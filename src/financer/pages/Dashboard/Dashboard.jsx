@@ -109,7 +109,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="fin-dashboard-stat-card">
+        {/* <div className="fin-dashboard-stat-card">
           <div className="fin-dashboard-stat-icon-bg fin-stat-orange">
             <Clock size={22} />
           </div>
@@ -140,9 +140,9 @@ export default function Dashboard() {
             <h2 className="fin-dashboard-stat-value">{formatCurrency(mockDashboardStats.pendingInterest)}</h2>
             <span className="fin-dashboard-stat-subtext">Across active loans</span>
           </div>
-        </div>
+        </div> */}
 
-        <div className="fin-dashboard-stat-card fin-stat-card-highlight-red">
+        {/* <div className="fin-dashboard-stat-card fin-stat-card-highlight-red">
           <div className="fin-dashboard-stat-icon-bg fin-stat-red">
             <AlertOctagon size={22} />
           </div>
@@ -151,7 +151,7 @@ export default function Dashboard() {
             <h2 className="fin-dashboard-stat-value fin-value-red">{formatCurrency(mockDashboardStats.overdueAmount)}</h2>
             <span className="fin-dashboard-stat-subtext fin-text-red">{mockDashboardStats.overdueAccountsCount} accounts overdue</span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Analytics Section Grid */}
