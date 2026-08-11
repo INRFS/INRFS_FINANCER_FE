@@ -6,7 +6,7 @@
 .payments-page {
   width: 100%;
   min-height: 100%;
-  padding: 30px 42px 50px;
+  padding: 24px 34px 40px;
   background: #f5f8fc;
   color: #18324f;
   box-sizing: border-box;
@@ -38,7 +38,7 @@
 .payments-header p {
   margin: 7px 0 0;
   color: #7590ad;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .payments-header-actions {
@@ -48,16 +48,16 @@
 }
 
 .payments-btn {
-  min-height: 52px;
+  min-height: 44px;
   border: 1px solid transparent;
-  border-radius: 11px;
-  padding: 0 22px;
+  border-radius: 9px;
+  padding: 0 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   font: inherit;
-  font-size: 15px;
+  font-size: 11px;
   font-weight: 750;
   cursor: pointer;
   transition:
@@ -98,29 +98,29 @@
 .payments-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 17px;
-  margin-bottom: 22px;
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .payments-stat-card {
-  min-height: 97px;
-  padding: 18px 20px;
+  min-height: 82px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   border: 1px solid #dfe7f0;
-  border-radius: 14px;
+  border-radius: 9px;
   background: #fff;
   box-shadow: 0 2px 5px rgba(32, 57, 84, 0.025);
 }
 
 .payments-stat-icon {
-  width: 57px;
-  height: 57px;
-  flex: 0 0 57px;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
   display: grid;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 9px;
 }
 
 .payments-stat-icon-green {
@@ -153,7 +153,7 @@
 .payments-stat-card strong {
   display: block;
   color: #0b315a;
-  font-size: 25px;
+  font-size: 23px;
   line-height: 1.1;
   font-weight: 800;
 }
@@ -173,11 +173,11 @@
 .payments-date-filter,
 .payments-filter-select {
   min-width: 0;
-  height: 54px;
+  height: 46px;
   display: flex;
   align-items: center;
   border: 1px solid #d8e2ed;
-  border-radius: 11px;
+  border-radius: 9px;
   background: #fff;
 }
 
@@ -198,7 +198,7 @@
   background: transparent;
   color: #385571;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .payments-search input::placeholder {
@@ -241,18 +241,18 @@
 
 .payments-sort-btn {
   min-width: 119px;
-  height: 54px;
+  height: 46px;
   padding: 0 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
   border: 1px solid #d8e2ed;
-  border-radius: 11px;
+  border-radius: 9px;
   background: #fff;
   color: #5e7793;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -274,8 +274,8 @@
 }
 
 .payments-activity-header {
-  min-height: 79px;
-  padding: 17px 20px;
+  min-height: 64px;
+  padding: 13px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -286,14 +286,14 @@
 .payments-activity-header h2 {
   margin: 0;
   color: #12375f;
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 800;
 }
 
 .payments-activity-header p {
   margin: 5px 0 0;
   color: #8397ae;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .payments-record-count {
@@ -301,7 +301,7 @@
   border-radius: 9px;
   background: #f4f7fa;
   color: #5c7692;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -332,11 +332,11 @@
 }
 
 .payments-table td {
-  min-height: 75px;
-  padding: 14px;
+  min-height: 62px;
+  padding: 10px 12px;
   border-top: 1px solid #e9eef4;
   color: #4f6781;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -362,11 +362,11 @@
 
 .payments-amount {
   color: #203b58;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .payments-method-pill {
-  padding: 7px 11px;
+  padding: 5px 9px;
   display: inline-block;
   border-radius: 999px;
   background: #f2f6fa;
@@ -375,7 +375,7 @@
 }
 
 .payments-status {
-  padding: 6px 12px;
+  padding: 5px 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -406,8 +406,8 @@
 }
 
 .payments-action-btn {
-  min-height: 34px;
-  padding: 0 11px;
+  min-height: 30px;
+  padding: 0 9px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -429,7 +429,7 @@
 }
 
 .payments-action-calendar {
-  width: 34px;
+  width: 30px;
   padding: 0;
   color: #0aa2d6;
 }
@@ -460,12 +460,12 @@
 
 .payments-empty strong {
   color: #385572;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .payments-empty span {
   color: #91a2b4;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .payments-toast {
@@ -474,12 +474,12 @@
   top: 24px;
   right: 24px;
   max-width: min(430px, calc(100vw - 32px));
-  min-height: 48px;
+  min-height: 42px;
   padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 9px;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 14px 35px rgba(26, 50, 75, 0.16);
   font-size: 13px;
   font-weight: 700;
@@ -514,23 +514,23 @@
 }
 
 .payments-modal {
-  width: min(975px, 100%);
-  max-height: calc(100vh - 50px);
+  width: min(900px, 100%);
+  max-height: calc(100vh - 36px);
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 14px;
   background: #fff;
   box-shadow: 0 24px 70px rgba(19, 39, 61, 0.25);
 }
 
 .payments-modal-form {
-  max-height: calc(100vh - 50px);
+  max-height: calc(100vh - 36px);
   display: flex;
   flex-direction: column;
 }
 
 .payments-modal-header {
-  min-height: 91px;
-  padding: 20px 27px;
+  min-height: 72px;
+  padding: 15px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -541,7 +541,7 @@
 .payments-modal-header h2 {
   margin: 0;
   color: #12375f;
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1.15;
   font-weight: 800;
 }
@@ -566,27 +566,27 @@
 
 .payments-form-body {
   overflow-y: auto;
-  padding: 22px 27px 24px;
+  padding: 16px 22px 18px;
 }
 
 .payments-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 17px;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 
 .payments-field {
   min-width: 0;
   display: block;
-  margin-bottom: 17px;
+  margin-bottom: 12px;
 }
 
 .payments-field > span {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: #29496a;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 750;
 }
 
@@ -600,24 +600,24 @@
 .payments-field textarea,
 .payments-field select {
   width: 100%;
-  min-height: 55px;
-  padding: 0 14px;
+  min-height: 44px;
+  padding: 0 12px;
   border: 1px solid #d5e0eb;
-  border-radius: 10px;
+  border-radius: 8px;
   outline: 0;
   background: #fff;
   color: #294661;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
 
 .payments-field textarea {
-  min-height: 87px;
-  padding-top: 13px;
-  padding-bottom: 13px;
+  min-height: 68px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   resize: vertical;
 }
 
@@ -655,18 +655,18 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  margin-bottom: 17px;
+  margin-bottom: 12px;
 }
 
 .payments-segmented button {
-  min-height: 52px;
-  padding: 0 12px;
+  min-height: 44px;
+  padding: 0 10px;
   border: 1px solid #d7e1eb;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #fff;
   color: #647d98;
   font: inherit;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 750;
   cursor: pointer;
 }
@@ -683,9 +683,9 @@
 
 .payments-reschedule-action {
   width: 100%;
-  min-height: 70px;
-  margin: 2px 0 19px;
-  padding: 10px 15px;
+  min-height: 58px;
+  margin: 2px 0 14px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -708,12 +708,12 @@
 }
 
 .payments-reschedule-icon {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #e7f8fd;
   color: #06a6da;
 }
@@ -746,24 +746,24 @@
    ========================================================= */
 
 .payments-current-date-card {
-  min-height: 77px;
-  margin-bottom: 20px;
-  padding: 13px 15px;
+  min-height: 62px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   border: 1px solid #dfe8f0;
-  border-radius: 11px;
+  border-radius: 9px;
   background: #f7fafc;
 }
 
 .payments-current-date-icon {
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #e6f7fc;
   color: #06a4d8;
 }
@@ -778,19 +778,19 @@
 .payments-current-date-card strong {
   display: block;
   color: #294663;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .payments-info-box {
   margin-top: 2px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   display: flex;
   align-items: flex-start;
   gap: 9px;
   border-radius: 9px;
   background: #effaff;
   color: #6f879f;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -805,8 +805,8 @@
    ========================================================= */
 
 .payments-modal-footer {
-  min-height: 78px;
-  padding: 13px 27px;
+  min-height: 62px;
+  padding: 10px 22px;
   display: flex;
   justify-content: flex-end;
   gap: 11px;
@@ -815,7 +815,7 @@
 }
 
 .payments-modal-footer .payments-btn {
-  min-width: 185px;
+  min-width: 150px;
 }
 
 .payments-back-btn {
@@ -828,7 +828,7 @@
 
 @media (max-width: 1200px) {
   .payments-page {
-    padding: 28px 28px 45px;
+    padding: 22px 24px 36px;
   }
 
   .payments-stats-grid {
@@ -850,7 +850,7 @@
 
 @media (max-width: 900px) {
   .payments-page {
-    padding: 24px 20px 40px;
+    padding: 20px 18px 32px;
   }
 
   .payments-header {
@@ -884,11 +884,11 @@
   }
 
   .payments-header h1 {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .payments-header p {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.45;
   }
 
@@ -919,7 +919,7 @@
   }
 
   .payments-activity-header {
-    padding: 15px;
+    padding: 13px;
     align-items: flex-start;
   }
 
@@ -947,20 +947,20 @@
   }
 
   .payments-modal-header {
-    min-height: 76px;
-    padding: 16px 18px;
+    min-height: 64px;
+    padding: 13px 16px;
   }
 
   .payments-modal-header h2 {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .payments-modal-header p {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .payments-form-body {
-    padding: 18px;
+    padding: 14px;
   }
 
   .payments-form-grid {
@@ -974,28 +974,28 @@
   }
 
   .payments-segmented button {
-    min-height: 48px;
+    min-height: 42px;
   }
 
   .payments-modal-footer {
-    padding: 12px 18px;
+    padding: 10px 14px;
   }
 }
 
 @media (max-width: 600px) {
   .payments-stat-card {
-    min-height: 88px;
-    padding: 15px;
+    min-height: 78px;
+    padding: 13px;
   }
 
   .payments-stat-icon {
-    width: 50px;
-    height: 50px;
-    flex-basis: 50px;
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
   }
 
   .payments-stat-card strong {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .payments-table {
@@ -1022,7 +1022,7 @@
 
 @media (max-width: 480px) {
   .payments-page {
-    padding: 16px 10px 30px;
+    padding: 14px 10px 26px;
   }
 
   .payments-header {
@@ -1030,7 +1030,7 @@
   }
 
   .payments-header h1 {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .payments-header p {
@@ -1063,15 +1063,15 @@
   }
 
   .payments-modal-header {
-    padding: 14px 15px;
+    padding: 12px 14px;
   }
 
   .payments-modal-header h2 {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .payments-form-body {
-    padding: 15px;
+    padding: 13px;
   }
 
   .payments-field {
@@ -1082,22 +1082,22 @@
   .payments-field textarea,
   .payments-field select {
     min-height: 51px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .payments-reschedule-action {
-    min-height: 65px;
-    padding: 9px 11px;
+    min-height: 56px;
+    padding: 8px 10px;
   }
 
   .payments-reschedule-icon {
-    width: 36px;
-    height: 36px;
-    flex-basis: 36px;
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
   }
 
   .payments-reschedule-copy strong {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .payments-reschedule-copy small {
@@ -1118,7 +1118,7 @@
   }
 
   .payments-stat-card strong {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .payments-modal-header {
@@ -1129,5 +1129,698 @@
     width: 34px;
     height: 34px;
     flex-basis: 34px;
+  }
+}
+
+
+/* =========================================================
+   COMPACT CARD / MODAL OVERRIDES
+   Keeps the same class names and structure while reducing
+   excessive height and spacing on desktop and mobile.
+   ========================================================= */
+
+.payments-modal {
+  width: min(900px, calc(100vw - 32px));
+}
+
+.payments-modal-header {
+  min-height: 70px;
+  padding: 14px 22px;
+}
+
+.payments-form-body {
+  padding: 15px 22px 16px;
+}
+
+.payments-form-grid {
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.payments-field {
+  margin-bottom: 12px;
+}
+
+.payments-field > span {
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+
+.payments-field input,
+.payments-field textarea,
+.payments-field select {
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.payments-field textarea {
+  min-height: 64px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.payments-segmented {
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.payments-segmented button {
+  min-height: 44px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+.payments-reschedule-action {
+  min-height: 56px;
+  margin: 2px 0 12px;
+  padding: 8px 12px;
+}
+
+.payments-current-date-card {
+  min-height: 60px;
+  margin-bottom: 12px;
+  padding: 9px 12px;
+}
+
+.payments-info-box {
+  padding: 9px 11px;
+  font-size: 11px;
+}
+
+.payments-modal-footer {
+  min-height: 62px;
+  padding: 9px 22px;
+  gap: 9px;
+}
+
+.payments-modal-footer .payments-btn {
+  min-width: 150px;
+  min-height: 42px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .payments-modal {
+    width: min(680px, calc(100vw - 24px));
+  }
+
+  .payments-modal-header {
+    min-height: 64px;
+    padding: 12px 16px;
+  }
+
+  .payments-modal-header h2 {
+    font-size: 21px;
+  }
+
+  .payments-form-body {
+    padding: 13px 16px 14px;
+  }
+
+  .payments-modal-footer {
+    padding: 8px 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .payments-modal-overlay {
+    padding: 8px;
+  }
+
+  .payments-modal {
+    width: 100%;
+    max-height: calc(100vh - 16px);
+    border-radius: 12px;
+  }
+
+  .payments-modal-form {
+    max-height: calc(100vh - 16px);
+  }
+
+  .payments-modal-header {
+    min-height: 60px;
+    padding: 10px 14px;
+  }
+
+  .payments-modal-header h2 {
+    font-size: 19px;
+  }
+
+  .payments-modal-header p {
+    margin-top: 3px;
+    font-size: 11px;
+  }
+
+  .payments-modal-close {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .payments-form-body {
+    padding: 12px 14px 13px;
+  }
+
+  .payments-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .payments-field {
+    margin-bottom: 10px;
+  }
+
+  .payments-field > span {
+    margin-bottom: 4px;
+    font-size: 11px;
+  }
+
+  .payments-field input,
+  .payments-field textarea,
+  .payments-field select {
+    min-height: 42px;
+    font-size: 12px;
+    border-radius: 7px;
+  }
+
+  .payments-field textarea {
+    min-height: 58px;
+  }
+
+  .payments-segmented {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .payments-segmented button {
+    min-height: 42px;
+    padding: 0 7px;
+    font-size: 11px;
+  }
+
+  .payments-modal-footer {
+    min-height: 58px;
+    padding: 8px 14px;
+    gap: 7px;
+  }
+
+  .payments-modal-footer .payments-btn {
+    min-height: 40px;
+    min-width: 0;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .payments-reschedule-action {
+    min-height: 52px;
+    margin: 2px 0 10px;
+    padding: 7px 9px;
+  }
+
+  .payments-current-date-card {
+    min-height: 56px;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .payments-page {
+    padding: 12px 9px 24px;
+  }
+
+  .payments-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .payments-modal {
+    max-height: 100vh;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .payments-modal-form {
+    max-height: 100vh;
+  }
+
+  .payments-modal-header {
+    min-height: 56px;
+    padding: 9px 12px;
+  }
+
+  .payments-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .payments-form-body {
+    padding: 10px 12px 11px;
+  }
+
+  .payments-field {
+    margin-bottom: 9px;
+  }
+
+  .payments-field > span {
+    margin-bottom: 3px;
+  }
+
+  .payments-field input,
+  .payments-field textarea,
+  .payments-field select {
+    min-height: 40px;
+    padding: 0 10px;
+  }
+
+  .payments-field textarea {
+    min-height: 54px;
+  }
+
+  .payments-segmented button {
+    min-height: 40px;
+    font-size: 10px;
+  }
+
+  .payments-modal-footer {
+    padding: 7px 12px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .payments-modal-header {
+    padding: 8px 10px;
+  }
+
+  .payments-form-body {
+    padding: 9px 10px 10px;
+  }
+
+  .payments-field input,
+  .payments-field textarea,
+  .payments-field select {
+    min-height: 38px;
+  }
+
+  .payments-segmented button {
+    min-height: 38px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
+  .payments-modal-footer .payments-btn {
+    min-height: 38px;
+    font-size: 11px;
+  }
+}
+
+
+/* =========================================================
+   FINAL COMPACT POPUP
+   Small desktop popup + tight two-column form.
+   Existing .payments-* class names are intentionally preserved.
+   ========================================================= */
+
+.payments-modal-overlay {
+  padding: 16px;
+}
+
+.payments-modal {
+  width: min(840px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  border-radius: 13px;
+}
+
+.payments-modal-form {
+  max-height: calc(100vh - 32px);
+}
+
+/* ---------- Header ---------- */
+
+.payments-modal-header {
+  min-height: 64px;
+  padding: 10px 18px;
+}
+
+.payments-modal-header h2 {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.payments-modal-header p {
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.payments-modal-close {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+}
+
+/* ---------- Form body ---------- */
+
+.payments-form-body {
+  padding: 13px 18px 12px;
+}
+
+.payments-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.payments-field {
+  margin-bottom: 9px;
+}
+
+.payments-field > span {
+  margin-bottom: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.payments-field input,
+.payments-field textarea,
+.payments-field select {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+
+.payments-field textarea {
+  min-height: 54px;
+  height: 54px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* ---------- Payment type: 3 small cards in one row ---------- */
+
+.payments-segmented {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 9px;
+}
+
+.payments-segmented button {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 7px;
+  border-radius: 7px;
+  font-size: 11px;
+}
+
+/* ---------- Reschedule card ---------- */
+
+.payments-reschedule-action {
+  min-height: 50px;
+  height: 50px;
+  margin: 1px 0 8px;
+  padding: 6px 10px;
+  gap: 9px;
+  border-radius: 8px;
+}
+
+.payments-reschedule-icon {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+  border-radius: 7px;
+}
+
+.payments-reschedule-copy strong {
+  font-size: 11px;
+}
+
+.payments-reschedule-copy small {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+.payments-reschedule-action > svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------- Footer ---------- */
+
+.payments-modal-footer {
+  min-height: 58px;
+  height: 58px;
+  padding: 8px 18px;
+  gap: 8px;
+}
+
+.payments-modal-footer .payments-btn {
+  min-width: 135px;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 14px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .payments-modal {
+    width: min(760px, calc(100vw - 24px));
+  }
+
+  .payments-modal-header {
+    padding: 10px 15px;
+  }
+
+  .payments-form-body {
+    padding: 12px 15px 11px;
+  }
+
+  .payments-modal-footer {
+    padding: 8px 15px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   Two-column fields become one column, while controls remain
+   compact and easy to tap.
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .payments-modal-overlay {
+    padding: 8px;
+    align-items: center;
+  }
+
+  .payments-modal {
+    width: min(520px, calc(100vw - 16px));
+    max-height: calc(100vh - 16px);
+    border-radius: 11px;
+  }
+
+  .payments-modal-form {
+    max-height: calc(100vh - 16px);
+  }
+
+  .payments-modal-header {
+    min-height: 56px;
+    padding: 9px 12px;
+  }
+
+  .payments-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .payments-modal-header p {
+    font-size: 10px;
+  }
+
+  .payments-modal-close {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+  .payments-form-body {
+    padding: 10px 12px;
+  }
+
+  .payments-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .payments-field {
+    margin-bottom: 8px;
+  }
+
+  .payments-field > span {
+    margin-bottom: 3px;
+    font-size: 10px;
+  }
+
+  .payments-field input,
+  .payments-field textarea,
+  .payments-field select {
+    min-height: 38px;
+    height: 38px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .payments-field textarea {
+    min-height: 50px;
+    height: 50px;
+  }
+
+  .payments-segmented {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .payments-segmented button {
+    min-height: 38px;
+    height: 38px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
+  .payments-reschedule-action {
+    min-height: 48px;
+    height: 48px;
+    margin-bottom: 7px;
+    padding: 6px 8px;
+  }
+
+  .payments-reschedule-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+  .payments-modal-footer {
+    min-height: 54px;
+    height: 54px;
+    padding: 7px 12px;
+  }
+
+  .payments-modal-footer .payments-btn {
+    min-height: 38px;
+    height: 38px;
+    min-width: 0;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .payments-modal-overlay {
+    padding: 5px;
+  }
+
+  .payments-modal {
+    width: calc(100vw - 10px);
+    max-height: calc(100vh - 10px);
+    border-radius: 10px;
+  }
+
+  .payments-modal-form {
+    max-height: calc(100vh - 10px);
+  }
+
+  .payments-modal-header {
+    min-height: 52px;
+    padding: 8px 10px;
+  }
+
+  .payments-modal-header h2 {
+    font-size: 17px;
+  }
+
+  .payments-form-body {
+    padding: 9px 10px;
+  }
+
+  .payments-field {
+    margin-bottom: 7px;
+  }
+
+  .payments-field input,
+  .payments-field textarea,
+  .payments-field select {
+    min-height: 36px;
+    height: 36px;
+    font-size: 11px;
+  }
+
+  .payments-field textarea {
+    min-height: 46px;
+    height: 46px;
+  }
+
+  .payments-segmented button {
+    min-height: 36px;
+    height: 36px;
+    font-size: 9.5px;
+  }
+
+  .payments-reschedule-action {
+    min-height: 44px;
+    height: 44px;
+  }
+
+  .payments-modal-footer {
+    min-height: 50px;
+    height: 50px;
+    padding: 6px 10px;
+  }
+
+  .payments-modal-footer .payments-btn {
+    min-height: 36px;
+    height: 36px;
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .payments-modal-header h2 {
+    font-size: 16px;
+  }
+
+  .payments-form-body {
+    padding: 8px;
+  }
+
+  .payments-segmented {
+    gap: 4px;
+  }
+
+  .payments-segmented button {
+    padding: 0 3px;
+    font-size: 9px;
+  }
+
+  .payments-modal-footer {
+    padding: 5px 8px;
   }
 }
