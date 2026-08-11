@@ -6,21 +6,19 @@ import {
   UsersRound,
   UserRound,
   WalletCards,
-  CreditCard,
-  MessageSquare,
   BarChart3,
-  LifeBuoy,
+  ReceiptIndianRupee,
+  CalendarDays,
+  Banknote,
+  MessageSquare,
   FileText,
-  Settings,
-  ShieldCheck,
 } from 'lucide-react';
 
 import './AdminSidebar.css';
 
-
 /* =========================================================
    ADMIN NAVIGATION
-   ========================================================= */
+========================================================= */
 
 const adminNavigation = [
   {
@@ -48,9 +46,27 @@ const adminNavigation = [
   },
 
   {
-    label: 'Subscriptions',
-    path: '/admin/subscriptions',
-    icon: CreditCard,
+    label: 'Financer Usage',
+    path: '/admin/financer-usage',
+    icon: BarChart3,
+  },
+
+  {
+    label: 'Service Charges',
+    path: '/admin/service-charges',
+    icon: ReceiptIndianRupee,
+  },
+
+  {
+    label: 'Monthly Billing',
+    path: '/admin/monthly-billing',
+    icon: CalendarDays,
+  },
+
+  {
+    label: 'Collections',
+    path: '/admin/collections',
+    icon: Banknote,
   },
 
   {
@@ -59,42 +75,16 @@ const adminNavigation = [
     icon: MessageSquare,
   },
 
-  // {
-  //   label: 'Usage Analytics',
-  //   path: '/admin/usage-analytics',
-  //   icon: BarChart3,
-  // },
-
-  // {
-  //   label: 'Support Tickets',
-  //   path: '/admin/support-tickets',
-  //   icon: LifeBuoy,
-  //   badge: 2,
-  // },
-
   {
     label: 'Reports',
     path: '/admin/reports',
     icon: FileText,
   },
-
-  // {
-  //   label: 'System Settings',
-  //   path: '/admin/settings',
-  //   icon: Settings,
-  // },
-
-  // {
-  //   label: 'Audit Logs',
-  //   path: '/admin/audit-logs',
-  //   icon: ShieldCheck,
-  // },
 ];
-
 
 /* =========================================================
    ADMIN SIDEBAR
-   ========================================================= */
+========================================================= */
 
 export default function AdminSidebar({
   isOpen = false,
@@ -112,7 +102,6 @@ export default function AdminSidebar({
           onClick={onClose}
         />
       )}
-
 
       {/* =====================================================
           SIDEBAR
@@ -132,32 +121,16 @@ export default function AdminSidebar({
 
           <div className="admin-sidebar-logo">
 
-            {/* LOGO */}
-
             <div className="admin-sidebar-logo-mark">
 
-              <span
-                className="logo-petal logo-petal-1"
-              />
-
-              <span
-                className="logo-petal logo-petal-2"
-              />
-
-              <span
-                className="logo-petal logo-petal-3"
-              />
-
-              <span
-                className="logo-petal logo-petal-4"
-              />
+              <span className="logo-petal logo-petal-1" />
+              <span className="logo-petal logo-petal-2" />
+              <span className="logo-petal logo-petal-3" />
+              <span className="logo-petal logo-petal-4" />
 
               <span className="logo-center" />
 
             </div>
-
-
-            {/* BRAND TEXT */}
 
             <div className="admin-sidebar-brand-text">
 
@@ -173,15 +146,11 @@ export default function AdminSidebar({
 
           </div>
 
-
-          {/* ADMIN BADGE */}
-
           <div className="admin-sidebar-role">
             ADMIN
           </div>
 
         </div>
-
 
         {/* ===================================================
             NAVIGATION
@@ -208,23 +177,15 @@ export default function AdminSidebar({
                 }
               >
 
-                {/* ICON */}
-
                 <Icon
                   size={18}
                   strokeWidth={1.8}
                   className="admin-sidebar-nav-icon"
                 />
 
-
-                {/* LABEL */}
-
                 <span className="admin-sidebar-nav-label">
                   {item.label}
                 </span>
-
-
-                {/* BADGE */}
 
                 {item.badge && (
                   <span className="admin-sidebar-nav-badge">
@@ -238,7 +199,6 @@ export default function AdminSidebar({
 
         </nav>
 
-
         {/* ===================================================
             BOTTOM ADMIN INFO
         ==================================================== */}
@@ -247,14 +207,9 @@ export default function AdminSidebar({
 
           <div className="admin-sidebar-user-card">
 
-            {/* AVATAR */}
-
             <div className="admin-sidebar-user-avatar">
               A
             </div>
-
-
-            {/* USER INFO */}
 
             <div className="admin-sidebar-user-info">
 

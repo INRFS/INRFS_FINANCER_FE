@@ -9,25 +9,45 @@ import './AdminLayout.css';
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const handleToggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const handleCloseSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="admin-layout">
 
-      {/* SIDEBAR */}
+      {/* =====================================================
+          SIDEBAR
+      ====================================================== */}
+
       <AdminSidebar
         isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+        onClose={handleCloseSidebar}
       />
 
-      {/* MAIN AREA */}
+      {/* =====================================================
+          MAIN AREA
+      ====================================================== */}
+
       <div className="admin-layout-wrapper">
 
+        {/* ===================================================
+            HEADER
+        ==================================================== */}
+
         <AdminHeader
-          onToggleSidebar={() =>
-            setSidebarOpen(!sidebarOpen)
-          }
+          onToggleSidebar={handleToggleSidebar}
+          sidebarOpen={sidebarOpen}
         />
 
-        {/* PAGE CONTENT */}
+        {/* ===================================================
+            PAGE CONTENT
+        ==================================================== */}
+
         <main className="admin-layout-content">
           <Outlet />
         </main>

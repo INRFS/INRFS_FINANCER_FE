@@ -12,7 +12,6 @@ import {
 
 import './common/styles/global.css';
 
-
 // =========================================================
 // AUTH PAGES
 // =========================================================
@@ -23,12 +22,12 @@ import AdminLogin from './auth/pages/AdminLogin/AdminLogin';
 import OTPVerification from './auth/pages/OTPVerification/OTPVerification';
 import Welcome from './auth/pages/Welcome/Welcome';
 
-
 // =========================================================
 // FINANCER LAYOUT & PAGES
 // =========================================================
 
 import FinancerLayout from './financer/layouts/FinancerLayout';
+
 import ServiceCharge from './financer/pages/ServiceCharge/ServiceCharge';
 import FinancerDashboard from './financer/pages/Dashboard/Dashboard';
 import Customers from './financer/pages/Customers/Customers';
@@ -42,35 +41,35 @@ import Reports from './financer/pages/Reports/Reports';
 import Support from './financer/pages/Support/Support';
 import Settings from './financer/pages/Settings/Settings';
 
-
 // =========================================================
 // ADMIN LAYOUT & PAGES
 // =========================================================
 
+// IMPORTANT:
+// AdminLayout must be imported before it is used below.
 import AdminLayout from './admin/layouts/AdminLayout';
 
 import AdminDashboard from './admin/pages/Dashboard/AdminDashboard';
 import AdminFinancers from './admin/pages/Financers/Financers';
 import AdminCustomers from './admin/pages/Customers/AdminCustomers';
 import AdminLoans from './admin/pages/Loans/AdminLoans';
-import AdminPayments from './admin/pages/Payments/AdminPayments';
 
-import AdminSubscriptions from './admin/pages/Subscriptions/AdminSubscriptions';
+import AdminFinancerUsage from './admin/pages/UsageAnalytics/AdminUsageAnalytics';
+
+import AdminServiceCharges from './admin/pages/ServiceCharges/AdminServiceCharges';
+import AdminMonthlyBilling from './admin/pages/MonthlyBilling/AdminMonthlyBilling';
+import AdminCollections from './admin/pages/Collections/AdminCollections';
+
 import AdminSMSManagement from './admin/pages/SMSManagement/AdminSMSManagement';
-import AdminUsageAnalytics from './admin/pages/UsageAnalytics/AdminUsageAnalytics';
-
 import AdminReports from './admin/pages/Reports/AdminReports';
-import AdminNotifications from './admin/pages/Notifications/AdminNotifications';
-import AdminSupport from './admin/pages/Support/AdminSupport';
-import AdminSettings from './admin/pages/Settings/AdminSettings';
 
 // =========================================================
 // AUDIT LOGS
 // =========================================================
+
 // Add this import once you create the page:
 //
 // import AdminAuditLogs from './admin/pages/AuditLogs/AdminAuditLogs';
-
 
 // =========================================================
 // FINANCER ROUTE GUARD
@@ -92,7 +91,6 @@ function FinancerGuard({ children }) {
   );
 }
 
-
 // =========================================================
 // ADMIN ROUTE GUARD
 // =========================================================
@@ -113,7 +111,6 @@ function AdminGuard({ children }) {
   );
 }
 
-
 // =========================================================
 // APP
 // =========================================================
@@ -121,7 +118,6 @@ function AdminGuard({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-
       <Routes>
 
         {/* ===================================================
@@ -132,7 +128,6 @@ export default function App() {
           path="/"
           element={<PortalSelection />}
         />
-
 
         {/* ===================================================
             FINANCER AUTH ROUTES
@@ -156,7 +151,6 @@ export default function App() {
           path="/financer/welcome"
           element={<Welcome />}
         />
-
 
         {/* ===================================================
             FINANCER PORTAL ROUTES
@@ -245,10 +239,13 @@ export default function App() {
             path="reports"
             element={<Reports />}
           />
-<Route
-  path="service-charge"
-  element={<ServiceCharge />}
-/>
+
+          {/* Service Charge */}
+
+          <Route
+            path="service-charge"
+            element={<ServiceCharge />}
+          />
 
           {/* Support */}
 
@@ -265,7 +262,6 @@ export default function App() {
           />
 
         </Route>
-
 
         {/* ===================================================
             ADMIN AUTH ROUTES
@@ -289,7 +285,6 @@ export default function App() {
           path="/admin/welcome"
           element={<Welcome />}
         />
-
 
         {/* ===================================================
             ADMIN PORTAL ROUTES
@@ -318,7 +313,6 @@ export default function App() {
             }
           />
 
-
           {/* =================================================
               DASHBOARD
           ================================================== */}
@@ -327,7 +321,6 @@ export default function App() {
             path="dashboard"
             element={<AdminDashboard />}
           />
-
 
           {/* =================================================
               FINANCERS
@@ -338,7 +331,6 @@ export default function App() {
             element={<AdminFinancers />}
           />
 
-
           {/* =================================================
               CUSTOMERS OVERVIEW
           ================================================== */}
@@ -347,7 +339,6 @@ export default function App() {
             path="customers"
             element={<AdminCustomers />}
           />
-
 
           {/* =================================================
               LOANS OVERVIEW
@@ -358,26 +349,41 @@ export default function App() {
             element={<AdminLoans />}
           />
 
-
           {/* =================================================
-              PAYMENTS
+              FINANCER USAGE
           ================================================== */}
 
           <Route
-            path="payments"
-            element={<AdminPayments />}
+            path="financer-usage"
+            element={<AdminFinancerUsage />}
           />
 
-
           {/* =================================================
-              SUBSCRIPTIONS
+              SERVICE CHARGES
           ================================================== */}
 
           <Route
-            path="subscriptions"
-            element={<AdminSubscriptions />}
+            path="service-charges"
+            element={<AdminServiceCharges />}
           />
 
+          {/* =================================================
+              MONTHLY BILLING
+          ================================================== */}
+
+          <Route
+            path="monthly-billing"
+            element={<AdminMonthlyBilling />}
+          />
+
+          {/* =================================================
+              COLLECTIONS
+          ================================================== */}
+
+          <Route
+            path="collections"
+            element={<AdminCollections />}
+          />
 
           {/* =================================================
               SMS MANAGEMENT
@@ -388,27 +394,6 @@ export default function App() {
             element={<AdminSMSManagement />}
           />
 
-
-          {/* =================================================
-              USAGE ANALYTICS
-          ================================================== */}
-
-          <Route
-            path="usage-analytics"
-            element={<AdminUsageAnalytics />}
-          />
-
-
-          {/* =================================================
-              SUPPORT TICKETS
-          ================================================== */}
-
-          <Route
-            path="support-tickets"
-            element={<AdminSupport />}
-          />
-
-
           {/* =================================================
               REPORTS
           ================================================== */}
@@ -418,44 +403,18 @@ export default function App() {
             element={<AdminReports />}
           />
 
-
-          {/* =================================================
-              NOTIFICATIONS
-          ================================================== */}
-
-          <Route
-            path="notifications"
-            element={<AdminNotifications />}
-          />
-
-
-          {/* =================================================
-              SYSTEM SETTINGS
-          ================================================== */}
-
-          <Route
-            path="settings"
-            element={<AdminSettings />}
-          />
-
-
           {/* =================================================
               AUDIT LOGS
+              
+              Uncomment after creating the page:
+              
+              <Route
+                path="audit-logs"
+                element={<AdminAuditLogs />}
+              />
           ================================================== */}
 
-          {/*
-            Add this after creating:
-
-            src/admin/pages/AuditLogs/AdminAuditLogs.jsx
-
-            <Route
-              path="audit-logs"
-              element={<AdminAuditLogs />}
-            />
-          */}
-
         </Route>
-
 
         {/* ===================================================
             FALLBACK
@@ -472,7 +431,6 @@ export default function App() {
         />
 
       </Routes>
-
     </BrowserRouter>
   );
 }

@@ -1,67 +1,1088 @@
-.admin-loans-page {
+.inrfs-loans-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 24px;
+  background: #f8fafc;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.inrfs-loans-header {
+  margin-bottom: 24px;
+}
+
+.inrfs-loans-header-content {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 24px;
 }
 
-.admin-loans-header {
-  background: var(--color-white);
-  padding: 20px 24px;
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-border);
+.inrfs-loans-title {
+  margin: 0;
+  color: #111827;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.admin-loans-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-navy);
+.inrfs-loans-subtitle {
+  max-width: 780px;
+  margin: 7px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-.admin-loans-subtitle {
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.inrfs-loans-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.inrfs-loans-summary-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.inrfs-loans-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 10px;
+}
+
+.inrfs-loans-summary-icon--blue {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.inrfs-loans-summary-icon--orange {
+  color: #c2410c;
+  background: #ffedd5;
+}
+
+.inrfs-loans-summary-icon--green {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.inrfs-loans-summary-icon--red {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+.inrfs-loans-summary-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.inrfs-loans-summary-content > span {
+  margin-bottom: 5px;
+  color: #6b7280;
   font-size: 13px;
-  color: var(--color-text-muted);
-  margin-top: 4px;
+  font-weight: 500;
 }
 
-.admin-loans-toolbar {
+.inrfs-loans-summary-content > strong {
+  color: #111827;
+  font-size: 21px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.inrfs-loans-summary-content > small {
+  margin-top: 5px;
+  color: #9ca3af;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.inrfs-loans-content-card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.inrfs-loans-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-loans-search-wrapper {
+  width: 100%;
+  max-width: 440px;
+}
+
+.inrfs-loans-filter-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.inrfs-loans-filter-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 155px;
+}
+
+.inrfs-loans-filter-control label {
+  color: #4b5563;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.inrfs-loans-filter-control select {
+  width: 100%;
+  height: 40px;
+  padding: 0 32px 0 12px;
+  color: #374151;
+  font-size: 13px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.inrfs-loans-filter-control select:focus {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.15);
+}
+
+/* =========================================================
+   RESULTS BAR
+========================================================= */
+
+.inrfs-loans-results-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 48px;
+  padding: 0 20px;
+  color: #6b7280;
+  font-size: 13px;
+  border-bottom: 1px solid #eef0f3;
 }
 
-.admin-loans-table-card {
-  background: var(--color-white);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
+.inrfs-loans-results-bar strong {
+  color: #111827;
 }
 
-.admin-loans-table-wrapper {
+.inrfs-loans-clear-filters {
+  padding: 5px 8px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.inrfs-loans-clear-filters:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   DESKTOP TABLE
+========================================================= */
+
+.inrfs-loans-table-wrapper {
+  width: 100%;
   overflow-x: auto;
 }
 
-.admin-loans-table {
+.inrfs-loans-table {
   width: 100%;
+  min-width: 1250px;
   border-collapse: collapse;
-  font-size: 13px;
-  text-align: left;
 }
 
-.admin-loans-table th {
-  background: var(--color-bg);
-  padding: 12px 16px;
+.inrfs-loans-table th {
+  padding: 13px 16px;
+  color: #6b7280;
   font-size: 11px;
+  line-height: 1.4;
   font-weight: 700;
-  color: var(--color-muted);
-  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
-.admin-loans-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--color-border);
+.inrfs-loans-table td {
+  padding: 16px;
+  color: #374151;
+  font-size: 13px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f1f3;
 }
 
-.admin-loans-id { color: var(--color-purple); font-weight: 700; }
-.admin-loans-financer { color: var(--color-cyan); font-weight: 600; }
-.admin-loans-amt { color: var(--color-navy); font-weight: 700; }
+.inrfs-loans-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.inrfs-loans-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* =========================================================
+   CUSTOMER CELL
+========================================================= */
+
+.inrfs-loans-customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 175px;
+}
+
+.inrfs-loans-customer-cell > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.inrfs-loans-customer-cell strong {
+  overflow: hidden;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inrfs-loans-customer-cell span {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.inrfs-loans-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  background: #eff6ff;
+  border-radius: 50%;
+}
+
+/* =========================================================
+   TABLE CELLS
+========================================================= */
+
+.inrfs-loans-id {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inrfs-loans-financer-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 190px;
+  color: #4b5563;
+}
+
+.inrfs-loans-financer-cell svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.inrfs-loans-financer-cell span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inrfs-loans-principal {
+  color: #374151;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inrfs-loans-interest {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.inrfs-loans-outstanding {
+  color: #b45309;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.inrfs-loans-date-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+.inrfs-loans-date-cell svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.inrfs-loans-status-wrapper {
+  display: inline-flex;
+}
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.inrfs-loans-view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.inrfs-loans-view-button:hover {
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+/* =========================================================
+   MOBILE LIST
+========================================================= */
+
+.inrfs-loans-mobile-list {
+  display: none;
+}
+
+.inrfs-loans-mobile-card {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+}
+
+.inrfs-loans-mobile-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-loans-mobile-loan {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.inrfs-loans-mobile-loan > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.inrfs-loans-mobile-loan strong {
+  overflow: hidden;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inrfs-loans-mobile-loan span {
+  overflow: hidden;
+  color: #9ca3af;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inrfs-loans-mobile-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 14px 0;
+}
+
+.inrfs-loans-mobile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.inrfs-loans-mobile-row > span {
+  flex-shrink: 0;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.inrfs-loans-mobile-row > strong {
+  max-width: 60%;
+  color: #1f2937;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.inrfs-loans-mobile-outstanding {
+  color: #b45309 !important;
+}
+
+.inrfs-loans-mobile-card-footer {
+  padding-top: 13px;
+  border-top: 1px solid #eef0f3;
+}
+
+.inrfs-loans-mobile-view-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: 38px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.inrfs-loans-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.inrfs-loans-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  border-radius: 50%;
+}
+
+.inrfs-loans-empty-state h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.inrfs-loans-empty-state p {
+  max-width: 380px;
+  margin: 7px 0 15px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.inrfs-loans-empty-button {
+  padding: 8px 13px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   LOAN DETAILS MODAL
+========================================================= */
+
+.inrfs-loans-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.inrfs-loans-modal {
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+}
+
+.inrfs-loans-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-loans-modal-loan {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.inrfs-loans-modal-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 10px;
+}
+
+.inrfs-loans-modal-loan > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.inrfs-loans-modal-loan h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.inrfs-loans-modal-loan span {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.inrfs-loans-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.inrfs-loans-modal-close:hover {
+  color: #111827;
+  background: #f3f4f6;
+}
+
+.inrfs-loans-modal-status {
+  padding: 14px 22px 0;
+}
+
+.inrfs-loans-modal-section {
+  margin: 0 22px;
+  padding: 20px 0;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-loans-modal-section h3 {
+  margin: 0 0 15px;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   DETAIL GRID
+========================================================= */
+
+.inrfs-loans-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px 24px;
+}
+
+.inrfs-loans-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.inrfs-loans-detail-item span {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.inrfs-loans-detail-item strong {
+  overflow-wrap: anywhere;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   FINANCIAL INFORMATION
+========================================================= */
+
+.inrfs-loans-financial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.inrfs-loans-financial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  background: #f9fafb;
+  border: 1px solid #eef0f3;
+  border-radius: 9px;
+}
+
+.inrfs-loans-financial-card span {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.inrfs-loans-financial-card strong {
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.inrfs-loans-modal-outstanding {
+  color: #b45309 !important;
+}
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.inrfs-loans-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.inrfs-loans-timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  background: #f9fafb;
+  border: 1px solid #eef0f3;
+  border-radius: 9px;
+}
+
+.inrfs-loans-timeline-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 8px;
+}
+
+.inrfs-loans-timeline-item > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.inrfs-loans-timeline-item span {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.inrfs-loans-timeline-item strong {
+  color: #1f2937;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   ADDITIONAL INFORMATION
+========================================================= */
+
+.inrfs-loans-additional-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px 24px;
+}
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.inrfs-loans-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 22px;
+}
+
+.inrfs-loans-modal-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.inrfs-loans-modal-close-button {
+  min-width: 80px;
+  height: 36px;
+  padding: 0 14px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.inrfs-loans-modal-close-button:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+  .inrfs-loans-page {
+    padding: 20px;
+  }
+
+  .inrfs-loans-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inrfs-loans-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inrfs-loans-search-wrapper {
+    max-width: none;
+  }
+
+  .inrfs-loans-filter-group {
+    width: 100%;
+  }
+
+  .inrfs-loans-filter-control {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   SMALL LAPTOP / TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .inrfs-loans-table {
+    min-width: 1120px;
+  }
+
+  .inrfs-loans-table th,
+  .inrfs-loans-table td {
+    padding: 13px;
+  }
+
+  .inrfs-loans-summary-card {
+    padding: 16px;
+  }
+
+  .inrfs-loans-summary-content > strong {
+    font-size: 18px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .inrfs-loans-page {
+    padding: 16px;
+  }
+
+  .inrfs-loans-title {
+    font-size: 24px;
+  }
+
+  .inrfs-loans-subtitle {
+    font-size: 13px;
+  }
+
+  .inrfs-loans-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .inrfs-loans-summary-card {
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .inrfs-loans-summary-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .inrfs-loans-summary-content > span {
+    font-size: 12px;
+  }
+
+  .inrfs-loans-summary-content > strong {
+    font-size: 17px;
+  }
+
+  .inrfs-loans-summary-content > small {
+    display: none;
+  }
+
+  .inrfs-loans-toolbar {
+    padding: 16px;
+  }
+
+  .inrfs-loans-filter-group {
+    gap: 8px;
+  }
+
+  .inrfs-loans-filter-control {
+    min-width: 0;
+  }
+
+  .inrfs-loans-results-bar {
+    min-height: 46px;
+    padding: 0 16px;
+  }
+
+  .inrfs-loans-table-wrapper {
+    display: none;
+  }
+
+  .inrfs-loans-mobile-list {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    background: #f9fafb;
+  }
+
+  .inrfs-loans-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .inrfs-loans-modal {
+    max-width: none;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+  .inrfs-loans-page {
+    padding: 12px;
+  }
+
+  .inrfs-loans-header {
+    margin-bottom: 18px;
+  }
+
+  .inrfs-loans-title {
+    font-size: 21px;
+  }
+
+  .inrfs-loans-subtitle {
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .inrfs-loans-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-loans-summary-card {
+    padding: 13px;
+  }
+
+  .inrfs-loans-toolbar {
+    padding: 14px;
+  }
+
+  .inrfs-loans-filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inrfs-loans-filter-control {
+    width: 100%;
+  }
+
+  .inrfs-loans-results-bar {
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .inrfs-loans-mobile-list {
+    padding: 12px;
+  }
+
+  .inrfs-loans-mobile-card {
+    padding: 14px;
+  }
+
+  .inrfs-loans-mobile-row {
+    align-items: flex-start;
+  }
+
+  .inrfs-loans-mobile-row > span {
+    max-width: 40%;
+  }
+
+  .inrfs-loans-mobile-row > strong {
+    max-width: 60%;
+  }
+
+  .inrfs-loans-modal-header {
+    padding: 18px 16px 14px;
+  }
+
+  .inrfs-loans-modal-status {
+    padding: 12px 16px 0;
+  }
+
+  .inrfs-loans-modal-section {
+    margin: 0 16px;
+    padding: 17px 0;
+  }
+
+  .inrfs-loans-detail-grid,
+  .inrfs-loans-additional-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .inrfs-loans-financial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-loans-timeline-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-loans-modal-footer {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 15px 16px;
+  }
+
+  .inrfs-loans-modal-footer-info {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .inrfs-loans-modal-close-button {
+    width: 100%;
+  }
+}
