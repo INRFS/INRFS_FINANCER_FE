@@ -1,0 +1,1121 @@
+/* =========================================================
+   INRFS SERVICE CHARGE MANAGEMENT
+   Unique prefix:
+   .inrfs-service-charge-
+========================================================= */
+
+.inrfs-service-charge-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 28px;
+  box-sizing: border-box;
+  background: #f7f9fc;
+  color: #172033;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.inrfs-service-charge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.inrfs-service-charge-header-copy {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.inrfs-service-charge-title-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(125, 31, 232, 0.09);
+  color: #7d1fe8;
+}
+
+.inrfs-service-charge-header h1 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.inrfs-service-charge-header p {
+  margin: 7px 0 0;
+  color: #8190a5;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.inrfs-service-charge-primary-btn,
+.inrfs-service-charge-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #7d1fe8;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-primary-btn:hover,
+.inrfs-service-charge-add-btn:hover {
+  background: #6e18d0;
+  box-shadow: 0 7px 18px rgba(125, 31, 232, 0.18);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.inrfs-service-charge-toast {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(24, 196, 106, 0.2);
+  border-radius: 9px;
+  background: rgba(24, 196, 106, 0.07);
+  color: #148b4d;
+  font-size: 13px;
+}
+
+.inrfs-service-charge-toast span {
+  flex: 1;
+}
+
+.inrfs-service-charge-toast button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.inrfs-service-charge-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.inrfs-service-charge-summary-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 17px;
+  border: 1px solid #e5eaf0;
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow: 0 2px 7px rgba(20, 35, 60, 0.025);
+}
+
+.inrfs-service-charge-summary-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.inrfs-service-charge-summary-icon--blue {
+  background: rgba(16, 174, 239, 0.1);
+  color: #10aeef;
+}
+
+.inrfs-service-charge-summary-icon--green {
+  background: rgba(24, 196, 106, 0.1);
+  color: #18c46a;
+}
+
+.inrfs-service-charge-summary-icon--orange {
+  background: rgba(255, 121, 11, 0.1);
+  color: #ff790b;
+}
+
+.inrfs-service-charge-summary-icon--purple {
+  background: rgba(125, 31, 232, 0.1);
+  color: #7d1fe8;
+}
+
+.inrfs-service-charge-summary-card > div:last-child {
+  min-width: 0;
+}
+
+.inrfs-service-charge-summary-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8190a5;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+}
+
+.inrfs-service-charge-summary-card strong {
+  display: block;
+  color: #172033;
+  font-size: 21px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* =========================================================
+   DEFAULT CONFIGURATION
+========================================================= */
+
+.inrfs-service-charge-default-card {
+  padding: 22px;
+  margin-bottom: 15px;
+  border: 1px solid #e5eaf0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 7px rgba(20, 35, 60, 0.025);
+}
+
+.inrfs-service-charge-default-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.inrfs-service-charge-default-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(16, 174, 239, 0.09);
+  color: #10aeef;
+}
+
+.inrfs-service-charge-default-heading h2,
+.inrfs-service-charge-financer-header h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.inrfs-service-charge-default-heading p,
+.inrfs-service-charge-financer-header p {
+  margin: 5px 0 0;
+  color: #8190a5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.inrfs-service-charge-default-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 1.1fr)
+    minmax(180px, 1fr)
+    minmax(150px, 0.8fr)
+    auto;
+  align-items: end;
+  gap: 20px;
+}
+
+.inrfs-service-charge-field {
+  min-width: 0;
+}
+
+.inrfs-service-charge-field > label {
+  display: block;
+  margin-bottom: 8px;
+  color: #59677b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.inrfs-service-charge-large-value {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  color: #7d1fe8;
+  font-size: 24px;
+  font-weight: 750;
+}
+
+.inrfs-service-charge-input-wrap {
+  position: relative;
+}
+
+.inrfs-service-charge-input-wrap input {
+  width: 100%;
+  height: 43px;
+  box-sizing: border-box;
+  padding: 0 38px 0 12px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #172033;
+  font-size: 13px;
+}
+
+.inrfs-service-charge-input-wrap input:focus,
+.inrfs-service-charge-date-input:focus,
+.inrfs-service-charge-select:focus {
+  border-color: #10aeef;
+  box-shadow: 0 0 0 3px rgba(16, 174, 239, 0.08);
+}
+
+.inrfs-service-charge-input-wrap span {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #8190a5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.inrfs-service-charge-date-input,
+.inrfs-service-charge-select {
+  width: 100%;
+  height: 43px;
+  box-sizing: border-box;
+  padding: 0 11px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #172033;
+  font-size: 13px;
+}
+
+.inrfs-service-charge-date-display {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #39465a;
+  font-size: 13px;
+}
+
+.inrfs-service-charge-date-display svg {
+  color: #8190a5;
+}
+
+.inrfs-service-charge-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 9px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-status-badge.is-active {
+  color: #148b4d;
+  background: rgba(24, 196, 106, 0.1);
+}
+
+.inrfs-service-charge-status-badge.is-inactive {
+  color: #c56a05;
+  background: rgba(255, 121, 11, 0.1);
+}
+
+.inrfs-service-charge-default-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 43px;
+}
+
+.inrfs-service-charge-edit-btn,
+.inrfs-service-charge-secondary-btn,
+.inrfs-service-charge-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-edit-btn,
+.inrfs-service-charge-secondary-btn {
+  border: 1px solid #dfe5ec;
+  background: #ffffff;
+  color: #536176;
+}
+
+.inrfs-service-charge-edit-btn:hover,
+.inrfs-service-charge-secondary-btn:hover {
+  background: #f7f9fc;
+  border-color: #cbd4df;
+}
+
+.inrfs-service-charge-save-btn {
+  border: 1px solid #7d1fe8;
+  background: #7d1fe8;
+  color: #ffffff;
+}
+
+.inrfs-service-charge-save-btn:hover {
+  background: #6e18d0;
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.inrfs-service-charge-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 15px;
+  padding: 12px 14px;
+  border: 1px solid rgba(16, 174, 239, 0.16);
+  border-radius: 9px;
+  background: rgba(16, 174, 239, 0.045);
+  color: #526175;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.inrfs-service-charge-info svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #10aeef;
+}
+
+/* =========================================================
+   FINANCER CONFIGURATION CARD
+========================================================= */
+
+.inrfs-service-charge-financer-card {
+  overflow: hidden;
+  border: 1px solid #e5eaf0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 7px rgba(20, 35, 60, 0.025);
+}
+
+.inrfs-service-charge-financer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+}
+
+.inrfs-service-charge-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 180px auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px 17px;
+}
+
+.inrfs-service-charge-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inrfs-service-charge-search > svg {
+  position: absolute;
+  left: 12px;
+  color: #8190a5;
+  pointer-events: none;
+}
+
+.inrfs-service-charge-search input {
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 38px 0 36px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  outline: none;
+  color: #172033;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.inrfs-service-charge-search input:focus {
+  border-color: #10aeef;
+  box-shadow: 0 0 0 3px rgba(16, 174, 239, 0.08);
+}
+
+.inrfs-service-charge-search > button {
+  position: absolute;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #8190a5;
+  cursor: pointer;
+}
+
+.inrfs-service-charge-filter-select {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #526175;
+  font-size: 12px;
+}
+
+.inrfs-service-charge-filter-select:focus {
+  border-color: #10aeef;
+}
+
+.inrfs-service-charge-results {
+  color: #8190a5;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-results strong {
+  color: #172033;
+}
+
+/* =========================================================
+   DESKTOP TABLE
+========================================================= */
+
+.inrfs-service-charge-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-top: 1px solid #edf0f4;
+}
+
+.inrfs-service-charge-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.inrfs-service-charge-table th {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e9edf2;
+  background: #fafbfd;
+  color: #8190a5;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-table td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #eef1f5;
+  color: #445167;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.inrfs-service-charge-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.inrfs-service-charge-table tbody tr:hover {
+  background: #fbfcfe;
+}
+
+.inrfs-service-charge-financer-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.inrfs-service-charge-financer-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: rgba(16, 174, 239, 0.09);
+  color: #10aeef;
+}
+
+.inrfs-service-charge-financer-cell strong {
+  display: block;
+  color: #1d2839;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.inrfs-service-charge-financer-cell span {
+  display: block;
+  margin-top: 3px;
+  color: #9aa5b4;
+  font-size: 10px;
+}
+
+.inrfs-service-charge-percentage-cell strong {
+  display: block;
+  color: #7d1fe8;
+  font-size: 14px;
+}
+
+.inrfs-service-charge-percentage-cell span {
+  display: block;
+  margin-top: 3px;
+  color: #9aa5b4;
+  font-size: 10px;
+}
+
+.inrfs-service-charge-effective-cell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #59677b;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-effective-cell svg {
+  color: #8190a5;
+}
+
+.inrfs-service-charge-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.inrfs-service-charge-row-edit,
+.inrfs-service-charge-row-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 31px;
+  padding: 0 9px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.inrfs-service-charge-row-edit {
+  border: 1px solid #dfe5ec;
+  background: #ffffff;
+  color: #536176;
+}
+
+.inrfs-service-charge-row-edit:hover {
+  background: #f7f9fc;
+  border-color: #cbd4df;
+}
+
+.inrfs-service-charge-row-toggle {
+  border: 1px solid rgba(125, 31, 232, 0.18);
+  background: rgba(125, 31, 232, 0.06);
+  color: #7d1fe8;
+}
+
+.inrfs-service-charge-row-toggle:hover {
+  background: rgba(125, 31, 232, 0.11);
+}
+
+.inrfs-service-charge-empty {
+  height: 190px;
+  text-align: center !important;
+  color: #8190a5 !important;
+}
+
+.inrfs-service-charge-empty svg {
+  display: block;
+  margin: 0 auto 10px;
+  color: #b0bac7;
+}
+
+.inrfs-service-charge-empty strong,
+.inrfs-service-charge-empty span {
+  display: block;
+}
+
+.inrfs-service-charge-empty strong {
+  margin-bottom: 4px;
+  color: #536176;
+  font-size: 13px;
+}
+
+/* =========================================================
+   MOBILE LIST
+========================================================= */
+
+.inrfs-service-charge-mobile-list {
+  display: none;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.inrfs-service-charge-modal-overlay {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(2px);
+}
+
+.inrfs-service-charge-modal {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 44px);
+  overflow-y: auto;
+  border: 1px solid #e3e8ef;
+  border-radius: 13px;
+  background: #ffffff;
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.2);
+}
+
+.inrfs-service-charge-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 21px 22px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.inrfs-service-charge-modal-header h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.inrfs-service-charge-modal-header p {
+  margin: 5px 0 0;
+  color: #8190a5;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.inrfs-service-charge-modal-close {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e1e6ed;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #68768a;
+  cursor: pointer;
+}
+
+.inrfs-service-charge-modal-close:hover {
+  background: #f7f9fc;
+}
+
+.inrfs-service-charge-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  padding: 22px;
+}
+
+.inrfs-service-charge-modal-field {
+  min-width: 0;
+}
+
+.inrfs-service-charge-modal-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #536176;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.inrfs-service-charge-modal-field input,
+.inrfs-service-charge-modal-field select {
+  width: 100%;
+  height: 42px;
+  box-sizing: border-box;
+  padding: 0 11px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #172033;
+  font-size: 12px;
+}
+
+.inrfs-service-charge-modal-field input:focus,
+.inrfs-service-charge-modal-field select:focus {
+  border-color: #10aeef;
+  box-shadow: 0 0 0 3px rgba(16, 174, 239, 0.08);
+}
+
+.inrfs-service-charge-modal-field input:disabled {
+  background: #f5f7fa;
+  color: #8a96a6;
+  cursor: not-allowed;
+}
+
+.inrfs-service-charge-modal-two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.inrfs-service-charge-modal-percentage {
+  position: relative;
+}
+
+.inrfs-service-charge-modal-percentage input {
+  padding-right: 35px;
+}
+
+.inrfs-service-charge-modal-percentage span {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  transform: translateY(-50%);
+  color: #8190a5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.inrfs-service-charge-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+  .inrfs-service-charge-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inrfs-service-charge-default-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .inrfs-service-charge-default-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  .inrfs-service-charge-page {
+    padding: 22px;
+  }
+
+  .inrfs-service-charge-header {
+    align-items: flex-start;
+  }
+
+  .inrfs-service-charge-filter-bar {
+    grid-template-columns:
+      minmax(0, 1fr) 170px;
+  }
+
+  .inrfs-service-charge-results {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .inrfs-service-charge-page {
+    padding: 16px;
+  }
+
+  .inrfs-service-charge-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .inrfs-service-charge-primary-btn {
+    width: 100%;
+  }
+
+  .inrfs-service-charge-header h1 {
+    font-size: 21px;
+  }
+
+  .inrfs-service-charge-header p {
+    font-size: 12px;
+  }
+
+  .inrfs-service-charge-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .inrfs-service-charge-summary-card {
+    padding: 13px;
+    gap: 9px;
+  }
+
+  .inrfs-service-charge-summary-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .inrfs-service-charge-summary-card span {
+    font-size: 8px;
+  }
+
+  .inrfs-service-charge-summary-card strong {
+    font-size: 17px;
+  }
+
+  .inrfs-service-charge-default-card {
+    padding: 17px;
+  }
+
+  .inrfs-service-charge-default-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .inrfs-service-charge-default-actions {
+    justify-content: stretch;
+  }
+
+  .inrfs-service-charge-default-actions button {
+    flex: 1;
+  }
+
+  .inrfs-service-charge-financer-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 17px;
+  }
+
+  .inrfs-service-charge-add-btn {
+    width: 100%;
+  }
+
+  .inrfs-service-charge-filter-bar {
+    grid-template-columns: 1fr;
+    padding: 0 17px 16px;
+  }
+
+  .inrfs-service-charge-results {
+    grid-column: auto;
+  }
+
+  .inrfs-service-charge-table-wrap {
+    display: none;
+  }
+
+  .inrfs-service-charge-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 12px 12px;
+  }
+
+  .inrfs-service-charge-mobile-card {
+    padding: 15px;
+    border: 1px solid #e7ebf0;
+    border-radius: 10px;
+    background: #ffffff;
+  }
+
+  .inrfs-service-charge-mobile-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .inrfs-service-charge-mobile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 14px;
+    border-top: 1px solid #edf0f4;
+  }
+
+  .inrfs-service-charge-mobile-grid > div {
+    min-width: 0;
+  }
+
+  .inrfs-service-charge-mobile-grid span {
+    display: block;
+    margin-bottom: 4px;
+    color: #8190a5;
+    font-size: 10px;
+  }
+
+  .inrfs-service-charge-mobile-grid strong {
+    display: block;
+    color: #263247;
+    font-size: 13px;
+  }
+
+  .inrfs-service-charge-mobile-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .inrfs-service-charge-mobile-actions button {
+    flex: 1;
+  }
+
+  .inrfs-service-charge-mobile-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    gap: 7px;
+    border: 1px solid #e7ebf0;
+    border-radius: 10px;
+    color: #8190a5;
+    text-align: center;
+  }
+
+  .inrfs-service-charge-mobile-empty strong {
+    color: #536176;
+    font-size: 13px;
+  }
+
+  .inrfs-service-charge-mobile-empty span {
+    font-size: 11px;
+  }
+
+  .inrfs-service-charge-info {
+    font-size: 11px;
+  }
+
+  .inrfs-service-charge-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .inrfs-service-charge-modal {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .inrfs-service-charge-modal-header {
+    padding: 18px;
+  }
+
+  .inrfs-service-charge-modal-form {
+    padding: 18px;
+  }
+
+  .inrfs-service-charge-modal-two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-service-charge-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .inrfs-service-charge-modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .inrfs-service-charge-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-service-charge-header-copy {
+    gap: 10px;
+  }
+
+  .inrfs-service-charge-title-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .inrfs-service-charge-default-heading {
+    gap: 9px;
+  }
+
+  .inrfs-service-charge-default-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .inrfs-service-charge-mobile-grid {
+    grid-template-columns: 1fr;
+  }
+}

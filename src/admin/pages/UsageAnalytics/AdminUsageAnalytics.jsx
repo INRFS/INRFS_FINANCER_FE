@@ -1,48 +1,63 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+
 import {
   Users,
   CreditCard,
   MessageSquare,
-  TrendingUp,
   Activity,
+  Building2,
+  ReceiptIndianRupee,
+  ArrowUpRight,
+  Search,
 } from 'lucide-react';
+
+import { financerUsageData } from '../../data/mockAdminData';
 
 import './AdminUsageAnalytics.css';
 
-const analyticsStats = [
-  {
-    title: 'TOTAL PLATFORM USERS',
-    value: '12,450',
-    change: '+4.6%',
-    description: 'vs last month',
-    color: 'cyan',
-    icon: Users,
-  },
-  {
-    title: 'ACTIVE LOANS',
-    value: '8,320',
-    change: '+7.2%',
-    description: 'vs last month',
-    color: 'purple',
-    icon: CreditCard,
-  },
-  {
-    title: 'SMS USAGE',
-    value: '85,420',
-    change: '+12.4%',
-    description: 'this month',
-    color: 'pink',
-    icon: MessageSquare,
-  },
-  {
-    title: 'PLATFORM ACTIVITY',
-    value: '92.8%',
-    change: '+3.1%',
-    description: 'active rate',
-    color: 'green',
-    icon: Activity,
-  },
-];
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const formatNumber = (value) =>
+  Number(value || 0).toLocaleString('en-IN');
+
+const getActivityPercentage = (item) => {
+  /*
+   * Demo activity calculation.
+   *
+   * Later this can come directly from the backend.
+   *
+   * We use customer, loan, transaction and SMS activity
+   * to create a simple platform-usage indicator.
+   */
+
+  const customerScore =
+    Math.min(Number(item.customerCount || 0) / 5, 25);
+
+  const loanScore =
+    Math.min(Number(item.loanCount || 0) / 4, 25);
+
+  const transactionScore =
+    Math.min(
+      Number(item.transactionCount || 0) / 30,
+      25
+    );
+
+  const smsScore =
+    Math.min(Number(item.smsActivity || 0) / 500, 25);
+
+  return Math.round(
+    customerScore +
+      loanScore +
+      transactionScore +
+      smsScore
+  );
+};
+
+/* =========================================================
+   MONTHLY CUSTOMER DATA
+========================================================= */
 
 const customerData = [
   { month: 'Mar', value: 7200 },
@@ -53,6 +68,10 @@ const customerData = [
   { month: 'Aug', value: 12450 },
 ];
 
+/* =========================================================
+   MONTHLY LOAN DATA
+========================================================= */
+
 const loanData = [
   { month: 'Mar', value: 5200 },
   { month: 'Apr', value: 5800 },
@@ -61,6 +80,10 @@ const loanData = [
   { month: 'Jul', value: 7600 },
   { month: 'Aug', value: 8320 },
 ];
+
+/* =========================================================
+   MONTHLY SMS DATA
+========================================================= */
 
 const smsData = [
   { month: 'Mar', value: 48000 },
@@ -71,89 +94,43 @@ const smsData = [
   { month: 'Aug', value: 85420 },
 ];
 
-const subscriptionData = [
-  {
-    name: 'Basic',
-    value: 32,
-    count: 40,
-    color: 'blue',
-  },
-  {
-    name: 'Standard',
-    value: 45,
-    count: 56,
-    color: 'purple',
-  },
-  {
-    name: 'Premium',
-    value: 23,
-    count: 29,
-    color: 'orange',
-  },
-];
-
-const financerActivity = [
-  {
-    financer: 'Patel Finance Services',
-    customers: 250,
-    loans: 180,
-    sms: 1240,
-    activity: 94,
-  },
-  {
-    financer: 'Singh Credit Solutions',
-    customers: 145,
-    loans: 112,
-    sms: 890,
-    activity: 91,
-  },
-  {
-    financer: 'Jain Money Solutions',
-    customers: 110,
-    loans: 88,
-    sms: 620,
-    activity: 87,
-  },
-  {
-    financer: 'Khan Financial',
-    customers: 78,
-    loans: 55,
-    sms: 450,
-    activity: 82,
-  },
-  {
-    financer: 'Sharma Money Lenders',
-    customers: 89,
-    loans: 65,
-    sms: 320,
-    activity: 79,
-  },
-  {
-    financer: 'Reddy Finance Corp',
-    customers: 42,
-    loans: 30,
-    sms: 85,
-    activity: 64,
-  },
-];
+/* =========================================================
+   LINE CHART POINTS
+========================================================= */
 
 function getLinePoints(data, maxValue) {
   const width = 100;
   const height = 100;
+
+  if (!data.length) {
+    return '';
+  }
+
+  if (data.length === 1) {
+    return `0,${height / 2}`;
+  }
 
   return data
     .map((item, index) => {
       const x =
         (index / (data.length - 1)) * width;
 
+      const safeMax =
+        maxValue > 0 ? maxValue : 1;
+
       const y =
         height -
-        (item.value / maxValue) * height;
+        (Number(item.value || 0) / safeMax) *
+          height;
 
       return `${x},${y}`;
     })
     .join(' ');
 }
+
+/* =========================================================
+   ANALYTICS LINE CHART
+========================================================= */
 
 function AnalyticsLineChart({
   data,
@@ -169,34 +146,39 @@ function AnalyticsLineChart({
     <div className="analytics-line-chart">
 
       <div className="analytics-y-axis">
+
         <span>
           {maxValue.toLocaleString('en-IN')}
         </span>
 
         <span>
-          {Math.round(maxValue * 0.75).toLocaleString(
-            'en-IN'
-          )}
+          {Math.round(
+            maxValue * 0.75
+          ).toLocaleString('en-IN')}
         </span>
 
         <span>
-          {Math.round(maxValue * 0.5).toLocaleString(
-            'en-IN'
-          )}
+          {Math.round(
+            maxValue * 0.5
+          ).toLocaleString('en-IN')}
         </span>
 
         <span>
-          {Math.round(maxValue * 0.25).toLocaleString(
-            'en-IN'
-          )}
+          {Math.round(
+            maxValue * 0.25
+          ).toLocaleString('en-IN')}
         </span>
 
-        <span>0</span>
+        <span>
+          0
+        </span>
+
       </div>
 
       <div className="analytics-chart-area">
 
         <div className="analytics-grid-lines">
+          <span />
           <span />
           <span />
           <span />
@@ -218,11 +200,13 @@ function AnalyticsLineChart({
         </svg>
 
         <div className="analytics-months">
+
           {data.map((item, index) => (
             <span key={index}>
               {item.month}
             </span>
           ))}
+
         </div>
 
       </div>
@@ -231,8 +215,242 @@ function AnalyticsLineChart({
   );
 }
 
+/* =========================================================
+   KPI CARD
+========================================================= */
+
+function UsageStatCard({
+  title,
+  value,
+  change,
+  description,
+  color,
+  icon: Icon,
+}) {
+  return (
+    <div
+      className={`usage-stat-card ${color}`}
+    >
+
+      <div className="usage-stat-content">
+
+        <span className="usage-stat-title">
+          {title}
+        </span>
+
+        <strong className="usage-stat-value">
+          {value}
+        </strong>
+
+        <span className="usage-stat-description">
+          <b>{change}</b>{' '}
+          {description}
+        </span>
+
+      </div>
+
+      <div className="usage-stat-icon">
+
+        <Icon
+          size={18}
+          strokeWidth={1.8}
+        />
+
+      </div>
+
+    </div>
+  );
+}
+
+/* =========================================================
+   FINANCER STATUS
+========================================================= */
+
+function getStatusClass(status) {
+  switch (status) {
+    case 'Active':
+      return 'active';
+
+    case 'Inactive':
+      return 'inactive';
+
+    case 'Suspended':
+      return 'suspended';
+
+    default:
+      return 'pending';
+  }
+}
+
+/* =========================================================
+   SERVICE CHARGE STATUS
+========================================================= */
+
+function getServiceChargeClass(status) {
+  switch (status) {
+    case 'Paid':
+      return 'paid';
+
+    case 'Pending':
+      return 'pending';
+
+    case 'Overdue':
+      return 'overdue';
+
+    case 'Partially Paid':
+      return 'partial';
+
+    default:
+      return 'pending';
+  }
+}
+
+/* =========================================================
+   ADMIN USAGE ANALYTICS
+========================================================= */
+
 export default function AdminUsageAnalytics() {
-  const [period, setPeriod] = useState('This Month');
+  const [period, setPeriod] =
+    useState('This Month');
+
+  const [search, setSearch] =
+    useState('');
+
+  const [statusFilter, setStatusFilter] =
+    useState('All');
+
+  const [
+    serviceChargeFilter,
+    setServiceChargeFilter,
+  ] = useState('All');
+
+  /* =======================================================
+     SUMMARY STATISTICS
+  ======================================================= */
+
+  const summary = useMemo(() => {
+    const totalFinancers =
+      financerUsageData.length;
+
+    const activeFinancers =
+      financerUsageData.filter(
+        (item) =>
+          item.status === 'Active'
+      ).length;
+
+    const inactiveFinancers =
+      financerUsageData.filter(
+        (item) =>
+          item.status === 'Inactive'
+      ).length;
+
+    const suspendedFinancers =
+      financerUsageData.filter(
+        (item) =>
+          item.status === 'Suspended'
+      ).length;
+
+    const totalCustomers =
+      financerUsageData.reduce(
+        (total, item) =>
+          total +
+          Number(
+            item.customerCount || 0
+          ),
+        0
+      );
+
+    const totalLoans =
+      financerUsageData.reduce(
+        (total, item) =>
+          total +
+          Number(
+            item.loanCount || 0
+          ),
+        0
+      );
+
+    const totalTransactions =
+      financerUsageData.reduce(
+        (total, item) =>
+          total +
+          Number(
+            item.transactionCount || 0
+          ),
+        0
+      );
+
+    const totalSms =
+      financerUsageData.reduce(
+        (total, item) =>
+          total +
+          Number(
+            item.smsActivity || 0
+          ),
+        0
+      );
+
+    const financersWithServiceChargeIssues =
+      financerUsageData.filter(
+        (item) =>
+          item.serviceChargeStatus !==
+          'Paid'
+      ).length;
+
+    return {
+      totalFinancers,
+      activeFinancers,
+      inactiveFinancers,
+      suspendedFinancers,
+      totalCustomers,
+      totalLoans,
+      totalTransactions,
+      totalSms,
+      financersWithServiceChargeIssues,
+    };
+  }, []);
+
+  /* =======================================================
+     FILTERED FINANCER DATA
+  ======================================================= */
+
+  const filteredFinancers = useMemo(() => {
+    const searchValue =
+      search.trim().toLowerCase();
+
+    return financerUsageData.filter(
+      (item) => {
+
+        const matchesSearch =
+          !searchValue ||
+          item.financerName
+            ?.toLowerCase()
+            .includes(searchValue) ||
+          item.financerId
+            ?.toLowerCase()
+            .includes(searchValue);
+
+        const matchesStatus =
+          statusFilter === 'All' ||
+          item.status === statusFilter;
+
+        const matchesServiceCharge =
+          serviceChargeFilter === 'All' ||
+          item.serviceChargeStatus ===
+            serviceChargeFilter;
+
+        return (
+          matchesSearch &&
+          matchesStatus &&
+          matchesServiceCharge
+        );
+      }
+    );
+  }, [
+    search,
+    statusFilter,
+    serviceChargeFilter,
+  ]);
 
   return (
     <div className="admin-usage-page">
@@ -244,30 +462,50 @@ export default function AdminUsageAnalytics() {
       <div className="usage-page-header">
 
         <div>
-          <h1>Usage Analytics</h1>
+
+          <h1>
+            Financer Usage Monitoring
+          </h1>
 
           <p>
-            Monitor platform usage and performance
-            across all financers
+            Monitor financer activity, customers,
+            loans, transactions, SMS usage and
+            service-charge status.
           </p>
+
         </div>
 
         <select
           className="usage-period-select"
           value={period}
-          onChange={(e) =>
-            setPeriod(e.target.value)
+          onChange={(event) =>
+            setPeriod(event.target.value)
           }
         >
-          <option>This Month</option>
-          <option>Last Month</option>
-          <option>Last 3 Months</option>
-          <option>Last 6 Months</option>
-          <option>This Year</option>
+
+          <option>
+            This Month
+          </option>
+
+          <option>
+            Last Month
+          </option>
+
+          <option>
+            Last 3 Months
+          </option>
+
+          <option>
+            Last 6 Months
+          </option>
+
+          <option>
+            This Year
+          </option>
+
         </select>
 
       </div>
-
 
       {/* =====================================================
           KPI CARDS
@@ -275,45 +513,102 @@ export default function AdminUsageAnalytics() {
 
       <div className="usage-stats-grid">
 
-        {analyticsStats.map((stat, index) => {
-          const Icon = stat.icon;
+        <UsageStatCard
+          title="TOTAL FINANCERS"
+          value={formatNumber(
+            summary.totalFinancers
+          )}
+          change="+7"
+          description="this month"
+          color="cyan"
+          icon={Building2}
+        />
 
-          return (
-            <div
-              className={`usage-stat-card ${stat.color}`}
-              key={index}
-            >
+        <UsageStatCard
+          title="ACTIVE FINANCERS"
+          value={formatNumber(
+            summary.activeFinancers
+          )}
+          change={`${Math.round(
+            (summary.activeFinancers /
+              Math.max(
+                summary.totalFinancers,
+                1
+              )) *
+              100
+          )}%`}
+          description="active rate"
+          color="green"
+          icon={Activity}
+        />
 
-              <div className="usage-stat-content">
+        <UsageStatCard
+          title="TOTAL CUSTOMERS"
+          value={formatNumber(
+            summary.totalCustomers
+          )}
+          change="+550"
+          description="this month"
+          color="cyan"
+          icon={Users}
+        />
 
-                <span className="usage-stat-title">
-                  {stat.title}
-                </span>
+        <UsageStatCard
+          title="TOTAL LOANS"
+          value={formatNumber(
+            summary.totalLoans
+          )}
+          change="+"
+          description="across financers"
+          color="purple"
+          icon={CreditCard}
+        />
 
-                <strong className="usage-stat-value">
-                  {stat.value}
-                </strong>
+        <UsageStatCard
+          title="TRANSACTIONS"
+          value={formatNumber(
+            summary.totalTransactions
+          )}
+          change="+"
+          description="recorded activity"
+          color="green"
+          icon={Activity}
+        />
 
-                <span className="usage-stat-description">
-                  <b>{stat.change}</b>{' '}
-                  {stat.description}
-                </span>
+        <UsageStatCard
+          title="SMS ACTIVITY"
+          value={formatNumber(
+            summary.totalSms
+          )}
+          change="+12.4%"
+          description="this month"
+          color="pink"
+          icon={MessageSquare}
+        />
 
-              </div>
+        <UsageStatCard
+          title="INACTIVE FINANCERS"
+          value={formatNumber(
+            summary.inactiveFinancers
+          )}
+          change="Monitor"
+          description="inactive accounts"
+          color="orange"
+          icon={Building2}
+        />
 
-              <div className="usage-stat-icon">
-                <Icon
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              </div>
-
-            </div>
-          );
-        })}
+        <UsageStatCard
+          title="SERVICE CHARGE ISSUES"
+          value={formatNumber(
+            summary.financersWithServiceChargeIssues
+          )}
+          change="Attention"
+          description="pending / overdue"
+          color="purple"
+          icon={ReceiptIndianRupee}
+        />
 
       </div>
-
 
       {/* =====================================================
           FIRST CHART ROW
@@ -326,14 +621,23 @@ export default function AdminUsageAnalytics() {
         <section className="usage-chart-card">
 
           <div className="usage-chart-header">
+
             <div>
-              <h2>Customer Usage</h2>
-              <p>Total customers registered over time</p>
+
+              <h2>
+                Customer Usage
+              </h2>
+
+              <p>
+                Total customers registered over time
+              </p>
+
             </div>
 
             <span className="chart-indicator cyan">
               Customers
             </span>
+
           </div>
 
           <AnalyticsLineChart
@@ -344,20 +648,28 @@ export default function AdminUsageAnalytics() {
 
         </section>
 
-
         {/* LOAN ACTIVITY */}
 
         <section className="usage-chart-card">
 
           <div className="usage-chart-header">
+
             <div>
-              <h2>Loan Activity</h2>
-              <p>Active loans across the platform</p>
+
+              <h2>
+                Loan Activity
+              </h2>
+
+              <p>
+                Loans across the platform
+              </p>
+
             </div>
 
             <span className="chart-indicator purple">
               Loans
             </span>
+
           </div>
 
           <AnalyticsLineChart
@@ -370,7 +682,6 @@ export default function AdminUsageAnalytics() {
 
       </div>
 
-
       {/* =====================================================
           SECOND ROW
       ====================================================== */}
@@ -382,14 +693,23 @@ export default function AdminUsageAnalytics() {
         <section className="usage-chart-card sms-analytics-card">
 
           <div className="usage-chart-header">
+
             <div>
-              <h2>SMS Usage Trend</h2>
-              <p>Platform SMS consumption</p>
+
+              <h2>
+                SMS Usage Trend
+              </h2>
+
+              <p>
+                Platform SMS activity
+              </p>
+
             </div>
 
             <span className="chart-indicator pink">
               SMS
             </span>
+
           </div>
 
           <AnalyticsLineChart
@@ -400,14 +720,20 @@ export default function AdminUsageAnalytics() {
 
         </section>
 
-
-        {/* SUBSCRIPTIONS */}
+        {/* FINANCER STATUS */}
 
         <section className="subscription-distribution-card">
 
           <div className="usage-section-heading">
-            <h2>Subscription Distribution</h2>
-            <p>Current financer plans</p>
+
+            <h2>
+              Financer Status
+            </h2>
+
+            <p>
+              Current account status
+            </p>
+
           </div>
 
           <div className="subscription-content">
@@ -417,8 +743,15 @@ export default function AdminUsageAnalytics() {
               <div className="donut-ring">
 
                 <div className="donut-center">
-                  <strong>125</strong>
-                  <span>Financers</span>
+
+                  <strong>
+                    {summary.totalFinancers}
+                  </strong>
+
+                  <span>
+                    Financers
+                  </span>
+
                 </div>
 
               </div>
@@ -427,38 +760,104 @@ export default function AdminUsageAnalytics() {
 
             <div className="subscription-legend">
 
-              {subscriptionData.map(
-                (item, index) => (
-                  <div
-                    className="subscription-legend-item"
-                    key={index}
-                  >
+              <div className="subscription-legend-item">
 
-                    <div className="legend-name">
+                <div className="legend-name">
 
-                      <span
-                        className={`legend-dot ${item.color}`}
-                      />
+                  <span className="legend-dot green" />
 
-                      <span>
-                        {item.name}
-                      </span>
+                  <span>
+                    Active
+                  </span>
 
-                    </div>
+                </div>
 
-                    <div className="legend-value">
-                      <strong>
-                        {item.count}
-                      </strong>
+                <div className="legend-value">
 
-                      <span>
-                        {item.value}%
-                      </span>
-                    </div>
+                  <strong>
+                    {summary.activeFinancers}
+                  </strong>
 
-                  </div>
-                )
-              )}
+                  <span>
+                    {Math.round(
+                      (summary.activeFinancers /
+                        Math.max(
+                          summary.totalFinancers,
+                          1
+                        )) *
+                        100
+                    )}%
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div className="subscription-legend-item">
+
+                <div className="legend-name">
+
+                  <span className="legend-dot blue" />
+
+                  <span>
+                    Inactive
+                  </span>
+
+                </div>
+
+                <div className="legend-value">
+
+                  <strong>
+                    {summary.inactiveFinancers}
+                  </strong>
+
+                  <span>
+                    {Math.round(
+                      (summary.inactiveFinancers /
+                        Math.max(
+                          summary.totalFinancers,
+                          1
+                        )) *
+                        100
+                    )}%
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div className="subscription-legend-item">
+
+                <div className="legend-name">
+
+                  <span className="legend-dot orange" />
+
+                  <span>
+                    Suspended
+                  </span>
+
+                </div>
+
+                <div className="legend-value">
+
+                  <strong>
+                    {summary.suspendedFinancers}
+                  </strong>
+
+                  <span>
+                    {Math.round(
+                      (summary.suspendedFinancers /
+                        Math.max(
+                          summary.totalFinancers,
+                          1
+                        )) *
+                        100
+                    )}%
+                  </span>
+
+                </div>
+
+              </div>
 
             </div>
 
@@ -468,96 +867,473 @@ export default function AdminUsageAnalytics() {
 
       </div>
 
-
       {/* =====================================================
-          FINANCER ACTIVITY TABLE
+          FINANCER USAGE MONITORING
       ====================================================== */}
 
       <section className="financer-activity-card">
 
         <div className="financer-activity-header">
+
           <div>
-            <h2>Financer Activity</h2>
+
+            <h2>
+              Financer Usage Monitoring
+            </h2>
+
             <p>
-              Usage statistics by financer
+              Usage statistics and service-charge
+              status by financer
             </p>
+
           </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+
+            <span
+              style={{
+                fontSize: '13px',
+                color: '#8190A5',
+              }}
+            >
+              {filteredFinancers.length} financers
+            </span>
+
+          </div>
+
         </div>
+
+        {/* ===================================================
+            FILTERS
+        ==================================================== */}
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns:
+              'minmax(220px, 1fr) 180px 200px',
+            gap: '12px',
+            padding: '0 24px 20px',
+          }}
+        >
+
+          {/* SEARCH */}
+
+          <div
+            style={{
+              position: 'relative',
+            }}
+          >
+
+            <Search
+              size={16}
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform:
+                  'translateY(-50%)',
+                color: '#8190A5',
+                pointerEvents: 'none',
+              }}
+            />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) =>
+                setSearch(
+                  event.target.value
+                )
+              }
+              placeholder="Search financer..."
+              style={{
+                width: '100%',
+                height: '40px',
+                padding:
+                  '0 12px 0 36px',
+                border:
+                  '1px solid #E1E7EF',
+                borderRadius: '8px',
+                outline: 'none',
+                fontSize: '13px',
+                background: '#FFFFFF',
+              }}
+            />
+
+          </div>
+
+          {/* STATUS */}
+
+          <select
+            value={statusFilter}
+            onChange={(event) =>
+              setStatusFilter(
+                event.target.value
+              )
+            }
+            style={{
+              height: '40px',
+              padding: '0 12px',
+              border:
+                '1px solid #E1E7EF',
+              borderRadius: '8px',
+              outline: 'none',
+              fontSize: '13px',
+              background: '#FFFFFF',
+            }}
+          >
+
+            <option value="All">
+              All Statuses
+            </option>
+
+            <option value="Active">
+              Active
+            </option>
+
+            <option value="Inactive">
+              Inactive
+            </option>
+
+            <option value="Suspended">
+              Suspended
+            </option>
+
+          </select>
+
+          {/* SERVICE CHARGE STATUS */}
+
+          <select
+            value={serviceChargeFilter}
+            onChange={(event) =>
+              setServiceChargeFilter(
+                event.target.value
+              )
+            }
+            style={{
+              height: '40px',
+              padding: '0 12px',
+              border:
+                '1px solid #E1E7EF',
+              borderRadius: '8px',
+              outline: 'none',
+              fontSize: '13px',
+              background: '#FFFFFF',
+            }}
+          >
+
+            <option value="All">
+              All Service Charges
+            </option>
+
+            <option value="Paid">
+              Paid
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="Overdue">
+              Overdue
+            </option>
+
+            <option value="Partially Paid">
+              Partially Paid
+            </option>
+
+          </select>
+
+        </div>
+
+        {/* ===================================================
+            TABLE
+        ==================================================== */}
 
         <div className="financer-activity-wrapper">
 
           <table className="financer-activity-table">
 
             <thead>
+
               <tr>
-                <th>FINANCER</th>
-                <th>CUSTOMERS</th>
-                <th>ACTIVE LOANS</th>
-                <th>SMS USED</th>
-                <th>ACTIVITY</th>
-                <th>STATUS</th>
+
+                <th>
+                  FINANCER
+                </th>
+
+                <th>
+                  REGISTRATION DATE
+                </th>
+
+                <th>
+                  LAST LOGIN
+                </th>
+
+                <th>
+                  CUSTOMERS
+                </th>
+
+                <th>
+                  LOANS
+                </th>
+
+                <th>
+                  TRANSACTIONS
+                </th>
+
+                <th>
+                  SMS ACTIVITY
+                </th>
+
+                <th>
+                  ACTIVITY
+                </th>
+
+                <th>
+                  STATUS
+                </th>
+
+                <th>
+                  SERVICE CHARGE
+                </th>
+
               </tr>
+
             </thead>
 
             <tbody>
 
-              {financerActivity.map(
-                (item, index) => (
-                  <tr key={index}>
+              {filteredFinancers.length > 0 ? (
 
-                    <td className="activity-financer">
-                      {item.financer}
-                    </td>
+                filteredFinancers.map(
+                  (item) => {
 
-                    <td>
-                      {item.customers.toLocaleString(
-                        'en-IN'
-                      )}
-                    </td>
+                    const activity =
+                      getActivityPercentage(
+                        item
+                      );
 
-                    <td>
-                      {item.loans.toLocaleString(
-                        'en-IN'
-                      )}
-                    </td>
+                    return (
 
-                    <td>
-                      {item.sms.toLocaleString(
-                        'en-IN'
-                      )}
-                    </td>
+                      <tr
+                        key={
+                          item.financerId
+                        }
+                      >
 
-                    <td>
+                        {/* FINANCER */}
 
-                      <div className="activity-progress-cell">
-
-                        <div className="activity-progress">
+                        <td className="activity-financer">
 
                           <div
-                            className="activity-progress-fill"
                             style={{
-                              width: `${item.activity}%`,
+                              display:
+                                'flex',
+                              alignItems:
+                                'center',
+                              gap: '10px',
                             }}
-                          />
+                          >
 
-                        </div>
+                            <div
+                              style={{
+                                width: '34px',
+                                height: '34px',
+                                borderRadius:
+                                  '9px',
+                                display:
+                                  'flex',
+                                alignItems:
+                                  'center',
+                                justifyContent:
+                                  'center',
+                                background:
+                                  'rgba(16,174,239,0.10)',
+                                color:
+                                  '#10AEEF',
+                                flexShrink: 0,
+                              }}
+                            >
 
-                        <span>
-                          {item.activity}%
-                        </span>
+                              <Building2
+                                size={17}
+                              />
 
-                      </div>
+                            </div>
 
-                    </td>
+                            <div>
 
-                    <td>
-                      <span className="activity-status">
-                        Active
-                      </span>
-                    </td>
+                              <strong
+                                style={{
+                                  display:
+                                    'block',
+                                }}
+                              >
+                                {
+                                  item.financerName
+                                }
+                              </strong>
 
-                  </tr>
+                              <span
+                                style={{
+                                  display:
+                                    'block',
+                                  marginTop:
+                                    '2px',
+                                  fontSize:
+                                    '11px',
+                                  color:
+                                    '#8190A5',
+                                }}
+                              >
+                                {
+                                  item.financerId
+                                }
+                              </span>
+
+                            </div>
+
+                          </div>
+
+                        </td>
+
+                        {/* REGISTRATION DATE */}
+
+                        <td>
+                          {
+                            item.registrationDate
+                          }
+                        </td>
+
+                        {/* LAST LOGIN */}
+
+                        <td>
+                          {
+                            item.lastLogin
+                          }
+                        </td>
+
+                        {/* CUSTOMERS */}
+
+                        <td>
+                          {formatNumber(
+                            item.customerCount
+                          )}
+                        </td>
+
+                        {/* LOANS */}
+
+                        <td>
+                          {formatNumber(
+                            item.loanCount
+                          )}
+                        </td>
+
+                        {/* TRANSACTIONS */}
+
+                        <td>
+                          {formatNumber(
+                            item.transactionCount
+                          )}
+                        </td>
+
+                        {/* SMS */}
+
+                        <td>
+                          {formatNumber(
+                            item.smsActivity
+                          )}
+                        </td>
+
+                        {/* ACTIVITY */}
+
+                        <td>
+
+                          <div className="activity-progress-cell">
+
+                            <div className="activity-progress">
+
+                              <div
+                                className="activity-progress-fill"
+                                style={{
+                                  width: `${activity}%`,
+                                }}
+                              />
+
+                            </div>
+
+                            <span>
+                              {activity}%
+                            </span>
+
+                          </div>
+
+                        </td>
+
+                        {/* STATUS */}
+
+                        <td>
+
+                          <span
+                            className={`activity-status ${getStatusClass(
+                              item.status
+                            )}`}
+                          >
+                            {item.status}
+                          </span>
+
+                        </td>
+
+                        {/* SERVICE CHARGE STATUS */}
+
+                        <td>
+
+                          <span
+                            className={`activity-status ${getServiceChargeClass(
+                              item.serviceChargeStatus
+                            )}`}
+                          >
+
+                            {item.serviceChargeStatus}
+
+                          </span>
+
+                        </td>
+
+                      </tr>
+
+                    );
+                  }
                 )
+
+              ) : (
+
+                <tr>
+
+                  <td
+                    colSpan="10"
+                    style={{
+                      textAlign: 'center',
+                      padding: '40px 20px',
+                      color: '#8190A5',
+                    }}
+                  >
+
+                    No financers found
+                    matching the selected filters.
+
+                  </td>
+
+                </tr>
+
               )}
 
             </tbody>
@@ -567,6 +1343,107 @@ export default function AdminUsageAnalytics() {
         </div>
 
       </section>
+
+      {/* =====================================================
+          MONITORING NOTE
+      ====================================================== */}
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '20px',
+          marginTop: '18px',
+          padding: '16px 20px',
+          border:
+            '1px solid rgba(16,174,239,0.15)',
+          borderRadius: '10px',
+          background:
+            'rgba(16,174,239,0.04)',
+        }}
+      >
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+
+          <Activity
+            size={18}
+            color="#10AEEF"
+          />
+
+          <div>
+
+            <strong
+              style={{
+                display: 'block',
+                fontSize: '13px',
+              }}
+            >
+              Usage monitoring
+            </strong>
+
+            <span
+              style={{
+                display: 'block',
+                marginTop: '3px',
+                fontSize: '12px',
+                color: '#8190A5',
+              }}
+            >
+              Usage data includes customer,
+              loan, transaction and SMS activity
+              for each financer.
+            </span>
+
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          onClick={() =>
+            window.dispatchEvent(
+              new CustomEvent(
+                'inrfs-admin-action',
+                {
+                  detail: {
+                    key: 'financers',
+                    label:
+                      'Manage Financers',
+                  },
+                }
+              )
+            )
+          }
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            border: 'none',
+            background: 'transparent',
+            color: '#10AEEF',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+
+          Manage Financers
+
+          <ArrowUpRight
+            size={14}
+          />
+
+        </button>
+
+      </div>
 
     </div>
   );

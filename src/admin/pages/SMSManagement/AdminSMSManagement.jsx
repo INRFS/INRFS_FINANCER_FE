@@ -1,420 +1,1073 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  MessageSquare,
-  TrendingUp,
   CheckCircle2,
-  XCircle,
+  Clock3,
   Coins,
+  Eye,
+  MessageSquare,
+  Search,
+  TrendingUp,
+  X,
 } from 'lucide-react';
 
+import SearchInput from '../../../common/components/SearchInput';
+import StatusBadge from '../../../common/components/StatusBadge';
 import './AdminSMSManagement.css';
 
-const smsStats = [
-  {
-    label: 'SENT TODAY',
-    value: '2,841',
-    type: 'cyan',
-  },
-  {
-    label: 'SENT THIS MONTH',
-    value: '85,420',
-    type: 'purple',
-  },
-  {
-    label: 'DELIVERED',
-    value: '83,210',
-    type: 'green',
-  },
-  {
-    label: 'FAILED',
-    value: '2,210',
-    type: 'red',
-  },
-  {
-    label: 'CREDITS REMAINING',
-    value: '14,545',
-    type: 'orange',
-  },
-];
-
-const financerUsage = [
-  {
-    name: 'Patel',
-    used: 1240,
-    allocated: 2000,
-  },
-  {
-    name: 'Singh',
-    used: 890,
-    allocated: 2000,
-  },
-  {
-    name: 'Jain',
-    used: 620,
-    allocated: 2000,
-  },
-  {
-    name: 'Khan',
-    used: 450,
-    allocated: 2000,
-  },
-  {
-    name: 'Sharma',
-    used: 320,
-    allocated: 2000,
-  },
-  {
-    name: 'Reddy',
-    used: 85,
-    allocated: 500,
-  },
-  {
-    name: 'Verma',
-    used: 40,
-    allocated: 500,
-  },
-];
-
-const smsTableData = [
-  {
-    financer: 'Patel Finance Services',
-    allocated: 2000,
-    used: 1240,
-    remaining: 760,
-    usage: 62,
-    status: 'Normal',
-  },
-  {
-    financer: 'Singh Credit Solutions',
-    allocated: 2000,
-    used: 890,
-    remaining: 1110,
-    usage: 45,
-    status: 'Normal',
-  },
-  {
-    financer: 'Jain Money Solutions',
-    allocated: 2000,
-    used: 620,
-    remaining: 1380,
-    usage: 31,
-    status: 'Normal',
-  },
-  {
-    financer: 'Khan Financial',
-    allocated: 2000,
-    used: 450,
-    remaining: 1550,
-    usage: 23,
-    status: 'Normal',
-  },
-  {
-    financer: 'Sharma Money Lenders',
-    allocated: 2000,
-    used: 320,
-    remaining: 1680,
-    usage: 16,
-    status: 'Normal',
-  },
-  {
-    financer: 'Reddy Finance Corp',
-    allocated: 500,
-    used: 85,
-    remaining: 415,
-    usage: 17,
-    status: 'Normal',
-  },
-  {
-    financer: 'Verma Capital',
-    allocated: 500,
-    used: 40,
-    remaining: 460,
-    usage: 8,
-    status: 'Normal',
-  },
-];
-
-const maxUsage = 1800;
+import {
+  adminSMSStats,
+  adminSMSFinancerUsage,
+  adminSMSActivity,
+} from '../../data/mockAdminData';
 
 function formatNumber(number) {
-  return number.toLocaleString('en-IN');
+  return Number(number || 0).toLocaleString('en-IN');
+}
+
+function getUsageStatus(usage) {
+  if (usage >= 90) {
+    return 'Critical';
+  }
+
+  if (usage >= 75) {
+    return 'Warning';
+  }
+
+  return 'Normal';
+}
+
+function getUsageStatusClass(usage) {
+  if (usage >= 90) {
+    return 'inrfs-sms-status-critical';
+  }
+
+  if (usage >= 75) {
+    return 'inrfs-sms-status-warning';
+  }
+
+  return 'inrfs-sms-status-normal';
 }
 
 export default function AdminSMSManagement() {
-  return (
-    <div className="admin-sms-page">
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [selectedActivity, setSelectedActivity] = useState(null);
 
+  const stats = adminSMSStats || {};
+  const financerUsage = Array.isArray(adminSMSFinancerUsage)
+    ? adminSMSFinancerUsage
+    : [];
+
+  const smsActivity = Array.isArray(adminSMSActivity)
+    ? adminSMSActivity
+    : [];
+
+  const filteredFinancerUsage = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return financerUsage.filter((item) => {
+      const usageStatus = getUsageStatus(
+        Number(item.usage || 0)
+      );
+
+      const searchableText = [
+        item.financer,
+        item.financerId,
+        usageStatus,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      const matchesSearch =
+        !normalizedSearch ||
+        searchableText.includes(normalizedSearch);
+
+      const matchesStatus =
+        statusFilter === 'All' ||
+        usageStatus === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [financerUsage, search, statusFilter]);
+
+  const filteredActivity = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return smsActivity.filter((item) => {
+      const searchableText = [
+        item.activityId,
+        item.financer,
+        item.customer,
+        item.mobile,
+        item.messageType,
+        item.status,
+        item.reference,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return (
+        !normalizedSearch ||
+        searchableText.includes(normalizedSearch)
+      );
+    });
+  }, [smsActivity, search]);
+
+  const deliveryRate =
+    Number(stats.sentThisMonth || 0) > 0
+      ? (
+          (Number(stats.delivered || 0) /
+            Number(stats.sentThisMonth || 0)) *
+          100
+        ).toFixed(1)
+      : '0.0';
+
+  const platformCreditsUsed = Number(
+    stats.sentThisMonth || 0
+  );
+
+  const platformCreditLimit = Number(
+    stats.platformCreditLimit || 100000
+  );
+
+  const platformCreditsPercentage =
+    platformCreditLimit > 0
+      ? Math.min(
+          (platformCreditsUsed / platformCreditLimit) * 100,
+          100
+        )
+      : 0;
+
+  const maxUsage = Math.max(
+    1800,
+    ...financerUsage.map((item) =>
+      Number(item.allocated || 0)
+    )
+  );
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setStatusFilter('All');
+  };
+
+  return (
+    <div className="inrfs-sms-page">
       {/* =====================================================
           PAGE HEADER
       ====================================================== */}
 
-      <div className="sms-page-header">
-        <h1>SMS Management</h1>
-        <p>Monitor SMS usage across all financers</p>
-      </div>
+      <div className="inrfs-sms-header">
+        <div className="inrfs-sms-header-content">
+          <div>
+            <h1 className="inrfs-sms-title">
+              SMS Management
+            </h1>
 
+            <p className="inrfs-sms-subtitle">
+              Monitor platform SMS usage, delivery performance,
+              financer allocations and messaging activity.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* =====================================================
           KPI CARDS
       ====================================================== */}
 
-      <div className="sms-kpi-grid">
-        {smsStats.map((stat, index) => (
-          <div
-            className={`sms-kpi-card ${stat.type}`}
-            key={index}
-          >
-            <span className="sms-kpi-label">
-              {stat.label}
-            </span>
+      <section className="inrfs-sms-kpi-grid">
+        <div className="inrfs-sms-kpi-card">
+          <div className="inrfs-sms-kpi-icon inrfs-sms-kpi-icon--blue">
+            <MessageSquare size={20} />
+          </div>
 
-            <strong className="sms-kpi-value">
-              {stat.value}
+          <div className="inrfs-sms-kpi-content">
+            <span>Sent Today</span>
+            <strong>
+              {formatNumber(stats.sentToday)}
             </strong>
+            <small>Messages sent today</small>
           </div>
-        ))}
-      </div>
-
-
-      {/* =====================================================
-          CHART + QUICK STATS
-      ====================================================== */}
-
-      <div className="sms-middle-grid">
-
-        {/* SMS USAGE CHART */}
-
-        <section className="sms-chart-card">
-
-          <div className="sms-section-title">
-            SMS Usage by Financer
-          </div>
-
-          <div className="sms-chart-container">
-
-            <div className="sms-chart">
-
-              {financerUsage.map((item, index) => {
-                const usedWidth =
-                  (item.used / maxUsage) * 100;
-
-                const allocatedWidth =
-                  (item.allocated / maxUsage) * 100;
-
-                return (
-                  <div
-                    className="sms-chart-row"
-                    key={index}
-                  >
-
-                    <div className="sms-chart-name">
-                      {item.name}
-                    </div>
-
-                    <div className="sms-chart-bars">
-
-                      {/* allocated / background bar */}
-                      <div
-                        className="sms-chart-background"
-                        style={{
-                          width: `${allocatedWidth}%`,
-                        }}
-                      />
-
-                      {/* used bar */}
-                      <div
-                        className="sms-chart-used"
-                        style={{
-                          width: `${usedWidth}%`,
-                        }}
-                      />
-
-                    </div>
-
-                  </div>
-                );
-              })}
-
-              {/* X AXIS */}
-
-              <div className="sms-chart-axis">
-
-                <span>0</span>
-                <span>450</span>
-                <span>900</span>
-                <span>1350</span>
-                <span>1800</span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        {/* QUICK STATS */}
-
-        <section className="sms-quick-stats">
-
-          <div className="sms-section-title">
-            Quick Stats
-          </div>
-
-          <div className="quick-stat-box delivery">
-
-            <div className="quick-stat-label">
-              Delivery Rate
-            </div>
-
-            <div className="quick-stat-value">
-              97.4%
-            </div>
-
-            <div className="quick-stat-progress">
-              <div
-                className="quick-stat-progress-fill"
-                style={{ width: '97.4%' }}
-              />
-            </div>
-
-          </div>
-
-
-          <div className="quick-stat-box credits">
-
-            <div className="quick-stat-label">
-              Platform Credits Used
-            </div>
-
-            <div className="quick-stat-value">
-              85,420
-            </div>
-
-            <div className="quick-stat-total">
-              of 100,000 total
-            </div>
-
-            <div className="quick-stat-progress">
-              <div
-                className="quick-stat-progress-fill"
-                style={{ width: '85.42%' }}
-              />
-            </div>
-
-          </div>
-
-        </section>
-
-      </div>
-
-
-      {/* =====================================================
-          FINANCER SMS USAGE TABLE
-      ====================================================== */}
-
-      <section className="sms-table-card">
-
-        <div className="sms-table-header">
-          <h2>Financer SMS Usage</h2>
         </div>
 
-        <div className="sms-table-wrapper">
+        <div className="inrfs-sms-kpi-card">
+          <div className="inrfs-sms-kpi-icon inrfs-sms-kpi-icon--purple">
+            <TrendingUp size={20} />
+          </div>
 
-          <table className="sms-table">
-
-            <thead>
-              <tr>
-                <th>FINANCER</th>
-                <th>ALLOCATED</th>
-                <th>USED</th>
-                <th>REMAINING</th>
-                <th>USAGE %</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              {smsTableData.map((item, index) => (
-                <tr key={index}>
-
-                  {/* FINANCER */}
-
-                  <td className="sms-financer-name">
-                    {item.financer}
-                  </td>
-
-
-                  {/* ALLOCATED */}
-
-                  <td>
-                    {formatNumber(item.allocated)}
-                  </td>
-
-
-                  {/* USED */}
-
-                  <td className="sms-used-value">
-                    {formatNumber(item.used)}
-                  </td>
-
-
-                  {/* REMAINING */}
-
-                  <td>
-                    {formatNumber(item.remaining)}
-                  </td>
-
-
-                  {/* USAGE */}
-
-                  <td>
-
-                    <div className="usage-cell">
-
-                      <div className="usage-progress">
-
-                        <div
-                          className="usage-progress-fill"
-                          style={{
-                            width: `${item.usage}%`,
-                          }}
-                        />
-
-                      </div>
-
-                      <span className="usage-percentage">
-                        {item.usage}%
-                      </span>
-
-                    </div>
-
-                  </td>
-
-
-                  {/* STATUS */}
-
-                  <td>
-
-                    <span className="sms-status-normal">
-                      {item.status}
-                    </span>
-
-                  </td>
-
-                </tr>
-              ))}
-
-            </tbody>
-
-          </table>
-
+          <div className="inrfs-sms-kpi-content">
+            <span>Sent This Month</span>
+            <strong>
+              {formatNumber(stats.sentThisMonth)}
+            </strong>
+            <small>Monthly SMS volume</small>
+          </div>
         </div>
 
+        <div className="inrfs-sms-kpi-card">
+          <div className="inrfs-sms-kpi-icon inrfs-sms-kpi-icon--green">
+            <CheckCircle2 size={20} />
+          </div>
+
+          <div className="inrfs-sms-kpi-content">
+            <span>Delivered</span>
+            <strong>
+              {formatNumber(stats.delivered)}
+            </strong>
+            <small>{deliveryRate}% delivery rate</small>
+          </div>
+        </div>
+
+        <div className="inrfs-sms-kpi-card">
+          <div className="inrfs-sms-kpi-icon inrfs-sms-kpi-icon--red">
+            <X size={20} />
+          </div>
+
+          <div className="inrfs-sms-kpi-content">
+            <span>Failed</span>
+            <strong>
+              {formatNumber(stats.failed)}
+            </strong>
+            <small>Failed message attempts</small>
+          </div>
+        </div>
+
+        <div className="inrfs-sms-kpi-card">
+          <div className="inrfs-sms-kpi-icon inrfs-sms-kpi-icon--orange">
+            <Coins size={20} />
+          </div>
+
+          <div className="inrfs-sms-kpi-content">
+            <span>Credits Remaining</span>
+            <strong>
+              {formatNumber(stats.creditsRemaining)}
+            </strong>
+            <small>Available platform credits</small>
+          </div>
+        </div>
       </section>
 
+      {/* =====================================================
+          ANALYTICS SECTION
+      ====================================================== */}
+
+      <section className="inrfs-sms-analytics-grid">
+        {/* Usage Chart */}
+
+        <div className="inrfs-sms-chart-card">
+          <div className="inrfs-sms-section-header">
+            <div>
+              <h2>SMS Usage by Financer</h2>
+              <p>
+                Allocated versus consumed SMS credits
+              </p>
+            </div>
+          </div>
+
+          <div className="inrfs-sms-chart-content">
+            {financerUsage.length > 0 ? (
+              <>
+                <div className="inrfs-sms-chart-list">
+                  {financerUsage.map((item) => {
+                    const usedWidth =
+                      Math.min(
+                        (Number(item.used || 0) /
+                          maxUsage) *
+                          100,
+                        100
+                      );
+
+                    const allocatedWidth =
+                      Math.min(
+                        (Number(item.allocated || 0) /
+                          maxUsage) *
+                          100,
+                        100
+                      );
+
+                    return (
+                      <div
+                        className="inrfs-sms-chart-row"
+                        key={
+                          item.financerId ||
+                          item.financer
+                        }
+                      >
+                        <div className="inrfs-sms-chart-label">
+                          <span>
+                            {item.financer}
+                          </span>
+
+                          <strong>
+                            {formatNumber(item.used)}
+                          </strong>
+                        </div>
+
+                        <div className="inrfs-sms-chart-track">
+                          <div
+                            className="inrfs-sms-chart-allocated"
+                            style={{
+                              width: `${allocatedWidth}%`,
+                            }}
+                          />
+
+                          <div
+                            className="inrfs-sms-chart-used"
+                            style={{
+                              width: `${usedWidth}%`,
+                            }}
+                          />
+                        </div>
+
+                        <div className="inrfs-sms-chart-meta">
+                          {Number(item.usage || 0)}%
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="inrfs-sms-chart-axis">
+                  <span>0</span>
+                  <span>
+                    {formatNumber(
+                      Math.round(maxUsage / 4)
+                    )}
+                  </span>
+                  <span>
+                    {formatNumber(
+                      Math.round(maxUsage / 2)
+                    )}
+                  </span>
+                  <span>
+                    {formatNumber(
+                      Math.round((maxUsage * 3) / 4)
+                    )}
+                  </span>
+                  <span>
+                    {formatNumber(maxUsage)}
+                  </span>
+                </div>
+
+                <div className="inrfs-sms-chart-legend">
+                  <div>
+                    <span className="inrfs-sms-legend-box inrfs-sms-legend-box--allocated" />
+                    Allocated
+                  </div>
+
+                  <div>
+                    <span className="inrfs-sms-legend-box inrfs-sms-legend-box--used" />
+                    Used
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="inrfs-sms-chart-empty">
+                No financer usage data available.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+
+        <div className="inrfs-sms-quick-card">
+          <div className="inrfs-sms-section-header">
+            <div>
+              <h2>Quick Stats</h2>
+              <p>Platform-level SMS performance</p>
+            </div>
+          </div>
+
+          <div className="inrfs-sms-quick-stat">
+            <div className="inrfs-sms-quick-stat-top">
+              <span>Delivery Rate</span>
+
+              <strong>{deliveryRate}%</strong>
+            </div>
+
+            <div className="inrfs-sms-progress-track">
+              <div
+                className="inrfs-sms-progress-fill inrfs-sms-progress-fill--green"
+                style={{
+                  width: `${Math.min(
+                    Number(deliveryRate),
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+
+            <small>
+              {formatNumber(stats.delivered)} delivered
+              out of {formatNumber(stats.sentThisMonth)}
+              messages
+            </small>
+          </div>
+
+          <div className="inrfs-sms-quick-stat">
+            <div className="inrfs-sms-quick-stat-top">
+              <span>Platform Credits Used</span>
+
+              <strong>
+                {formatNumber(platformCreditsUsed)}
+              </strong>
+            </div>
+
+            <div className="inrfs-sms-progress-track">
+              <div
+                className="inrfs-sms-progress-fill inrfs-sms-progress-fill--purple"
+                style={{
+                  width: `${platformCreditsPercentage}%`,
+                }}
+              />
+            </div>
+
+            <small>
+              {platformCreditsPercentage.toFixed(1)}% of{' '}
+              {formatNumber(platformCreditLimit)} total
+              credits
+            </small>
+          </div>
+
+          <div className="inrfs-sms-quick-stat">
+            <div className="inrfs-sms-quick-stat-top">
+              <span>Failed Messages</span>
+
+              <strong>
+                {formatNumber(stats.failed)}
+              </strong>
+            </div>
+
+            <div className="inrfs-sms-progress-track">
+              <div
+                className="inrfs-sms-progress-fill inrfs-sms-progress-fill--red"
+                style={{
+                  width: `${Math.min(
+                    Number(stats.failed || 0) /
+                      Math.max(
+                        Number(stats.sentThisMonth || 1),
+                        1
+                      ) *
+                      100 *
+                      5,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+
+            <small>
+              Requires monitoring for delivery issues
+            </small>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================
+          FINANCER USAGE
+      ====================================================== */}
+
+      <section className="inrfs-sms-table-card">
+        <div className="inrfs-sms-table-header">
+          <div>
+            <h2>Financer SMS Usage</h2>
+
+            <p>
+              Monitor SMS allocation and credit consumption
+              by financer.
+            </p>
+          </div>
+        </div>
+
+        <div className="inrfs-sms-table-toolbar">
+          <div className="inrfs-sms-search-wrapper">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search financer or status..."
+            />
+          </div>
+
+          <div className="inrfs-sms-status-filter">
+            <label htmlFor="inrfs-sms-status-filter">
+              Usage Status
+            </label>
+
+            <select
+              id="inrfs-sms-status-filter"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value)
+              }
+            >
+              <option value="All">All Statuses</option>
+              <option value="Normal">Normal</option>
+              <option value="Warning">Warning</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="inrfs-sms-results-bar">
+          <span>
+            Showing{' '}
+            <strong>
+              {filteredFinancerUsage.length}
+            </strong>{' '}
+            financer
+            {filteredFinancerUsage.length !== 1
+              ? 's'
+              : ''}
+          </span>
+
+          {(search || statusFilter !== 'All') && (
+            <button
+              type="button"
+              className="inrfs-sms-clear-button"
+              onClick={handleClearFilters}
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+
+        {filteredFinancerUsage.length > 0 ? (
+          <>
+            {/* Desktop Table */}
+
+            <div className="inrfs-sms-table-wrapper">
+              <table className="inrfs-sms-table">
+                <thead>
+                  <tr>
+                    <th>Financer</th>
+                    <th>Allocated</th>
+                    <th>Used</th>
+                    <th>Remaining</th>
+                    <th>Usage</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredFinancerUsage.map((item) => {
+                    const usageStatus =
+                      getUsageStatus(
+                        Number(item.usage || 0)
+                      );
+
+                    return (
+                      <tr
+                        key={
+                          item.financerId ||
+                          item.financer
+                        }
+                      >
+                        <td>
+                          <div className="inrfs-sms-financer-cell">
+                            <div className="inrfs-sms-financer-avatar">
+                              {String(
+                                item.financer || 'F'
+                              )
+                                .charAt(0)
+                                .toUpperCase()}
+                            </div>
+
+                            <div>
+                              <strong>
+                                {item.financer}
+                              </strong>
+
+                              {item.financerId && (
+                                <span>
+                                  {item.financerId}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          {formatNumber(item.allocated)}
+                        </td>
+
+                        <td>
+                          <strong className="inrfs-sms-used-value">
+                            {formatNumber(item.used)}
+                          </strong>
+                        </td>
+
+                        <td>
+                          <strong className="inrfs-sms-remaining-value">
+                            {formatNumber(item.remaining)}
+                          </strong>
+                        </td>
+
+                        <td>
+                          <div className="inrfs-sms-usage-cell">
+                            <div className="inrfs-sms-usage-track">
+                              <div
+                                className="inrfs-sms-usage-fill"
+                                style={{
+                                  width: `${Math.min(
+                                    Number(item.usage || 0),
+                                    100
+                                  )}%`,
+                                }}
+                              />
+                            </div>
+
+                            <span>
+                              {item.usage}%
+                            </span>
+                          </div>
+                        </td>
+
+                        <td>
+                          <span
+                            className={`inrfs-sms-usage-status ${getUsageStatusClass(
+                              Number(item.usage || 0)
+                            )}`}
+                          >
+                            {usageStatus}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+
+            <div className="inrfs-sms-mobile-list">
+              {filteredFinancerUsage.map((item) => {
+                const usageStatus =
+                  getUsageStatus(
+                    Number(item.usage || 0)
+                  );
+
+                return (
+                  <article
+                    className="inrfs-sms-mobile-card"
+                    key={`mobile-${
+                      item.financerId ||
+                      item.financer
+                    }`}
+                  >
+                    <div className="inrfs-sms-mobile-card-header">
+                      <div className="inrfs-sms-mobile-financer">
+                        <div className="inrfs-sms-financer-avatar">
+                          {String(
+                            item.financer || 'F'
+                          )
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+
+                        <div>
+                          <strong>
+                            {item.financer}
+                          </strong>
+
+                          {item.financerId && (
+                            <span>
+                              {item.financerId}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <span
+                        className={`inrfs-sms-usage-status ${getUsageStatusClass(
+                          Number(item.usage || 0)
+                        )}`}
+                      >
+                        {usageStatus}
+                      </span>
+                    </div>
+
+                    <div className="inrfs-sms-mobile-card-body">
+                      <div className="inrfs-sms-mobile-row">
+                        <span>Allocated</span>
+                        <strong>
+                          {formatNumber(
+                            item.allocated
+                          )}
+                        </strong>
+                      </div>
+
+                      <div className="inrfs-sms-mobile-row">
+                        <span>Used</span>
+                        <strong className="inrfs-sms-mobile-used">
+                          {formatNumber(item.used)}
+                        </strong>
+                      </div>
+
+                      <div className="inrfs-sms-mobile-row">
+                        <span>Remaining</span>
+                        <strong>
+                          {formatNumber(
+                            item.remaining
+                          )}
+                        </strong>
+                      </div>
+
+                      <div className="inrfs-sms-mobile-usage">
+                        <div className="inrfs-sms-mobile-usage-header">
+                          <span>Usage</span>
+                          <strong>
+                            {item.usage}%
+                          </strong>
+                        </div>
+
+                        <div className="inrfs-sms-usage-track">
+                          <div
+                            className="inrfs-sms-usage-fill"
+                            style={{
+                              width: `${Math.min(
+                                Number(
+                                  item.usage || 0
+                                ),
+                                100
+                              )}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <div className="inrfs-sms-empty-state">
+            <div className="inrfs-sms-empty-icon">
+              <Search size={24} />
+            </div>
+
+            <h3>No financer usage found</h3>
+
+            <p>
+              No financer matches the current search or
+              usage-status filter.
+            </p>
+
+            <button
+              type="button"
+              className="inrfs-sms-empty-button"
+              onClick={handleClearFilters}
+            >
+              Clear filters
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* =====================================================
+          SMS ACTIVITY
+      ====================================================== */}
+
+      <section className="inrfs-sms-activity-card">
+        <div className="inrfs-sms-table-header">
+          <div>
+            <h2>SMS Activity</h2>
+
+            <p>
+              Recent SMS delivery and messaging activity.
+            </p>
+          </div>
+
+          <span className="inrfs-sms-activity-count">
+            {filteredActivity.length} records
+          </span>
+        </div>
+
+        {filteredActivity.length > 0 ? (
+          <>
+            <div className="inrfs-sms-activity-table-wrapper">
+              <table className="inrfs-sms-activity-table">
+                <thead>
+                  <tr>
+                    <th>Activity ID</th>
+                    <th>Financer</th>
+                    <th>Customer</th>
+                    <th>Message Type</th>
+                    <th>Date / Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredActivity.map((activity) => (
+                    <tr key={activity.activityId}>
+                      <td>
+                        <strong>
+                          {activity.activityId}
+                        </strong>
+                      </td>
+
+                      <td>{activity.financer}</td>
+
+                      <td>
+                        <div className="inrfs-sms-activity-customer">
+                          <strong>
+                            {activity.customer}
+                          </strong>
+
+                          <span>
+                            {activity.mobile}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>
+                        {activity.messageType}
+                      </td>
+
+                      <td>
+                        <div className="inrfs-sms-activity-date">
+                          <Clock3 size={14} />
+                          {activity.dateTime}
+                        </div>
+                      </td>
+
+                      <td>
+                        <StatusBadge
+                          status={activity.status}
+                        />
+                      </td>
+
+                      <td>
+                        <button
+                          type="button"
+                          className="inrfs-sms-activity-view"
+                          onClick={() =>
+                            setSelectedActivity(
+                              activity
+                            )
+                          }
+                        >
+                          <Eye size={15} />
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="inrfs-sms-activity-mobile-list">
+              {filteredActivity.map((activity) => (
+                <article
+                  className="inrfs-sms-activity-mobile-card"
+                  key={`mobile-${activity.activityId}`}
+                >
+                  <div className="inrfs-sms-activity-mobile-header">
+                    <div>
+                      <span>Activity ID</span>
+
+                      <strong>
+                        {activity.activityId}
+                      </strong>
+                    </div>
+
+                    <StatusBadge
+                      status={activity.status}
+                    />
+                  </div>
+
+                  <div className="inrfs-sms-activity-mobile-body">
+                    <div>
+                      <span>Financer</span>
+                      <strong>
+                        {activity.financer}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Customer</span>
+                      <strong>
+                        {activity.customer}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Message</span>
+                      <strong>
+                        {activity.messageType}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Date / Time</span>
+                      <strong>
+                        {activity.dateTime}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="inrfs-sms-activity-mobile-view"
+                    onClick={() =>
+                      setSelectedActivity(activity)
+                    }
+                  >
+                    <Eye size={15} />
+                    View Activity
+                  </button>
+                </article>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="inrfs-sms-empty-state">
+            <div className="inrfs-sms-empty-icon">
+              <MessageSquare size={24} />
+            </div>
+
+            <h3>No SMS activity found</h3>
+
+            <p>
+              No SMS activity matches the current search.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* =====================================================
+          SMS ACTIVITY DETAILS
+      ====================================================== */}
+
+      {selectedActivity && (
+        <div
+          className="inrfs-sms-modal-backdrop"
+          onMouseDown={() =>
+            setSelectedActivity(null)
+          }
+        >
+          <div
+            className="inrfs-sms-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="inrfs-sms-modal-title"
+            onMouseDown={(event) =>
+              event.stopPropagation()
+            }
+          >
+            <div className="inrfs-sms-modal-header">
+              <div className="inrfs-sms-modal-title-area">
+                <div className="inrfs-sms-modal-icon">
+                  <MessageSquare size={19} />
+                </div>
+
+                <div>
+                  <h2 id="inrfs-sms-modal-title">
+                    SMS Activity
+                  </h2>
+
+                  <span>
+                    {selectedActivity.activityId}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="inrfs-sms-modal-close"
+                onClick={() =>
+                  setSelectedActivity(null)
+                }
+                aria-label="Close SMS activity"
+              >
+                <X size={19} />
+              </button>
+            </div>
+
+            <div className="inrfs-sms-modal-status">
+              <StatusBadge
+                status={selectedActivity.status}
+              />
+            </div>
+
+            <div className="inrfs-sms-modal-section">
+              <h3>Activity Information</h3>
+
+              <div className="inrfs-sms-modal-detail-grid">
+                <div>
+                  <span>Financer</span>
+                  <strong>
+                    {selectedActivity.financer}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Customer</span>
+                  <strong>
+                    {selectedActivity.customer}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Mobile Number</span>
+                  <strong>
+                    {selectedActivity.mobile}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Message Type</span>
+                  <strong>
+                    {selectedActivity.messageType}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Date / Time</span>
+                  <strong>
+                    {selectedActivity.dateTime}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Reference</span>
+                  <strong>
+                    {selectedActivity.reference || '—'}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="inrfs-sms-modal-section">
+              <h3>Message</h3>
+
+              <div className="inrfs-sms-message-preview">
+                {selectedActivity.message ||
+                  'Message content is not available in mock data.'}
+              </div>
+            </div>
+
+            <div className="inrfs-sms-modal-footer">
+              <button
+                type="button"
+                className="inrfs-sms-modal-done"
+                onClick={() =>
+                  setSelectedActivity(null)
+                }
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

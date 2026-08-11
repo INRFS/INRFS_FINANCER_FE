@@ -851,3 +851,162 @@
   }
 
 }
+
+/* ============================================================
+   ADMIN SIDEBAR — WHITE THEME OVERRIDE
+   Paste at the VERY BOTTOM of AdminSidebar.css
+============================================================ */
+
+.admin-sidebar {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
+}
+
+/* Brand */
+.admin-sidebar-brand {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.admin-sidebar-brand-name {
+  color: #111827 !important;
+}
+
+.admin-sidebar-brand-subtitle {
+  color: #64748b !important;
+}
+
+/* Admin badge */
+.admin-sidebar-role {
+  background: rgba(125, 31, 232, 0.08) !important;
+  color: #7d1fe8 !important;
+}
+
+/* Navigation */
+.admin-sidebar-nav-item {
+  color: #475569 !important;
+  background: transparent !important;
+}
+
+.admin-sidebar-nav-icon {
+  color: #64748b !important;
+}
+
+/* Navigation hover */
+.admin-sidebar-nav-item:hover {
+  color: #111827 !important;
+  background: #f5f7fa !important;
+  border-left-color: #7d1fe8 !important;
+}
+
+.admin-sidebar-nav-item:hover .admin-sidebar-nav-icon {
+  color: #111827 !important;
+}
+
+/* Active navigation item */
+.admin-sidebar-nav-item.active {
+  color: #7d1fe8 !important;
+  background: rgba(125, 31, 232, 0.08) !important;
+  border-left-color: #7d1fe8 !important;
+}
+
+.admin-sidebar-nav-item.active .admin-sidebar-nav-icon {
+  color: #7d1fe8 !important;
+}
+
+/* Scrollbar */
+.admin-sidebar-nav {
+  scrollbar-color: #cbd5e1 transparent !important;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+}
+
+/* Bottom admin section */
+.admin-sidebar-bottom {
+  background: #f8fafc !important;
+  border-top: 1px solid #e5e7eb !important;
+}
+
+/* Admin user card */
+.admin-sidebar-user-card {
+  background: #f1f5f9 !important;
+}
+
+.admin-sidebar-user-name {
+  color: #111827 !important;
+}
+
+.admin-sidebar-user-role {
+  color: #64748b !important;
+}
+
+/* Keep avatar purple */
+.admin-sidebar-user-avatar {
+  background: linear-gradient(
+    135deg,
+    #7d1fe8,
+    #a855f7
+  ) !important;
+
+  color: #ffffff !important;
+}
+
+/* Force white even when system is in dark mode */
+@media (prefers-color-scheme: dark) {
+  .admin-sidebar {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  .admin-sidebar-brand-name {
+    color: #111827 !important;
+  }
+
+  .admin-sidebar-brand-subtitle {
+    color: #64748b !important;
+  }
+
+  .admin-sidebar-nav-item {
+    color: #475569 !important;
+  }
+
+  .admin-sidebar-nav-icon {
+    color: #64748b !important;
+  }
+
+  .admin-sidebar-user-name {
+    color: #111827 !important;
+  }
+
+  .admin-sidebar-user-role {
+    color: #64748b !important;
+  }
+}
+
+/* ============================================================
+   SIDEBAR LAYERING FIX
+============================================================ */
+
+/* Sidebar must always appear above the overlay */
+.admin-sidebar {
+  z-index: 1200 !important;
+}
+
+/* Overlay stays behind the sidebar */
+.admin-sidebar-overlay {
+  z-index: 1100 !important;
+}
+
+/* Make sure the overlay does not affect the sidebar */
+@media (max-width: 992px) {
+  .admin-sidebar {
+    z-index: 1200 !important;
+  }
+
+  .admin-sidebar-overlay {
+    z-index: 1100 !important;
+  }
+}

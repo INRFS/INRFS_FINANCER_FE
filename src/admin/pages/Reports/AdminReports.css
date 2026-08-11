@@ -1,842 +1,1058 @@
 /* =========================================================
-   ADMIN REPORTS PAGE
-   ========================================================= */
+   INRFS ADMIN REPORTS
+   Completely isolated page styles
+========================================================= */
 
-.admin-reports {
+.inrfs-reports-page {
   width: 100%;
   min-height: 100%;
-  padding: 28px 32px 40px;
+  padding: 24px;
   box-sizing: border-box;
-  background: #f7f9fc;
-  color: #071d41;
+  background: #f8fafc;
 }
 
-
 /* =========================================================
-   PAGE HEADER
-   ========================================================= */
+   HEADER
+========================================================= */
 
-.admin-reports-header {
-  width: 100%;
+.inrfs-reports-header {
+  margin-bottom: 22px;
+}
+
+.inrfs-reports-header-content {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 28px;
 }
 
-.admin-reports-header > div {
-  min-width: 0;
+.inrfs-reports-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.admin-reports-header h1 {
+.inrfs-reports-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 39px;
+  height: 39px;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 10px;
+}
+
+.inrfs-reports-title {
   margin: 0;
-  font-size: 26px;
-  line-height: 1.2;
+  color: #111827;
+  font-size: 28px;
+  line-height: 1.25;
   font-weight: 700;
-  color: #071d41;
+  letter-spacing: -0.02em;
 }
 
-.admin-reports-header p {
-  margin: 6px 0 0;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #60789b;
+.inrfs-reports-subtitle {
+  margin: 7px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
-
-/* =========================================================
-   EXPORT ALL BUTTON
-   ========================================================= */
-
-.admin-reports-export-all {
+.inrfs-reports-export-all {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-
-  min-width: 144px;
-  height: 46px;
-  padding: 0 18px;
-
-  border: 0;
-  border-radius: 8px;
-
-  background: #8500d6;
+  gap: 7px;
+  min-height: 39px;
+  padding: 0 14px;
   color: #ffffff;
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.admin-reports-export-all:hover {
-  background: #7200b8;
-  box-shadow: 0 5px 14px rgba(133, 0, 214, 0.2);
-}
-
-.admin-reports-export-all:active {
-  transform: translateY(1px);
-}
-
-.admin-reports-export-all svg {
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   TOP CHARTS
-   ========================================================= */
-
-.admin-reports-charts-grid {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 24px;
-
-  margin-bottom: 24px;
-}
-
-
-/* =========================================================
-   CHART CARD
-   ========================================================= */
-
-.admin-reports-chart-card {
-  min-width: 0;
-  min-height: 350px;
-
-  background: #ffffff;
-
-  border: 1px solid #dfe5ec;
-  border-radius: 14px;
-
-  overflow: hidden;
-
-  box-sizing: border-box;
-
-  transition:
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.admin-reports-chart-card:hover {
-  border-color: #d7dee7;
-  box-shadow: 0 5px 18px rgba(7, 29, 65, 0.05);
-}
-
-
-/* =========================================================
-   CHART HEADER
-   ========================================================= */
-
-.admin-reports-chart-header {
-  padding: 28px 28px 0;
-}
-
-.admin-reports-chart-header h3 {
-  margin: 0;
-
-  color: #071d41;
-
-  font-size: 17px;
-  line-height: 1.3;
-  font-weight: 700;
-}
-
-.admin-reports-chart-header p {
-  margin: 7px 0 0;
-
-  color: #647d9e;
-
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-
-/* =========================================================
-   CHART BODY
-   ========================================================= */
-
-.admin-reports-chart-body {
-  width: 100%;
-
-  height: 300px;
-
-  padding: 14px 20px 18px 12px;
-
-  box-sizing: border-box;
-}
-
-
-/* =========================================================
-   RECHARTS TEXT
-   ========================================================= */
-
-.admin-reports-chart-card .recharts-cartesian-axis-tick-value {
-  fill: #7890b0;
-  font-size: 12px;
-}
-
-.admin-reports-chart-card .recharts-cartesian-grid-horizontal line {
-  stroke: #dfe6ee;
-  stroke-dasharray: 4 4;
-}
-
-.admin-reports-chart-card .recharts-cartesian-grid-vertical line {
-  stroke: transparent;
-}
-
-.admin-reports-chart-card .recharts-tooltip-wrapper {
-  outline: none;
-}
-
-
-/* =========================================================
-   CUSTOM TOOLTIP
-   ========================================================= */
-
-.admin-reports-tooltip {
-  min-width: 145px;
-
-  padding: 11px 14px;
-
-  background: #ffffff;
-
-  border: 1px solid #dfe5ec;
-  border-radius: 8px;
-
-  box-shadow: 0 6px 20px rgba(7, 29, 65, 0.12);
-}
-
-.admin-reports-tooltip-title {
-  margin: 0 0 6px;
-
-  color: #071d41;
-
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.admin-reports-tooltip-value {
-  margin: 2px 0;
-
-  color: #7d1fe8;
-
   font-size: 12px;
   font-weight: 600;
-}
-
-
-/* =========================================================
-   REPORT CARDS GRID
-   ========================================================= */
-
-.admin-reports-grid {
-  width: 100%;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
-  gap: 16px;
-
-  box-sizing: border-box;
-}
-
-
-/* =========================================================
-   INDIVIDUAL REPORT CARD
-   ========================================================= */
-
-.admin-reports-card {
-  min-width: 0;
-  min-height: 170px;
-
-  padding: 22px;
-
-  display: flex;
-  flex-direction: column;
-
-  background: #ffffff;
-
-  border: 1px solid #dfe5ec;
-  border-radius: 13px;
-
-  box-sizing: border-box;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.admin-reports-card:hover {
-  transform: translateY(-2px);
-
-  border-color: #d5dce5;
-
-  box-shadow:
-    0 7px 20px rgba(7, 29, 65, 0.07);
-}
-
-
-/* =========================================================
-   REPORT ICON
-   ========================================================= */
-
-.admin-reports-card-icon {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  border-radius: 9px;
-
-  margin-bottom: 14px;
-}
-
-.admin-reports-card-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-
-/* =========================================================
-   ICON COLORS
-   ========================================================= */
-
-.report-icon-cyan {
-  background: #e2f7ff;
-  color: #08aeea;
-}
-
-.report-icon-purple {
-  background: #f1e4ff;
-  color: #8500d6;
-}
-
-.report-icon-green {
-  background: #effbdc;
-  color: #69c900;
-}
-
-.report-icon-pink {
-  background: #ffe6f4;
-  color: #ed1490;
-}
-
-.report-icon-orange {
-  background: #fff0e5;
-  color: #ff7600;
-}
-
-.report-icon-yellow {
-  background: #fff8df;
-  color: #ffb800;
-}
-
-.report-icon-gray {
-  background: #f0f3f7;
-  color: #8da0b8;
-}
-
-.report-icon-red {
-  background: #ffe8e8;
-  color: #ff4141;
-}
-
-
-/* =========================================================
-   REPORT CARD CONTENT
-   ========================================================= */
-
-.admin-reports-card-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.admin-reports-card-content h3 {
-  margin: 0;
-
-  color: #071d41;
-
-  font-size: 14px;
-  line-height: 1.4;
-  font-weight: 700;
-}
-
-.admin-reports-card-content p {
-  margin: 6px 0 0;
-
-  color: #7186a2;
-
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-
-/* =========================================================
-   REPORT CARD ACTIONS
-   ========================================================= */
-
-.admin-reports-card-actions {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  gap: 7px;
-
-  margin-top: 18px;
-}
-
-.admin-reports-view-btn,
-.admin-reports-export-btn {
-  height: 34px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 7px;
-
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
   cursor: pointer;
-
   transition:
     background 0.2s ease,
-    border-color 0.2s ease,
     transform 0.2s ease;
 }
 
-.admin-reports-view-btn {
-  background: #ffffff;
-
-  border: 1px solid #dce3eb;
-
-  color: #071d41;
+.inrfs-reports-export-all:hover {
+  background: #1d4ed8;
 }
 
-.admin-reports-view-btn:hover {
-  background: #f7f9fc;
-  border-color: #c7d1dd;
-}
-
-.admin-reports-export-btn {
-  background: #0eaeeb;
-
-  border: 1px solid #0eaeeb;
-
-  color: #ffffff;
-}
-
-.admin-reports-export-btn:hover {
-  background: #079bd4;
-  border-color: #079bd4;
-}
-
-.admin-reports-view-btn:active,
-.admin-reports-export-btn:active {
+.inrfs-reports-export-all:active {
   transform: translateY(1px);
 }
 
-
 /* =========================================================
-   REPORT VIEW MODAL
-   ========================================================= */
+   SUMMARY CARDS
+========================================================= */
 
-.admin-report-modal-overlay {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 24px;
-
-  background: rgba(7, 29, 65, 0.42);
-
-  box-sizing: border-box;
+.inrfs-reports-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
-.admin-report-modal {
-  width: min(900px, 100%);
-
-  max-height: min(700px, 90vh);
-
+.inrfs-reports-summary-card {
   display: flex;
-  flex-direction: column;
-
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
   background: #ffffff;
-
-  border-radius: 14px;
-
-  box-shadow:
-    0 20px 60px rgba(7, 29, 65, 0.2);
-
-  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
-
-/* =========================================================
-   MODAL HEADER
-   ========================================================= */
-
-.admin-report-modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
-  gap: 20px;
-
-  padding: 22px 24px;
-
-  border-bottom: 1px solid #e6ebf1;
-}
-
-.admin-report-modal-header h3 {
-  margin: 0;
-
-  color: #071d41;
-
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.admin-report-modal-header p {
-  margin: 5px 0 0;
-
-  color: #7186a2;
-
-  font-size: 13px;
-}
-
-.admin-report-modal-close {
-  width: 34px;
-  height: 34px;
-
+.inrfs-reports-summary-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
-
-  border: 0;
-  border-radius: 7px;
-
-  background: #f3f6f9;
-
-  color: #536b88;
-
-  font-size: 23px;
-  line-height: 1;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.admin-report-modal-close:hover {
-  background: #e9eef4;
-  color: #071d41;
-}
-
-
-/* =========================================================
-   MODAL BODY
-   ========================================================= */
-
-.admin-report-modal-body {
-  flex: 1;
-
-  min-height: 0;
-
-  padding: 20px 24px;
-
-  overflow: auto;
-}
-
-.admin-report-modal-table-wrapper {
-  width: 100%;
-
-  overflow-x: auto;
-
-  border: 1px solid #e2e7ed;
-
+  width: 39px;
+  height: 39px;
+  min-width: 39px;
   border-radius: 9px;
 }
 
-
-/* =========================================================
-   MODAL TABLE
-   ========================================================= */
-
-.admin-report-modal-table {
-  width: 100%;
-
-  border-collapse: collapse;
-
-  min-width: 500px;
+.inrfs-reports-summary-icon--blue {
+  color: #2563eb;
+  background: #eff6ff;
 }
 
-.admin-report-modal-table th {
-  padding: 12px 14px;
-
-  background: #f7f9fc;
-
-  border-bottom: 1px solid #dfe5ec;
-
-  color: #536b88;
-
-  font-size: 11px;
-  font-weight: 700;
-
-  text-align: left;
-
-  text-transform: uppercase;
+.inrfs-reports-summary-icon--purple {
+  color: #7c3aed;
+  background: #f3e8ff;
 }
 
-.admin-report-modal-table td {
-  padding: 12px 14px;
-
-  border-bottom: 1px solid #edf0f4;
-
-  color: #344b69;
-
-  font-size: 13px;
+.inrfs-reports-summary-icon--green {
+  color: #15803d;
+  background: #dcfce7;
 }
 
-.admin-report-modal-table tbody tr:last-child td {
-  border-bottom: 0;
+.inrfs-reports-summary-icon--orange {
+  color: #c2410c;
+  background: #ffedd5;
 }
 
-.admin-report-modal-table tbody tr:hover {
-  background: #fafbfd;
-}
-
-
-/* =========================================================
-   MODAL FOOTER
-   ========================================================= */
-
-.admin-report-modal-footer {
+.inrfs-reports-summary-card > div:last-child {
   display: flex;
-
-  justify-content: flex-end;
-
-  gap: 10px;
-
-  padding: 16px 24px;
-
-  border-top: 1px solid #e6ebf1;
-
-  background: #ffffff;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.admin-report-modal-cancel,
-.admin-report-modal-export {
-  height: 38px;
+.inrfs-reports-summary-card span {
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 500;
+}
 
-  display: inline-flex;
+.inrfs-reports-summary-card strong {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.inrfs-reports-filter-card {
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+}
+
+.inrfs-reports-filter-heading {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
 
-  gap: 7px;
+.inrfs-reports-filter-heading h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
 
-  padding: 0 16px;
+.inrfs-reports-filter-heading p {
+  margin: 4px 0 0;
+  color: #9ca3af;
+  font-size: 11px;
+}
 
-  border-radius: 7px;
-
-  font-family: inherit;
-
-  font-size: 13px;
+.inrfs-reports-result-count {
+  padding: 5px 9px;
+  color: #2563eb;
+  font-size: 10px;
   font-weight: 600;
+  background: #eff6ff;
+  border-radius: 999px;
+}
 
+.inrfs-reports-filter-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.inrfs-reports-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 190px;
+}
+
+.inrfs-reports-filter-field label {
+  color: #4b5563;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.inrfs-reports-filter-field select {
+  width: 100%;
+  height: 38px;
+  padding: 0 30px 0 10px;
+  color: #374151;
+  font-size: 11px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  outline: none;
+}
+
+.inrfs-reports-filter-field select:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.inrfs-reports-reset-button {
+  height: 38px;
+  padding: 0 12px;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 600;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
   cursor: pointer;
 }
 
-.admin-report-modal-cancel {
-  background: #ffffff;
-
-  border: 1px solid #dce3eb;
-
-  color: #344b69;
+.inrfs-reports-reset-button:hover {
+  background: #f9fafb;
 }
-
-.admin-report-modal-cancel:hover {
-  background: #f7f9fc;
-}
-
-.admin-report-modal-export {
-  background: #8500d6;
-
-  border: 1px solid #8500d6;
-
-  color: #ffffff;
-}
-
-.admin-report-modal-export:hover {
-  background: #7200b8;
-}
-
 
 /* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
+   CHART GRID
+========================================================= */
 
-@media (max-width: 1200px) {
+.inrfs-reports-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
 
-  .admin-reports {
-    padding: 24px;
+.inrfs-reports-chart-card {
+  min-width: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.inrfs-reports-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 17px 18px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-reports-chart-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.inrfs-reports-chart-header p {
+  margin: 4px 0 0;
+  color: #9ca3af;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.inrfs-reports-chart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+}
+
+.inrfs-reports-chart-icon--purple {
+  color: #7c3aed;
+  background: #f3e8ff;
+}
+
+.inrfs-reports-chart-icon--blue {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.inrfs-reports-chart-body {
+  width: 100%;
+  height: 300px;
+  padding: 10px 15px 12px;
+  box-sizing: border-box;
+}
+
+.inrfs-reports-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 18px 15px;
+}
+
+.inrfs-reports-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 10px;
+}
+
+.inrfs-reports-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.inrfs-reports-legend-dot--blue {
+  background: #2563eb;
+}
+
+.inrfs-reports-legend-dot--purple {
+  background: #7c3aed;
+}
+
+.inrfs-reports-legend-dot--green {
+  background: #16a34a;
+}
+
+/* =========================================================
+   REPORT GRID
+========================================================= */
+
+.inrfs-reports-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.inrfs-reports-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 190px;
+  padding: 17px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.inrfs-reports-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
+}
+
+.inrfs-reports-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.inrfs-reports-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 39px;
+  height: 39px;
+  min-width: 39px;
+  border-radius: 9px;
+}
+
+.inrfs-reports-card-icon--default {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.inrfs-reports-card-icon--cyan {
+  color: #0891b2;
+  background: #cffafe;
+}
+
+.inrfs-reports-card-icon--purple {
+  color: #7c3aed;
+  background: #f3e8ff;
+}
+
+.inrfs-reports-card-icon--green {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.inrfs-reports-card-icon--pink {
+  color: #db2777;
+  background: #fce7f3;
+}
+
+.inrfs-reports-card-icon--orange {
+  color: #ea580c;
+  background: #ffedd5;
+}
+
+.inrfs-reports-card-icon--yellow {
+  color: #ca8a04;
+  background: #fef9c3;
+}
+
+.inrfs-reports-card-icon--gray {
+  color: #4b5563;
+  background: #f3f4f6;
+}
+
+.inrfs-reports-card-icon--red {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+.inrfs-reports-category-badge {
+  padding: 5px 8px;
+  color: #6b7280;
+  font-size: 9px;
+  font-weight: 600;
+  background: #f3f4f6;
+  border-radius: 999px;
+}
+
+.inrfs-reports-card-content {
+  flex: 1;
+  padding-top: 18px;
+}
+
+.inrfs-reports-card-content h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.inrfs-reports-card-content p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.inrfs-reports-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #f0f1f3;
+}
+
+.inrfs-reports-card-footer > span {
+  color: #9ca3af;
+  font-size: 9px;
+}
+
+.inrfs-reports-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.inrfs-reports-view-button,
+.inrfs-reports-export-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 31px;
+  padding: 0 9px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.inrfs-reports-view-button {
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+}
+
+.inrfs-reports-export-button {
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+}
+
+.inrfs-reports-view-button:hover {
+  background: #dbeafe;
+}
+
+.inrfs-reports-export-button:hover {
+  background: #f9fafb;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.inrfs-reports-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  margin-bottom: 24px;
+  padding: 30px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+}
+
+.inrfs-reports-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 13px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  border-radius: 50%;
+}
+
+.inrfs-reports-empty h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 15px;
+}
+
+.inrfs-reports-empty p {
+  margin: 6px 0 14px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.inrfs-reports-empty button {
+  min-height: 34px;
+  padding: 0 12px;
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 600;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.inrfs-reports-modal-overlay {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.inrfs-reports-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 850px;
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.22);
+}
+
+.inrfs-reports-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 19px 21px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-reports-modal-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.inrfs-reports-modal-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 39px;
+  height: 39px;
+  min-width: 39px;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 9px;
+}
+
+.inrfs-reports-modal-heading h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 16px;
+}
+
+.inrfs-reports-modal-heading p {
+  margin: 4px 0 0;
+  color: #9ca3af;
+  font-size: 10px;
+}
+
+.inrfs-reports-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 33px;
+  min-width: 33px;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.inrfs-reports-modal-meta {
+  display: flex;
+  gap: 7px;
+  padding: 12px 21px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.inrfs-reports-modal-meta span {
+  padding: 5px 8px;
+  color: #2563eb;
+  font-size: 9px;
+  font-weight: 600;
+  background: #eff6ff;
+  border-radius: 999px;
+}
+
+.inrfs-reports-modal-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 0;
+}
+
+.inrfs-reports-modal-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.inrfs-reports-modal-table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+}
+
+.inrfs-reports-modal-table th {
+  padding: 12px 15px;
+  color: #6b7280;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.inrfs-reports-modal-table td {
+  padding: 12px 15px;
+  color: #4b5563;
+  font-size: 11px;
+  border-bottom: 1px solid #f0f1f3;
+  white-space: nowrap;
+}
+
+.inrfs-reports-modal-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.inrfs-reports-modal-mobile-list {
+  display: none;
+}
+
+.inrfs-reports-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 21px;
+  border-top: 1px solid #eef0f3;
+}
+
+.inrfs-reports-modal-cancel,
+.inrfs-reports-modal-export {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.inrfs-reports-modal-cancel {
+  color: #4b5563;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+}
+
+.inrfs-reports-modal-export {
+  color: #ffffff;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+/* =========================================================
+   TOOLTIP
+========================================================= */
+
+.inrfs-reports-tooltip {
+  min-width: 120px;
+  padding: 9px 11px;
+  background: #111827;
+  border-radius: 7px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.16);
+}
+
+.inrfs-reports-tooltip-title {
+  margin: 0 0 5px;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.inrfs-reports-tooltip-value {
+  margin: 2px 0;
+  color: #d1d5db;
+  font-size: 9px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1150px) {
+  .inrfs-reports-page {
+    padding: 20px;
   }
 
-  .admin-reports-grid {
+  .inrfs-reports-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .inrfs-reports-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-
 /* =========================================================
-   RESPONSIVE — SMALL TABLET
-   ========================================================= */
+   SMALL LAPTOP / TABLET
+========================================================= */
 
 @media (max-width: 900px) {
+  .inrfs-reports-header-content {
+    align-items: stretch;
+    flex-direction: column;
+  }
 
-  .admin-reports-charts-grid {
+  .inrfs-reports-export-all {
+    align-self: flex-start;
+  }
+
+  .inrfs-reports-charts-grid {
     grid-template-columns: 1fr;
   }
 
-  .admin-reports-chart-card {
-    min-height: 350px;
+  .inrfs-reports-filter-controls {
+    align-items: stretch;
+    flex-wrap: wrap;
   }
 
+  .inrfs-reports-filter-field {
+    flex: 1 1 200px;
+  }
+
+  .inrfs-reports-reset-button {
+    align-self: flex-end;
+  }
 }
 
-
 /* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
+   MOBILE
+========================================================= */
 
-@media (max-width: 640px) {
-
-  .admin-reports {
-    padding: 20px 16px 30px;
-  }
-
-
-  .admin-reports-header {
-    flex-direction: column;
-
-    align-items: stretch;
-
-    gap: 16px;
-
-    margin-bottom: 22px;
-  }
-
-
-  .admin-reports-header h1 {
-    font-size: 23px;
-  }
-
-
-  .admin-reports-export-all {
-    width: 100%;
-  }
-
-
-  .admin-reports-charts-grid {
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-
-  .admin-reports-chart-header {
-    padding: 22px 20px 0;
-  }
-
-
-  .admin-reports-chart-body {
-    padding: 10px 10px 16px 4px;
-  }
-
-
-  .admin-reports-grid {
-    grid-template-columns: 1fr;
-
-    gap: 14px;
-  }
-
-
-  .admin-reports-card {
-    min-height: 160px;
-
-    padding: 18px;
-  }
-
-
-  .admin-report-modal-overlay {
-    padding: 12px;
-  }
-
-
-  .admin-report-modal {
-    max-height: 94vh;
-  }
-
-
-  .admin-report-modal-header {
-    padding: 18px;
-  }
-
-
-  .admin-report-modal-body {
+@media (max-width: 768px) {
+  .inrfs-reports-page {
     padding: 16px;
   }
 
-
-  .admin-report-modal-footer {
-    padding: 14px 16px;
+  .inrfs-reports-title {
+    font-size: 24px;
   }
 
+  .inrfs-reports-subtitle {
+    font-size: 12px;
+  }
+
+  .inrfs-reports-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .inrfs-reports-summary-card {
+    padding: 13px;
+  }
+
+  .inrfs-reports-summary-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .inrfs-reports-summary-card strong {
+    font-size: 15px;
+  }
+
+  .inrfs-reports-filter-card {
+    padding: 15px;
+  }
+
+  .inrfs-reports-filter-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .inrfs-reports-filter-controls {
+    flex-direction: column;
+  }
+
+  .inrfs-reports-filter-field {
+    width: 100%;
+    flex: none;
+  }
+
+  .inrfs-reports-reset-button {
+    width: 100%;
+  }
+
+  .inrfs-reports-chart-body {
+    height: 260px;
+  }
+
+  .inrfs-reports-chart-legend {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .inrfs-reports-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .inrfs-reports-card {
+    min-height: 175px;
+  }
+
+  .inrfs-reports-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .inrfs-reports-modal {
+    max-width: none;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .inrfs-reports-modal-table-wrapper {
+    display: none;
+  }
+
+  .inrfs-reports-modal-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: #f9fafb;
+  }
+
+  .inrfs-reports-modal-mobile-card {
+    padding: 13px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+  }
+
+  .inrfs-reports-modal-mobile-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f1f3;
+  }
+
+  .inrfs-reports-modal-mobile-row:first-child {
+    padding-top: 0;
+  }
+
+  .inrfs-reports-modal-mobile-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .inrfs-reports-modal-mobile-row span {
+    color: #6b7280;
+    font-size: 10px;
+  }
+
+  .inrfs-reports-modal-mobile-row strong {
+    max-width: 60%;
+    color: #1f2937;
+    font-size: 10px;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
 }
 
-
 /* =========================================================
-   ACCESSIBILITY / FOCUS
-   ========================================================= */
+   SMALL MOBILE
+========================================================= */
 
-.admin-reports-export-all:focus-visible,
-.admin-reports-view-btn:focus-visible,
-.admin-reports-export-btn:focus-visible,
-.admin-report-modal-close:focus-visible,
-.admin-report-modal-cancel:focus-visible,
-.admin-report-modal-export:focus-visible {
-  outline: 2px solid #7d1fe8;
-  outline-offset: 2px;
+@media (max-width: 520px) {
+  .inrfs-reports-page {
+    padding: 12px;
+  }
+
+  .inrfs-reports-title {
+    font-size: 21px;
+  }
+
+  .inrfs-reports-title-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .inrfs-reports-export-all {
+    width: 100%;
+  }
+
+  .inrfs-reports-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inrfs-reports-summary-card {
+    padding: 12px;
+  }
+
+  .inrfs-reports-chart-header {
+    padding: 14px;
+  }
+
+  .inrfs-reports-chart-body {
+    height: 230px;
+    padding: 8px 8px 10px;
+  }
+
+  .inrfs-reports-chart-legend {
+    padding: 0 14px 13px;
+  }
+
+  .inrfs-reports-card {
+    padding: 14px;
+  }
+
+  .inrfs-reports-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .inrfs-reports-card-actions {
+    width: 100%;
+  }
+
+  .inrfs-reports-view-button,
+  .inrfs-reports-export-button {
+    flex: 1;
+  }
+
+  .inrfs-reports-modal-header {
+    padding: 16px;
+  }
+
+  .inrfs-reports-modal-meta {
+    padding: 10px 16px;
+  }
+
+  .inrfs-reports-modal-footer {
+    flex-direction: column-reverse;
+    padding: 13px 16px;
+  }
+
+  .inrfs-reports-modal-cancel,
+  .inrfs-reports-modal-export {
+    width: 100%;
+  }
 }
