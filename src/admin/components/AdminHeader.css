@@ -1,0 +1,100 @@
+.admin-header {
+  height: 70px;
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-header-menu-btn {
+  display: none;
+  color: var(--color-navy);
+  padding: 6px;
+}
+
+.admin-header-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(125, 31, 232, 0.08);
+  color: var(--color-purple);
+  padding: 6px 14px;
+  border-radius: var(--border-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-header-shield {
+  color: var(--color-purple);
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.admin-header-switch-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.admin-header-switch-link:hover {
+  color: var(--color-purple);
+}
+
+.admin-header-notif-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-navy);
+}
+
+.admin-header-notif-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-purple);
+  border-radius: 50%;
+}
+
+.admin-header-profile-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-purple);
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 992px) {
+  .admin-header-menu-btn {
+    display: flex;
+  }
+}

@@ -1,0 +1,2323 @@
+/* =========================================================
+   PAYMENTS + INTEREST SCHEDULE
+   Professional Finance Dashboard
+   ========================================================= */
+
+.fin-payment-page {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  padding: 20px 24px 30px;
+
+  color: #183454;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.fin-payment-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.fin-payment-header h1 {
+  margin: 0;
+
+  color: #092c55;
+
+  font-size: 26px;
+
+  font-weight: 750;
+
+  line-height: 1.15;
+}
+
+.fin-payment-header p {
+  margin: 5px 0 0;
+
+  color: #7286a0;
+
+  font-size: 13px;
+}
+
+.fin-payment-header-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+/* =========================================================
+   HEADER BUTTONS
+   ========================================================= */
+
+.fin-export-btn,
+.fin-record-payment-btn {
+  height: 40px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 16px;
+
+  border-radius: 8px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.fin-export-btn {
+  border: 1px solid #dce5ee;
+
+  background: #ffffff;
+
+  color: #284361;
+}
+
+.fin-export-btn:hover {
+  border-color: #a9dceb;
+
+  background: #f6fbfd;
+}
+
+.fin-record-payment-btn {
+  border: none;
+
+  background: #08a9dc;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 14px
+    rgba(8, 169, 220, 0.18);
+}
+
+.fin-record-payment-btn:hover {
+  background: #079acb;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.fin-payment-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-bottom: 15px;
+}
+
+.fin-payment-summary-card {
+  min-height: 78px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e0e7ee;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px
+    rgba(11, 43, 76, 0.025);
+}
+
+.fin-summary-icon {
+  width: 38px;
+  height: 38px;
+
+  min-width: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+}
+
+.fin-payment-summary-card.green
+.fin-summary-icon {
+  background: #ebf9dc;
+
+  color: #62a900;
+}
+
+.fin-payment-summary-card.blue
+.fin-summary-icon {
+  background: #e4f6fc;
+
+  color: #08a8d9;
+}
+
+.fin-payment-summary-card.amber
+.fin-summary-icon {
+  background: #fff6dd;
+
+  color: #c58b00;
+}
+
+.fin-payment-summary-card.red
+.fin-summary-icon {
+  background: #ffe9e9;
+
+  color: #f23b3b;
+}
+
+.fin-payment-summary-card span {
+  display: block;
+
+  color: #7589a2;
+
+  font-size: 10px;
+
+  font-weight: 650;
+}
+
+.fin-payment-summary-card strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #102f54;
+
+  font-size: 19px;
+
+  line-height: 1;
+
+  font-weight: 750;
+}
+
+.fin-payment-summary-card.red strong {
+  color: #e33338;
+}
+
+
+/* =========================================================
+   FILTER BAR
+   ========================================================= */
+
+.fin-payment-filter-bar {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 12px;
+}
+
+.fin-payment-search {
+  width: 260px;
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dbe4ed;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #7e91a9;
+}
+
+.fin-payment-search:focus-within {
+  border-color: #08a8d9;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(8, 168, 217, 0.07);
+}
+
+.fin-payment-search input {
+  width: 100%;
+
+  min-width: 0;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #334b67;
+
+  font-size: 10.5px;
+}
+
+.fin-payment-search input::placeholder {
+  color: #9ba9b9;
+}
+
+.fin-payment-search button {
+  width: 21px;
+  height: 21px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: #8495a8;
+
+  cursor: pointer;
+}
+
+.fin-payment-date-filter,
+.fin-payment-filter-select {
+  height: 36px;
+
+  box-sizing: border-box;
+
+  padding: 0 10px;
+
+  border: 1px solid #dbe4ed;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #4f6681;
+
+  font-size: 10px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.fin-payment-date-filter {
+  width: 132px;
+}
+
+.fin-payment-filter-select {
+  min-width: 118px;
+}
+
+.fin-payment-date-filter:focus,
+.fin-payment-filter-select:focus {
+  border-color: #08a8d9;
+}
+
+.fin-payment-sort-btn {
+  height: 36px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 0 11px;
+
+  border: 1px solid #dbe4ed;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #60758e;
+
+  font-size: 10px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.fin-payment-sort-btn:hover {
+  border-color: #8fd5e7;
+
+  color: #079ac9;
+}
+
+
+/* =========================================================
+   UNIFIED TABLE
+   ========================================================= */
+
+.fin-payment-table-card {
+  width: 100%;
+
+  min-width: 0;
+
+  border: 1px solid #dfe7ee;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 2px 10px
+    rgba(7, 42, 75, 0.025);
+}
+
+.fin-payment-table-top {
+  min-height: 54px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 9px 13px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e8edf2;
+}
+
+.fin-payment-table-top h2 {
+  margin: 0;
+
+  color: #173a60;
+
+  font-size: 14px;
+
+  font-weight: 750;
+}
+
+.fin-payment-table-top span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #8a9aac;
+
+  font-size: 9px;
+}
+
+.fin-record-count {
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  background: #f4f7fa;
+
+  color: #71849d;
+
+  font-size: 9px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.fin-payment-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+}
+
+.fin-payment-table {
+  width: 100%;
+
+  min-width: 980px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+}
+
+.fin-payment-table th {
+  height: 42px;
+
+  padding: 0 10px;
+
+  background: #f8fafc;
+
+  color: #758aa4;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.2px;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e1e8ef;
+}
+
+.fin-payment-table td {
+  height: 58px;
+
+  padding: 7px 10px;
+
+  box-sizing: border-box;
+
+  color: #435a74;
+
+  font-size: 10.5px;
+
+  border-bottom: 1px solid #edf1f5;
+
+  vertical-align: middle;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.fin-payment-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.fin-payment-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* COLUMN WIDTHS */
+
+.fin-payment-table th:nth-child(1) {
+  width: 11%;
+}
+
+.fin-payment-table th:nth-child(2) {
+  width: 15%;
+}
+
+.fin-payment-table th:nth-child(3) {
+  width: 13%;
+}
+
+.fin-payment-table th:nth-child(4) {
+  width: 10%;
+}
+
+.fin-payment-table th:nth-child(5) {
+  width: 12%;
+}
+
+.fin-payment-table th:nth-child(6) {
+  width: 12%;
+}
+
+.fin-payment-table th:nth-child(7) {
+  width: 11%;
+}
+
+.fin-payment-table th:nth-child(8) {
+  width: 9%;
+}
+
+.fin-payment-table th:nth-child(9) {
+  width: 7%;
+}
+
+
+/* =========================================================
+   TABLE CONTENT
+   ========================================================= */
+
+.fin-loan-link {
+  color: #08a6d7;
+
+  font-size: 10.5px;
+
+  font-weight: 750;
+}
+
+.fin-customer-name {
+  color: #1d3655;
+
+  font-size: 10.5px;
+
+  font-weight: 700;
+}
+
+.fin-amount {
+  color: #142f50;
+
+  font-size: 12px;
+
+  font-weight: 750;
+}
+
+.fin-interest-cell {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.fin-interest-cell span {
+  width: fit-content;
+
+  padding: 3px 6px;
+
+  border-radius: 5px;
+
+  background: #f4f7fa;
+
+  color: #536981;
+
+  font-size: 8.5px;
+}
+
+.fin-interest-cell strong {
+  color: #1e3856;
+
+  font-size: 9.5px;
+}
+
+.fin-date {
+  color: #435a74;
+
+  font-size: 10px;
+}
+
+.fin-method {
+  display: inline-flex;
+
+  align-items: center;
+
+  max-width: 100%;
+
+  padding: 5px 7px;
+
+  border-radius: 14px;
+
+  background: #f5f8fb;
+
+  color: #607792;
+
+  font-size: 8.5px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.fin-muted {
+  color: #a2afbd;
+}
+
+.fin-type-payment {
+  color: #089acb;
+
+  font-size: 9.5px;
+
+  font-weight: 650;
+}
+
+.fin-type-due {
+  color: #d28500;
+
+  font-size: 9.5px;
+
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.fin-payment-action-cell {
+  text-align: center;
+}
+
+.fin-small-record-btn {
+  height: 28px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 0 8px;
+
+  border: 1px solid #9edced;
+
+  border-radius: 6px;
+
+  background: #edfaff;
+
+  color: #079bc9;
+
+  font-size: 8.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.fin-small-record-btn:hover {
+  background: #dff7fd;
+}
+
+.fin-completed-mark {
+  width: 25px;
+  height: 25px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eaf9ee;
+
+  color: #24a557;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.fin-payment-empty {
+  height: 220px !important;
+
+  text-align: center;
+
+  color: #92a1b2 !important;
+}
+
+.fin-payment-empty svg {
+  display: block;
+
+  margin: 0 auto 8px;
+
+  color: #8eafc0;
+}
+
+.fin-payment-empty strong {
+  display: block;
+
+  color: #536981;
+
+  font-size: 12px;
+}
+
+.fin-payment-empty span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   MODAL OVERLAY
+   ========================================================= */
+
+.fin-payment-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(17, 38, 63, 0.46);
+
+  backdrop-filter: blur(4px);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.fin-payment-modal {
+  width: min(
+    650px,
+    calc(100vw - 30px)
+  );
+
+  max-height:
+    calc(100vh - 30px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e0e7ee;
+
+  box-shadow:
+    0 25px 70px
+    rgba(6, 31, 57, 0.25);
+
+  overflow: hidden;
+
+  animation:
+    finPaymentModalIn
+    0.18s ease-out;
+}
+
+
+@keyframes finPaymentModalIn {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(7px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.fin-payment-modal-header {
+  min-height: 62px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 18px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #edf1f5;
+}
+
+.fin-payment-modal-header h2 {
+  margin: 0;
+
+  color: #092d55;
+
+  font-size: 20px;
+
+  font-weight: 750;
+}
+
+.fin-payment-modal-header p {
+  margin: 3px 0 0;
+
+  color: #71859e;
+
+  font-size: 10px;
+}
+
+.fin-modal-close {
+  width: 31px;
+  height: 31px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #8296ad;
+
+  cursor: pointer;
+}
+
+.fin-modal-close:hover {
+  background: #f3f6f9;
+
+  color: #173957;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.fin-payment-form {
+  padding: 14px 18px 15px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+.fin-form-two {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.fin-form-field {
+  min-width: 0;
+
+  margin-bottom: 10px;
+}
+
+.fin-form-field label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #233f61;
+
+  font-size: 10px;
+
+  font-weight: 650;
+}
+
+.fin-form-field input,
+.fin-form-field select,
+.fin-form-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d9e2eb;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #29415f;
+
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 10.5px;
+}
+
+.fin-form-field input,
+.fin-form-field select {
+  height: 38px;
+
+  padding: 0 10px;
+}
+
+.fin-form-field textarea {
+  min-height: 58px;
+
+  padding: 9px 10px;
+
+  resize: none;
+}
+
+.fin-form-field input:focus,
+.fin-form-field select:focus,
+.fin-form-field textarea:focus {
+  border-color: #08a8d9;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(8, 168, 217, 0.07);
+}
+
+
+/* =========================================================
+   OPTION BUTTONS
+   ========================================================= */
+
+.fin-option-grid {
+  display: grid;
+
+  gap: 7px;
+}
+
+.fin-option-grid.three {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+.fin-option-grid button {
+  height: 34px;
+
+  padding: 0 7px;
+
+  border: 1px solid #d9e2eb;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #60758f;
+
+  font-size: 9.5px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.fin-option-grid button:hover {
+  background: #f5fbfd;
+
+  border-color: #94d9e9;
+}
+
+.fin-option-grid button.selected {
+  border: 1.5px solid #08a9dc;
+
+  background: #e8f8fd;
+
+  color: #049fd0;
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+   ========================================================= */
+
+.fin-payment-summary-box {
+  margin-top: 2px;
+
+  padding: 9px 11px;
+
+  border: 1px solid #dfe7ee;
+
+  border-radius: 9px;
+
+  background: #f8fafc;
+}
+
+.fin-payment-summary-box div {
+  min-height: 27px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.fin-payment-summary-box span {
+  color: #71859e;
+
+  font-size: 9.5px;
+}
+
+.fin-payment-summary-box strong {
+  color: #173552;
+
+  font-size: 11px;
+}
+
+.fin-payment-summary-box strong.received {
+  color: #69c900;
+}
+
+.fin-payment-summary-box .outstanding {
+  margin-top: 2px;
+
+  padding-top: 5px;
+
+  border-top: 1px solid #e0e6ec;
+}
+
+.fin-payment-summary-box .outstanding strong {
+  color: #f07800;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+   ========================================================= */
+
+.fin-modal-actions {
+  display: grid;
+
+  grid-template-columns:
+    0.7fr 1.3fr;
+
+  gap: 8px;
+
+  margin-top: 11px;
+}
+
+.fin-modal-cancel,
+.fin-modal-submit {
+  height: 38px;
+
+  border-radius: 7px;
+
+  font-size: 10.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.fin-modal-cancel {
+  border: 1px solid #d9e2eb;
+
+  background: #ffffff;
+
+  color: #263e5a;
+}
+
+.fin-modal-cancel:hover {
+  background: #f7f9fb;
+}
+
+.fin-modal-submit {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border: none;
+
+  background: #08a9dc;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 12px
+    rgba(8, 169, 220, 0.16);
+}
+
+.fin-modal-submit:hover {
+  background: #079acb;
+}
+
+
+/* =========================================================
+   LAPTOP
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .fin-payment-page {
+    padding: 17px 17px 25px;
+  }
+
+  .fin-payment-header h1 {
+    font-size: 23px;
+  }
+
+  .fin-payment-summary-card {
+    padding: 10px;
+  }
+
+  .fin-payment-summary-card strong {
+    font-size: 17px;
+  }
+
+  .fin-payment-search {
+    width: 220px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .fin-payment-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .fin-payment-header-actions {
+    width: 100%;
+  }
+
+  .fin-export-btn,
+  .fin-record-payment-btn {
+    flex: 1;
+  }
+
+  .fin-payment-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .fin-payment-filter-bar {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .fin-payment-search {
+    width: 100%;
+
+    grid-column: 1 / -1;
+  }
+
+  .fin-payment-date-filter,
+  .fin-payment-filter-select,
+  .fin-payment-sort-btn {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-payment-page {
+    padding: 11px 9px 20px;
+  }
+
+
+  /* HEADER */
+
+  .fin-payment-header h1 {
+    font-size: 20px;
+  }
+
+  .fin-payment-header p {
+    font-size: 10px;
+
+    line-height: 1.4;
+  }
+
+  .fin-payment-header-actions {
+    gap: 6px;
+  }
+
+  .fin-export-btn,
+  .fin-record-payment-btn {
+    height: 36px;
+
+    padding: 0 10px;
+
+    font-size: 9.5px;
+  }
+
+
+  /* SUMMARY */
+
+  .fin-payment-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+  }
+
+  .fin-payment-summary-card {
+    min-height: 62px;
+
+    padding: 8px;
+
+    gap: 7px;
+  }
+
+  .fin-summary-icon {
+    width: 29px;
+    height: 29px;
+
+    min-width: 29px;
+  }
+
+  .fin-payment-summary-card span {
+    font-size: 7.5px;
+  }
+
+  .fin-payment-summary-card strong {
+    margin-top: 3px;
+
+    font-size: 14px;
+  }
+
+
+  /* FILTERS */
+
+  .fin-payment-filter-bar {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 6px;
+  }
+
+  .fin-payment-search {
+    grid-column: 1 / -1;
+
+    height: 34px;
+  }
+
+  .fin-payment-date-filter,
+  .fin-payment-filter-select,
+  .fin-payment-sort-btn {
+    height: 34px;
+
+    min-width: 0;
+
+    font-size: 9px;
+  }
+
+
+  /* TABLE */
+
+  .fin-payment-table-card {
+    border-radius: 9px;
+  }
+
+  .fin-payment-table-top {
+    min-height: 48px;
+
+    padding: 8px 10px;
+  }
+
+  .fin-payment-table-top h2 {
+    font-size: 12px;
+  }
+
+  .fin-payment-table-top span {
+    font-size: 8px;
+  }
+
+  .fin-record-count {
+    font-size: 8px;
+  }
+
+
+  /*
+    Mobile table -> cards
+  */
+
+  .fin-payment-table-wrapper {
+    overflow: visible;
+  }
+
+  .fin-payment-table {
+    display: block;
+
+    min-width: 0;
+
+    width: 100%;
+  }
+
+  .fin-payment-table thead {
+    display: none;
+  }
+
+  .fin-payment-table tbody {
+    display: block;
+
+    width: 100%;
+  }
+
+  .fin-payment-table tr {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 0 12px;
+
+    padding: 11px 10px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #edf1f5;
+  }
+
+  .fin-payment-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .fin-payment-table td {
+    width: 100%;
+
+    height: auto;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 7px;
+
+    padding: 5px 0;
+
+    border: none;
+
+    white-space: normal;
+
+    overflow: visible;
+
+    text-overflow: unset;
+  }
+
+  .fin-payment-table td::before {
+    content: attr(data-label);
+
+    flex-shrink: 0;
+
+    color: #8b9bac;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+  }
+
+
+  /* Customer full width */
+
+  .fin-payment-table td:nth-child(2) {
+    grid-column: 1 / -1;
+
+    padding-bottom: 8px;
+
+    margin-bottom: 2px;
+
+    border-bottom: 1px dashed #e6edf3;
+  }
+
+
+  /* Action full width */
+
+  .fin-payment-table td:last-child {
+    grid-column: 1 / -1;
+
+    justify-content: flex-end;
+
+    margin-top: 5px;
+
+    padding-top: 7px;
+
+    border-top: 1px solid #edf1f5;
+  }
+
+  .fin-payment-table td:last-child::before {
+    display: none;
+  }
+
+
+  .fin-loan-link,
+  .fin-customer-name {
+    font-size: 9px;
+  }
+
+  .fin-amount {
+    font-size: 10px;
+  }
+
+  .fin-date {
+    font-size: 9px;
+  }
+
+
+  /* MODAL */
+
+  .fin-payment-modal-overlay {
+    padding: 8px;
+  }
+
+  .fin-payment-modal {
+    width: 100%;
+
+    max-height:
+      calc(100vh - 16px);
+
+    border-radius: 11px;
+  }
+
+  .fin-payment-modal-header {
+    min-height: 53px;
+
+    padding: 8px 12px;
+  }
+
+  .fin-payment-modal-header h2 {
+    font-size: 17px;
+  }
+
+  .fin-payment-modal-header p {
+    font-size: 8.5px;
+  }
+
+  .fin-payment-form {
+    padding: 10px 12px 12px;
+
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+  }
+
+  .fin-form-two {
+    gap: 8px;
+  }
+
+  .fin-form-field {
+    margin-bottom: 8px;
+  }
+
+  .fin-form-field label {
+    margin-bottom: 4px;
+
+    font-size: 8.5px;
+  }
+
+  .fin-form-field input,
+  .fin-form-field select {
+    height: 35px;
+
+    font-size: 9.5px;
+  }
+
+  .fin-form-field textarea {
+    min-height: 50px;
+
+    font-size: 9.5px;
+  }
+
+  .fin-option-grid {
+    gap: 5px;
+  }
+
+  .fin-option-grid button {
+    height: 32px;
+
+    font-size: 8px;
+  }
+
+  .fin-payment-summary-box {
+    padding: 7px 9px;
+  }
+
+  .fin-payment-summary-box div {
+    min-height: 24px;
+  }
+
+  .fin-payment-summary-box span {
+    font-size: 8px;
+  }
+
+  .fin-payment-summary-box strong {
+    font-size: 9.5px;
+  }
+
+  .fin-modal-actions {
+    margin-top: 8px;
+  }
+
+  .fin-modal-cancel,
+  .fin-modal-submit {
+    height: 35px;
+
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-payment-page {
+    padding: 8px 6px 16px;
+  }
+
+  .fin-payment-header h1 {
+    font-size: 18px;
+  }
+
+  .fin-payment-header-actions {
+    width: 100%;
+  }
+
+  .fin-export-btn,
+  .fin-record-payment-btn {
+    height: 34px;
+
+    font-size: 8.5px;
+  }
+
+  .fin-payment-summary-grid {
+    gap: 5px;
+  }
+
+  .fin-payment-summary-card {
+    min-height: 57px;
+
+    padding: 6px;
+  }
+
+  .fin-summary-icon {
+    width: 26px;
+    height: 26px;
+
+    min-width: 26px;
+  }
+
+  .fin-payment-summary-card span {
+    font-size: 6.5px;
+  }
+
+  .fin-payment-summary-card strong {
+    font-size: 12px;
+  }
+
+  .fin-payment-filter-bar {
+    gap: 5px;
+  }
+
+  .fin-payment-table tr {
+    padding: 9px 8px;
+  }
+
+  .fin-payment-modal-header {
+    padding: 7px 10px;
+  }
+
+  .fin-payment-form {
+    padding: 9px 10px 10px;
+  }
+
+  .fin-form-two {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+  .fin-option-grid.three {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SHORT LAPTOP
+   ========================================================= */
+
+@media (max-height: 720px) and (min-width: 701px) {
+
+  .fin-payment-page {
+    padding-top: 12px;
+
+    padding-bottom: 18px;
+  }
+
+  .fin-payment-header {
+    margin-bottom: 11px;
+  }
+
+  .fin-payment-header h1 {
+    font-size: 22px;
+  }
+
+  .fin-payment-summary-card {
+    min-height: 65px;
+  }
+
+  .fin-payment-table td {
+    height: 51px;
+  }
+
+}
+
+/* =========================================================
+   FINAL MOBILE TABLE STYLE
+   Compact table + horizontal scrollbar
+   Consistent with Customers / Loans
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-payment-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 10px 7px 18px;
+    overflow-x: hidden;
+  }
+
+  /*
+    Keep header compact.
+  */
+  .fin-payment-header {
+    gap: 8px;
+    margin-bottom: 11px;
+  }
+
+  .fin-payment-header-actions {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .fin-export-btn,
+  .fin-record-payment-btn {
+    min-width: 0;
+    flex: 1;
+    height: 35px;
+    padding: 0 9px;
+    font-size: 9px;
+  }
+
+  /*
+    Summary cards stay compact without large gaps.
+  */
+  .fin-payment-summary-grid {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .fin-payment-summary-card {
+    min-height: 60px;
+    padding: 7px;
+    gap: 7px;
+  }
+
+  .fin-summary-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .fin-payment-summary-card span {
+    font-size: 7.5px;
+  }
+
+  .fin-payment-summary-card strong {
+    font-size: 14px;
+  }
+
+  /*
+    Filters remain compact.
+  */
+  .fin-payment-filter-bar {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .fin-payment-search {
+    height: 34px;
+  }
+
+  .fin-payment-date-filter,
+  .fin-payment-filter-select,
+  .fin-payment-sort-btn {
+    height: 34px;
+    min-width: 0;
+    font-size: 9px;
+  }
+
+
+  /* =======================================================
+     TABLE
+     ======================================================= */
+
+  .fin-payment-table-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 9px;
+  }
+
+  .fin-payment-table-top {
+    min-height: 46px;
+    padding: 7px 9px;
+  }
+
+  .fin-payment-table-top h2 {
+    font-size: 12px;
+  }
+
+  .fin-payment-table-top span {
+    font-size: 7.5px;
+  }
+
+  .fin-record-count {
+    padding: 4px 7px;
+    font-size: 7.5px;
+  }
+
+  /*
+    IMPORTANT:
+    Existing mobile CSS converts the table into cards.
+    Override that behavior here.
+
+    We keep the real table structure and allow horizontal
+    scrolling inside the table only.
+  */
+  .fin-payment-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+    scrollbar-color: #b8c6d6 transparent;
+  }
+
+  .fin-payment-table {
+    display: table;
+
+    width: 850px;
+    min-width: 850px;
+    max-width: none;
+
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  .fin-payment-table thead {
+    display: table-header-group;
+  }
+
+  .fin-payment-table tbody {
+    display: table-row-group;
+    width: auto;
+  }
+
+  .fin-payment-table tr {
+    display: table-row;
+
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .fin-payment-table th,
+  .fin-payment-table td {
+    display: table-cell;
+  }
+
+  .fin-payment-table th {
+    height: 39px;
+    padding: 0 6px;
+    font-size: 7.5px;
+    letter-spacing: 0;
+  }
+
+  .fin-payment-table td {
+    height: 56px;
+    padding: 5px 6px;
+
+    font-size: 8.5px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    border-bottom: 1px solid #edf1f5;
+  }
+
+  .fin-payment-table td::before {
+    display: none;
+  }
+
+  /*
+    Compact column widths.
+    Enough room for values, but no unnecessary blank space.
+  */
+  .fin-payment-table th:nth-child(1) { width: 11%; }
+  .fin-payment-table th:nth-child(2) { width: 16%; }
+  .fin-payment-table th:nth-child(3) { width: 13%; }
+  .fin-payment-table th:nth-child(4) { width: 10%; }
+  .fin-payment-table th:nth-child(5) { width: 12%; }
+  .fin-payment-table th:nth-child(6) { width: 12%; }
+  .fin-payment-table th:nth-child(7) { width: 11%; }
+  .fin-payment-table th:nth-child(8) { width: 9%; }
+  .fin-payment-table th:nth-child(9) { width: 6%; }
+
+  .fin-loan-link,
+  .fin-customer-name {
+    font-size: 9px;
+  }
+
+  .fin-amount {
+    font-size: 9.5px;
+  }
+
+  .fin-interest-cell {
+    gap: 1px;
+  }
+
+  .fin-interest-cell span {
+    padding: 2px 5px;
+    font-size: 7.5px;
+  }
+
+  .fin-interest-cell strong {
+    font-size: 8.5px;
+  }
+
+  .fin-date {
+    font-size: 8.5px;
+  }
+
+  .fin-method {
+    padding: 4px 6px;
+    font-size: 7.5px;
+  }
+
+  .fin-type-payment,
+  .fin-type-due {
+    font-size: 8.5px;
+  }
+
+  .fin-small-record-btn {
+    height: 26px;
+    padding: 0 7px;
+    font-size: 8px;
+  }
+
+  .fin-completed-mark {
+    width: 24px;
+    height: 24px;
+  }
+
+
+  /* =======================================================
+     MOBILE MODAL
+     ======================================================= */
+
+  .fin-payment-modal-overlay {
+    padding: 6px;
+  }
+
+  .fin-payment-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100vh - 12px);
+    border-radius: 11px;
+  }
+
+  .fin-payment-modal-header {
+    min-height: 51px;
+    padding: 8px 11px;
+  }
+
+  .fin-payment-modal-header h2 {
+    font-size: 17px;
+  }
+
+  .fin-payment-modal-header p {
+    font-size: 8.5px;
+  }
+
+  .fin-payment-form {
+    padding: 9px 11px 11px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-payment-page {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .fin-payment-summary-grid {
+    gap: 5px;
+  }
+
+  .fin-payment-summary-card {
+    min-height: 57px;
+    padding: 6px;
+  }
+
+  .fin-summary-icon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .fin-payment-summary-card span {
+    font-size: 6.5px;
+  }
+
+  .fin-payment-summary-card strong {
+    font-size: 12px;
+  }
+
+  /*
+    Keep table scrollbar on small phones.
+    Slightly reduce table width, not the content structure.
+  */
+  .fin-payment-table-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .fin-payment-table {
+    width: 800px;
+    min-width: 800px;
+  }
+
+  .fin-payment-table th {
+    height: 37px;
+    padding: 0 5px;
+    font-size: 7px;
+  }
+
+  .fin-payment-table td {
+    height: 54px;
+    padding: 5px;
+    font-size: 8px;
+  }
+
+  .fin-loan-link,
+  .fin-customer-name {
+    font-size: 8.5px;
+  }
+
+  .fin-amount {
+    font-size: 9px;
+  }
+
+  .fin-date {
+    font-size: 8px;
+  }
+
+  .fin-method {
+    font-size: 7px;
+  }
+
+  .fin-small-record-btn {
+    height: 25px;
+    padding: 0 6px;
+    font-size: 7.5px;
+  }
+
+  .fin-payment-modal-header {
+    padding: 7px 10px;
+  }
+
+  .fin-payment-form {
+    padding: 8px 10px 10px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .fin-payment-table {
+    width: 780px;
+    min-width: 780px;
+  }
+
+  .fin-payment-table th {
+    padding: 0 4px;
+    font-size: 6.8px;
+  }
+
+  .fin-payment-table td {
+    padding: 4px;
+    font-size: 7.8px;
+  }
+
+  .fin-loan-link,
+  .fin-customer-name {
+    font-size: 8px;
+  }
+
+  .fin-amount {
+    font-size: 8.5px;
+  }
+
+  .fin-date {
+    font-size: 7.8px;
+  }
+
+  .fin-method {
+    font-size: 6.8px;
+  }
+}
+
+
+/* =========================================================
+   FINAL OVERFLOW SAFETY
+   ========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.fin-layout,
+.fin-layout-wrapper,
+.fin-layout-content,
+.fin-payment-page {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FINAL ACTION-COLUMN / MOBILE SCROLL FIX
+   Prevent the Record button from being clipped
+   ========================================================= */
+
+/*
+  The previous 7% action column was too narrow.
+  The Record button needs a little more fixed space.
+*/
+.fin-payment-table th:nth-child(1) { width: 10%; }
+.fin-payment-table th:nth-child(2) { width: 15%; }
+.fin-payment-table th:nth-child(3) { width: 12%; }
+.fin-payment-table th:nth-child(4) { width: 10%; }
+.fin-payment-table th:nth-child(5) { width: 12%; }
+.fin-payment-table th:nth-child(6) { width: 11%; }
+.fin-payment-table th:nth-child(7) { width: 11%; }
+.fin-payment-table th:nth-child(8) { width: 8%; }
+.fin-payment-table th:nth-child(9) { width: 11%; }
+
+/*
+  Action cell must not clip its own button.
+*/
+.fin-payment-table td.fin-payment-action-cell {
+  overflow: visible;
+  white-space: nowrap;
+  text-overflow: clip;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.fin-payment-table .fin-small-record-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: 72px;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   MOBILE — KEEP ALL COLUMNS + SAFE ACTION WIDTH
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-payment-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    /*
+      Give the browser a little breathing room below the table
+      so the scrollbar never visually overlaps the last row.
+    */
+    padding-bottom: 2px;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .fin-payment-table {
+    width: 900px;
+    min-width: 900px;
+    max-width: none;
+    table-layout: fixed;
+  }
+
+  /*
+    Rebalanced widths.
+    Action gets 12% so + Record is never squeezed.
+  */
+  .fin-payment-table th:nth-child(1) { width: 10%; }
+  .fin-payment-table th:nth-child(2) { width: 15%; }
+  .fin-payment-table th:nth-child(3) { width: 12%; }
+  .fin-payment-table th:nth-child(4) { width: 9%; }
+  .fin-payment-table th:nth-child(5) { width: 12%; }
+  .fin-payment-table th:nth-child(6) { width: 11%; }
+  .fin-payment-table th:nth-child(7) { width: 10%; }
+  .fin-payment-table th:nth-child(8) { width: 9%; }
+  .fin-payment-table th:nth-child(9) { width: 12%; }
+
+  .fin-payment-table th {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .fin-payment-table td {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .fin-payment-table td.fin-payment-action-cell {
+    overflow: visible;
+    text-align: center;
+  }
+
+  .fin-payment-table .fin-small-record-btn {
+    min-width: 76px;
+    width: auto;
+    height: 28px;
+    padding: 0 8px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE — DO NOT SHRINK ACTION BUTTON
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-payment-table {
+    width: 860px;
+    min-width: 860px;
+  }
+
+  .fin-payment-table .fin-small-record-btn {
+    min-width: 74px;
+    height: 27px;
+    padding: 0 7px;
+    font-size: 7.5px;
+  }
+
+  .fin-payment-table td.fin-payment-action-cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL — 360px
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .fin-payment-table {
+    width: 840px;
+    min-width: 840px;
+  }
+
+  .fin-payment-table .fin-small-record-btn {
+    min-width: 72px;
+    height: 26px;
+    padding: 0 6px;
+    font-size: 7.2px;
+  }
+}

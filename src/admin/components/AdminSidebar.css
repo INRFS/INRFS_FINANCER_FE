@@ -1,0 +1,853 @@
+/* ============================================================
+   INRFS ADMIN PORTAL — ADMIN SIDEBAR
+   Responsive Desktop / Tablet / Mobile
+   ============================================================ */
+
+/* ============================================================
+   ROOT SIDEBAR
+   ============================================================ */
+
+.admin-sidebar {
+  width: 260px;
+  height: 100vh;
+  height: 100dvh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #040e20;
+  color: #ffffff;
+
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.3s ease,
+    width 0.3s ease;
+
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   BRAND / HEADER
+   ============================================================ */
+
+.admin-sidebar-brand {
+  min-height: 112px;
+
+  padding: 20px 18px 18px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  flex-shrink: 0;
+}
+
+
+/* Logo row */
+
+.admin-sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 0;
+}
+
+
+/* ============================================================
+   INRFS LOGO
+   ============================================================ */
+
+.admin-sidebar-logo-mark {
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+}
+
+
+/* Individual logo petals */
+
+.logo-petal {
+  position: absolute;
+
+  width: 15px;
+  height: 15px;
+
+  border-radius: 50%;
+
+  display: block;
+}
+
+
+/* Top */
+
+.logo-petal-1 {
+  top: 0;
+  left: 12px;
+
+  background: #10afe9;
+}
+
+
+/* Right */
+
+.logo-petal-2 {
+  top: 11px;
+  right: 0;
+
+  background: #7bd000;
+}
+
+
+/* Bottom */
+
+.logo-petal-3 {
+  bottom: 0;
+  left: 12px;
+
+  background: #ff790b;
+}
+
+
+/* Left */
+
+.logo-petal-4 {
+  top: 11px;
+  left: 0;
+
+  background: #ec008c;
+}
+
+
+/* Center */
+
+.logo-center {
+  position: absolute;
+
+  width: 12px;
+  height: 12px;
+
+  top: 13px;
+  left: 13px;
+
+  background: #ffffff;
+
+  border-radius: 50%;
+
+  z-index: 2;
+}
+
+
+/* ============================================================
+   BRAND TEXT
+   ============================================================ */
+
+.admin-sidebar-brand-text {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1.1;
+}
+
+
+.admin-sidebar-brand-name {
+  font-size: 18px;
+  font-weight: 800;
+
+  letter-spacing: -0.3px;
+
+  color: #ffffff;
+}
+
+
+.admin-sidebar-brand-subtitle {
+  margin-top: 3px;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   ADMIN ROLE BADGE
+   ============================================================ */
+
+.admin-sidebar-role {
+  align-self: flex-start;
+
+  margin-top: 13px;
+
+  padding: 4px 9px;
+
+  border-radius: 5px;
+
+  background: rgba(125, 31, 232, 0.18);
+
+  color: #c084fc;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+.admin-sidebar-nav {
+  flex: 1;
+
+  padding: 14px 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(255, 255, 255, 0.15)
+    transparent;
+}
+
+
+/* Chrome / Edge scrollbar */
+
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+
+/* ============================================================
+   NAVIGATION ITEM
+   ============================================================ */
+
+.admin-sidebar-nav-item {
+  min-height: 44px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 13px;
+
+  border-radius: 9px;
+
+  border-left: 3px solid transparent;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  background: transparent;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+
+  position: relative;
+}
+
+
+/* ============================================================
+   NAV ICON
+   ============================================================ */
+
+.admin-sidebar-nav-icon {
+  flex-shrink: 0;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* ============================================================
+   NAV LABEL
+   ============================================================ */
+
+.admin-sidebar-nav-label {
+  flex: 1;
+
+  min-width: 0;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   HOVER
+   ============================================================ */
+
+.admin-sidebar-nav-item:hover {
+  color: #ffffff;
+
+  background: rgba(255, 255, 255, 0.055);
+
+  border-left-color: rgba(125, 31, 232, 0.45);
+
+  text-decoration: none;
+}
+
+
+.admin-sidebar-nav-item:hover
+.admin-sidebar-nav-icon {
+  color: #ffffff;
+
+  transform: translateX(1px);
+}
+
+
+/* ============================================================
+   ACTIVE ITEM
+   ============================================================ */
+
+.admin-sidebar-nav-item.active {
+  color: #a855f7;
+
+  font-weight: 700;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(125, 31, 232, 0.24) 0%,
+      rgba(125, 31, 232, 0.08) 100%
+    );
+
+  border-left-color: #7d1fe8;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(125, 31, 232, 0.04);
+}
+
+
+.admin-sidebar-nav-item.active
+.admin-sidebar-nav-icon {
+  color: #a855f7;
+}
+
+
+/* ============================================================
+   SUPPORT TICKET BADGE
+   ============================================================ */
+
+.admin-sidebar-nav-badge {
+  min-width: 20px;
+  height: 20px;
+
+  padding: 0 6px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background: #ff4a4f;
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  line-height: 1;
+
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   SIDEBAR BOTTOM USER SECTION
+   ============================================================ */
+
+.admin-sidebar-bottom {
+  flex-shrink: 0;
+
+  padding: 12px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(0, 0, 0, 0.22);
+}
+
+
+/* ============================================================
+   USER CARD
+   ============================================================ */
+
+.admin-sidebar-user-card {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 8px;
+
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.035);
+}
+
+
+/* ============================================================
+   USER AVATAR
+   ============================================================ */
+
+.admin-sidebar-user-avatar {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7d1fe8,
+      #a855f7
+    );
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   USER INFO
+   ============================================================ */
+
+.admin-sidebar-user-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.admin-sidebar-user-name {
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+.admin-sidebar-user-role {
+  margin-top: 2px;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 10px;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   BACKDROP
+   ============================================================ */
+
+.admin-sidebar-backdrop {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 999;
+
+  display: none;
+
+  background: rgba(0, 0, 0, 0.58);
+
+  backdrop-filter: blur(2px);
+
+  -webkit-backdrop-filter: blur(2px);
+}
+
+
+/* ============================================================
+   DESKTOP
+   993px+
+   ============================================================ */
+
+@media (min-width: 993px) {
+
+  .admin-sidebar {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar-backdrop {
+    display: none !important;
+  }
+
+}
+
+
+/* ============================================================
+   TABLET
+   769px - 992px
+   ============================================================ */
+
+@media (min-width: 769px) and (max-width: 992px) {
+
+  .admin-sidebar {
+    width: 250px;
+
+    transform: translateX(-100%);
+  }
+
+
+  .admin-sidebar.admin-sidebar-open {
+    transform: translateX(0);
+  }
+
+
+  .admin-sidebar-backdrop {
+    display: block;
+  }
+
+
+  .admin-sidebar-brand {
+    min-height: 108px;
+  }
+
+
+  .admin-sidebar-nav {
+    padding: 14px 10px;
+  }
+
+
+  .admin-sidebar-nav-item {
+    min-height: 45px;
+
+    padding: 10px 13px;
+
+    font-size: 14px;
+  }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   481px - 768px
+   ============================================================ */
+
+@media (min-width: 481px) and (max-width: 768px) {
+
+  .admin-sidebar {
+    width: min(285px, 86vw);
+
+    transform: translateX(-100%);
+
+    box-shadow:
+      8px 0 30px rgba(0, 0, 0, 0.45);
+  }
+
+
+  .admin-sidebar.admin-sidebar-open {
+    transform: translateX(0);
+  }
+
+
+  .admin-sidebar-backdrop {
+    display: block;
+  }
+
+
+  .admin-sidebar-brand {
+    min-height: 108px;
+
+    padding: 19px 18px 17px;
+  }
+
+
+  .admin-sidebar-nav {
+    padding: 13px 11px;
+  }
+
+
+  .admin-sidebar-nav-item {
+    min-height: 46px;
+
+    padding: 11px 14px;
+
+    font-size: 14px;
+  }
+
+
+  .admin-sidebar-nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+
+  .admin-sidebar-bottom {
+    padding: 12px;
+  }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   320px - 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+  .admin-sidebar {
+    width: min(290px, 88vw);
+
+    transform: translateX(-100%);
+
+    box-shadow:
+      8px 0 28px rgba(0, 0, 0, 0.48);
+  }
+
+
+  .admin-sidebar.admin-sidebar-open {
+    transform: translateX(0);
+  }
+
+
+  .admin-sidebar-backdrop {
+    display: block;
+  }
+
+
+  .admin-sidebar-brand {
+    min-height: 104px;
+
+    padding: 17px 16px 15px;
+  }
+
+
+  .admin-sidebar-logo-mark {
+    width: 36px;
+    height: 36px;
+  }
+
+
+  .admin-sidebar-brand-name {
+    font-size: 17px;
+  }
+
+
+  .admin-sidebar-brand-subtitle {
+    font-size: 9px;
+  }
+
+
+  .admin-sidebar-role {
+    margin-top: 10px;
+
+    padding: 3px 8px;
+
+    font-size: 9px;
+  }
+
+
+  .admin-sidebar-nav {
+    padding: 12px 9px;
+
+    gap: 2px;
+  }
+
+
+  .admin-sidebar-nav-item {
+    min-height: 45px;
+
+    padding: 10px 12px;
+
+    gap: 11px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+  }
+
+
+  .admin-sidebar-nav-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+
+  .admin-sidebar-nav-badge {
+    min-width: 19px;
+    height: 19px;
+
+    font-size: 9px;
+  }
+
+
+  .admin-sidebar-bottom {
+    padding: 10px;
+  }
+
+
+  .admin-sidebar-user-card {
+    padding: 8px;
+  }
+
+
+  .admin-sidebar-user-avatar {
+    width: 32px;
+    height: 32px;
+
+    font-size: 12px;
+  }
+
+}
+
+
+/* ============================================================
+   VERY SMALL DEVICES
+   320px - 360px
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+  .admin-sidebar {
+    width: 285px;
+    max-width: 90vw;
+  }
+
+
+  .admin-sidebar-nav-item {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    gap: 9px;
+  }
+
+
+  .admin-sidebar-nav-label {
+    font-size: 12.5px;
+  }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .admin-sidebar,
+  .admin-sidebar-nav-item,
+  .admin-sidebar-nav-icon {
+    transition: none;
+  }
+
+}
+
+
+/* ============================================================
+   DARK MODE SAFETY
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+
+  .admin-sidebar {
+    background: #040e20;
+  }
+
+}
+
+
+/* ============================================================
+   TOUCH DEVICES
+   ============================================================ */
+
+@media (hover: none) {
+
+  .admin-sidebar-nav-item:hover {
+    background: transparent;
+    border-left-color: transparent;
+  }
+
+
+  .admin-sidebar-nav-item:hover
+  .admin-sidebar-nav-icon {
+    transform: none;
+  }
+
+
+  .admin-sidebar-nav-item:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+}

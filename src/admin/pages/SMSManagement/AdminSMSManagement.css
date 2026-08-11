@@ -1,0 +1,753 @@
+/* =========================================================
+   SMS MANAGEMENT PAGE
+   ========================================================= */
+
+.admin-sms-page {
+  width: 100%;
+  min-height: 100%;
+
+  padding: 27px 30px 40px;
+
+  box-sizing: border-box;
+
+  background: #f7f9fc;
+
+  color: #071b3a;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.sms-page-header {
+  margin-bottom: 18px;
+}
+
+.sms-page-header h1 {
+  margin: 0;
+
+  color: #071b3a;
+
+  font-size: 21px;
+  line-height: 1.25;
+  font-weight: 700;
+
+  letter-spacing: -0.3px;
+}
+
+.sms-page-header p {
+  margin: 4px 0 0;
+
+  color: #71809a;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   KPI GRID
+   ========================================================= */
+
+.sms-kpi-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   KPI CARD
+   ========================================================= */
+
+.sms-kpi-card {
+  min-height: 67px;
+
+  padding: 14px 15px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+  border-left-width: 3px;
+
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* KPI COLORS */
+
+.sms-kpi-card.cyan {
+  border-left-color: #08b2e8;
+}
+
+.sms-kpi-card.purple {
+  border-left-color: #8a00e6;
+}
+
+.sms-kpi-card.green {
+  border-left-color: #72d900;
+}
+
+.sms-kpi-card.red {
+  border-left-color: #ff3d3d;
+}
+
+.sms-kpi-card.orange {
+  border-left-color: #ffb000;
+}
+
+
+/* KPI LABEL */
+
+.sms-kpi-label {
+  margin-bottom: 4px;
+
+  color: #667993;
+
+  font-size: 8px;
+  line-height: 1;
+
+  font-weight: 600;
+
+  letter-spacing: 0.55px;
+}
+
+
+/* KPI VALUE */
+
+.sms-kpi-value {
+  color: #10284a;
+
+  font-size: 17px;
+  line-height: 1.1;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   MIDDLE GRID
+   ========================================================= */
+
+.sms-middle-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr) 263px;
+
+  gap: 14px;
+
+  margin-bottom: 17px;
+}
+
+
+/* =========================================================
+   CHART CARD
+   ========================================================= */
+
+.sms-chart-card {
+  min-height: 228px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.sms-section-title {
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 15px;
+
+  box-sizing: border-box;
+
+  color: #071b3a;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CHART
+   ========================================================= */
+
+.sms-chart-container {
+  padding: 3px 16px 12px 14px;
+
+  box-sizing: border-box;
+}
+
+.sms-chart {
+  width: 100%;
+}
+
+
+/* =========================================================
+   CHART ROW
+   ========================================================= */
+
+.sms-chart-row {
+  height: 16px;
+
+  display: grid;
+
+  grid-template-columns: 45px minmax(0, 1fr);
+
+  align-items: center;
+
+  margin-bottom: 3px;
+}
+
+.sms-chart-name {
+  color: #263c5a;
+
+  font-size: 9px;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   CHART BARS
+   ========================================================= */
+
+.sms-chart-bars {
+  position: relative;
+
+  height: 7px;
+
+  width: 100%;
+}
+
+.sms-chart-background {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  height: 6px;
+
+  border-radius: 4px;
+
+  background: #dff5fc;
+}
+
+.sms-chart-used {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  height: 6px;
+
+  border-radius: 4px;
+
+  background: #08afe4;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   CHART AXIS
+   ========================================================= */
+
+.sms-chart-axis {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-left: 45px;
+  padding-top: 7px;
+
+  color: #9aa7ba;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   QUICK STATS
+   ========================================================= */
+
+.sms-quick-stats {
+  min-height: 228px;
+
+  padding: 0 15px 14px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+
+  border-radius: 9px;
+}
+
+.sms-quick-stats .sms-section-title {
+  padding: 0;
+
+  height: 42px;
+}
+
+
+/* =========================================================
+   QUICK STAT BOX
+   ========================================================= */
+
+.quick-stat-box {
+  min-height: 82px;
+
+  padding: 12px 11px;
+
+  margin-bottom: 9px;
+
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  background: #f8fafc;
+}
+
+.quick-stat-box:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   QUICK STAT LABEL
+   ========================================================= */
+
+.quick-stat-label {
+  margin-bottom: 5px;
+
+  color: #647590;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   QUICK STAT VALUE
+   ========================================================= */
+
+.quick-stat-value {
+  margin-bottom: 7px;
+
+  font-size: 16px;
+  line-height: 1;
+
+  font-weight: 700;
+}
+
+.quick-stat-box.delivery
+  .quick-stat-value {
+  color: #70d400;
+}
+
+.quick-stat-box.credits
+  .quick-stat-value {
+  color: #06aee5;
+}
+
+
+/* =========================================================
+   QUICK STAT TOTAL
+   ========================================================= */
+
+.quick-stat-total {
+  margin-top: -4px;
+  margin-bottom: 6px;
+
+  color: #8794a8;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   QUICK STAT PROGRESS
+   ========================================================= */
+
+.quick-stat-progress {
+  width: 100%;
+  height: 4px;
+
+  overflow: hidden;
+
+  border-radius: 4px;
+
+  background: #e5eaf0;
+}
+
+.quick-stat-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+}
+
+.quick-stat-box.delivery
+  .quick-stat-progress-fill {
+  background: #71d800;
+}
+
+.quick-stat-box.credits
+  .quick-stat-progress-fill {
+  background: #08afe4;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.sms-table-card {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.sms-table-header {
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+}
+
+.sms-table-header h2 {
+  margin: 0;
+
+  color: #071b3a;
+
+  font-size: 12px;
+  line-height: 1;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.sms-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.sms-table {
+  width: 100%;
+  min-width: 820px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+}
+
+
+/* =========================================================
+   TABLE HEAD
+   ========================================================= */
+
+.sms-table thead {
+  background: #f8fafc;
+}
+
+.sms-table th {
+  height: 31px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border-top: 1px solid #e5eaf0;
+  border-bottom: 1px solid #e5eaf0;
+
+  color: #687993;
+
+  font-size: 8px;
+  line-height: 1;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  letter-spacing: 0.35px;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+.sms-table td {
+  height: 40px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e8ecf1;
+
+  color: #203655;
+
+  font-size: 10px;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.sms-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sms-table tbody tr:hover {
+  background: #fbfcfe;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+   ========================================================= */
+
+.sms-table th:nth-child(1),
+.sms-table td:nth-child(1) {
+  width: 25%;
+}
+
+.sms-table th:nth-child(2),
+.sms-table td:nth-child(2) {
+  width: 13%;
+}
+
+.sms-table th:nth-child(3),
+.sms-table td:nth-child(3) {
+  width: 12%;
+}
+
+.sms-table th:nth-child(4),
+.sms-table td:nth-child(4) {
+  width: 13%;
+}
+
+.sms-table th:nth-child(5),
+.sms-table td:nth-child(5) {
+  width: 27%;
+}
+
+.sms-table th:nth-child(6),
+.sms-table td:nth-child(6) {
+  width: 10%;
+}
+
+
+/* =========================================================
+   FINANCER
+   ========================================================= */
+
+.sms-financer-name {
+  color: #09234a !important;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   USED VALUE
+   ========================================================= */
+
+.sms-used-value {
+  color: #071b3a !important;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   USAGE CELL
+   ========================================================= */
+
+.usage-cell {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+/* =========================================================
+   USAGE PROGRESS
+   ========================================================= */
+
+.usage-progress {
+  width: 57px;
+  height: 5px;
+
+  overflow: hidden;
+
+  border-radius: 5px;
+
+  background: #e9eef3;
+}
+
+.usage-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #08afe4;
+}
+
+
+/* =========================================================
+   USAGE PERCENTAGE
+   ========================================================= */
+
+.usage-percentage {
+  min-width: 25px;
+
+  color: #7c8ba1;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.sms-status-normal {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 45px;
+  height: 17px;
+
+  padding: 0 8px;
+
+  box-sizing: border-box;
+
+  border-radius: 10px;
+
+  background: #d9f8e6;
+
+  color: #1eaa60;
+
+  font-size: 8px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+  .sms-kpi-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .sms-middle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sms-quick-stats {
+    min-height: auto;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    padding-bottom: 14px;
+  }
+
+  .sms-quick-stats .sms-section-title {
+    grid-column: 1 / -1;
+  }
+
+  .quick-stat-box {
+    margin: 0;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .admin-sms-page {
+    padding: 20px 15px 30px;
+  }
+
+  .sms-kpi-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sms-quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .sms-quick-stats .sms-section-title {
+    grid-column: auto;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .sms-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sms-page-header h1 {
+    font-size: 19px;
+  }
+}

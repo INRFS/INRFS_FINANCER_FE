@@ -1,0 +1,98 @@
+.fin-interest-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fin-interest-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-white);
+  padding: 20px 24px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.fin-interest-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-navy);
+}
+
+.fin-interest-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.fin-interest-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fin-interest-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fin-interest-filter-icon {
+  color: var(--color-muted);
+}
+
+.fin-interest-select {
+  padding: 8px 14px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  color: var(--color-navy);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.fin-interest-table-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.fin-interest-table-wrapper {
+  overflow-x: auto;
+}
+
+.fin-interest-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.fin-interest-table th {
+  background: var(--color-bg);
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fin-interest-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fin-interest-loan-id { color: var(--color-cyan); font-weight: 700; }
+.fin-interest-cust-name { font-weight: 600; color: var(--color-navy); }
+.fin-interest-rate-tag {
+  background: var(--color-bg);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  font-size: 11px;
+  color: var(--color-navy);
+}
+.fin-interest-amt { font-weight: 700; color: var(--color-navy); }

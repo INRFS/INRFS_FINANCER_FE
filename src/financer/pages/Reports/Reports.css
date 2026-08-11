@@ -1,0 +1,1280 @@
+/* =========================================================
+   REPORTS PAGE
+========================================================= */
+
+.fin-reports-page {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+
+  padding: 25px 32px 35px;
+
+  box-sizing: border-box;
+
+  background: #f7f9fc;
+
+  color: #0b2545;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.fin-reports-header {
+  margin-bottom: 25px;
+}
+
+.fin-reports-title {
+  margin: 0 0 5px;
+
+  color: #08264b;
+
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.fin-reports-subtitle {
+  margin: 0;
+
+  color: #607b9c;
+
+  font-size: 15px;
+}
+
+/* =========================================================
+   REPORT CARD GRID
+========================================================= */
+
+.fin-report-card-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+/* =========================================================
+   REPORT CARD
+========================================================= */
+
+.fin-report-card {
+  min-width: 0;
+
+  min-height: 190px;
+
+  padding: 25px 26px 20px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #dce3eb;
+
+  border-radius: 13px;
+
+  box-shadow: 0 3px 12px rgba(18, 44, 75, 0.03);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.fin-report-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 22px rgba(18, 44, 75, 0.08);
+}
+
+/* =========================================================
+   REPORT ICON
+========================================================= */
+
+.fin-report-icon {
+  width: 52px;
+  height: 52px;
+
+  margin-bottom: 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+}
+
+.fin-report-icon.customer {
+  background: #e6f7fd;
+  color: #5b2b86;
+}
+
+.fin-report-icon.loan {
+  background: #f2e4fb;
+  color: #6c2aa3;
+}
+
+.fin-report-icon.interest {
+  background: #eef9e4;
+  color: #4abb55;
+}
+
+.fin-report-icon.payment {
+  background: #fff8e6;
+  color: #008bc5;
+}
+
+.fin-report-icon.overdue {
+  background: #ffe8e8;
+  color: #ff9b28;
+}
+
+.fin-report-icon.collection {
+  background: #fff0e7;
+  color: #7e62c9;
+}
+
+.fin-report-icon.statement {
+  background: #fde9f7;
+  color: #9c5cbe;
+}
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.fin-report-card-content {
+  flex: 1;
+}
+
+.fin-report-card-content h3 {
+  margin: 0 0 8px;
+
+  color: #0a2444;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.fin-report-card-content p {
+  margin: 0;
+
+  color: #607b9c;
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   CARD BOTTOM
+========================================================= */
+
+.fin-report-card-bottom {
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.fin-report-metric {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fin-report-metric.customer {
+  color: #0baeea;
+}
+
+.fin-report-metric.loan {
+  color: #8500e8;
+}
+
+.fin-report-metric.interest {
+  color: #61cf00;
+}
+
+.fin-report-metric.payment {
+  color: #ff9f00;
+}
+
+.fin-report-metric.overdue {
+  color: #ff3838;
+}
+
+.fin-report-metric.collection {
+  color: #ff7600;
+}
+
+.fin-report-metric.statement {
+  color: #ff009c;
+}
+
+/* =========================================================
+   CARD BUTTONS
+========================================================= */
+
+.fin-report-card-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.fin-report-view-btn,
+.fin-report-export-btn {
+  height: 34px;
+
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.fin-report-view-btn {
+  border: 1px solid #dce3eb;
+
+  background: #ffffff;
+
+  color: #09264b;
+}
+
+.fin-report-view-btn:hover {
+  border-color: #0caee9;
+
+  color: #0caee9;
+}
+
+.fin-report-export-btn {
+  border: 1px solid #10afe9;
+
+  background: #10afe9;
+
+  color: #ffffff;
+}
+
+.fin-report-export-btn:hover {
+  background: #069fd6;
+
+  border-color: #069fd6;
+}
+
+/* =========================================================
+   REPORT MODAL
+========================================================= */
+
+.fin-report-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 2000;
+
+  padding: 25px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(4, 18, 39, 0.48);
+
+  backdrop-filter: blur(3px);
+}
+
+.fin-report-modal {
+  width: min(1180px, 100%);
+
+  max-height: calc(100vh - 50px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 70px rgba(4, 18, 39, 0.22);
+}
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.fin-report-modal-header {
+  min-height: 88px;
+
+  padding: 19px 25px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-bottom: 1px solid #e1e7ed;
+
+  background: #ffffff;
+}
+
+.fin-report-modal-kicker {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #10afe9;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+}
+
+.fin-report-modal-header h2 {
+  margin: 0 0 3px;
+
+  color: #08264b;
+
+  font-size: 22px;
+}
+
+.fin-report-modal-header p {
+  margin: 0;
+
+  color: #7185a3;
+
+  font-size: 13px;
+}
+
+.fin-report-modal-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+.fin-report-print-btn {
+  height: 39px;
+
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #10afe9;
+
+  border-radius: 9px;
+
+  background: #10afe9;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.fin-report-print-btn:hover {
+  background: #079fd6;
+}
+
+.fin-report-close {
+  width: 39px;
+  height: 39px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e0e6ed;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #647b98;
+
+  cursor: pointer;
+}
+
+.fin-report-close:hover {
+  background: #f5f8fb;
+}
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.fin-report-modal-body {
+  flex: 1;
+
+  min-height: 0;
+
+  padding: 22px 25px 25px;
+
+  overflow-y: auto;
+
+  background: #f8fafc;
+}
+
+/* =========================================================
+   MINI SUMMARY
+========================================================= */
+
+.fin-report-mini-summary {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 13px;
+
+  margin-bottom: 18px;
+}
+
+.fin-report-mini-summary > div {
+  min-height: 80px;
+
+  padding: 16px 18px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 12px;
+}
+
+.fin-report-mini-summary span {
+  margin-bottom: 5px;
+
+  color: #7d92af;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.fin-report-mini-summary strong {
+  color: #08264b;
+
+  font-size: 22px;
+}
+
+.green-text {
+  color: #62ca00 !important;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.fin-report-table-card {
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 13px;
+}
+
+.fin-report-table-title {
+  padding: 15px 18px;
+
+  color: #0a284b;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid #e1e7ed;
+}
+
+.fin-report-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.fin-report-table {
+  width: 100%;
+
+  min-width: 780px;
+
+  border-collapse: collapse;
+
+  table-layout: auto;
+}
+
+.fin-report-table th {
+  height: 46px;
+
+  padding: 0 15px;
+
+  color: #6d85a5;
+
+  background: #f8fafc;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #dce4ed;
+}
+
+.fin-report-table td {
+  min-height: 54px;
+
+  padding: 12px 15px;
+
+  color: #183454;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e8edf2;
+}
+
+.fin-report-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.fin-report-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.fin-report-table td strong {
+  color: #102b4e;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.fin-report-badge {
+  display: inline-flex;
+
+  min-width: 60px;
+  height: 25px;
+
+  padding: 0 9px;
+
+  box-sizing: border-box;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.fin-report-badge.success {
+  background: #dff8e9;
+  color: #13a04b;
+}
+
+.fin-report-badge.warning {
+  background: #ffedcf;
+  color: #f26a00;
+}
+
+.fin-report-badge.danger {
+  background: #ffe1e3;
+  color: #ed343d;
+}
+
+.fin-report-credit {
+  color: #65c900 !important;
+}
+
+.fin-report-danger-text {
+  color: #ff4040;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   COLLECTION CHART
+========================================================= */
+
+.fin-report-chart-card {
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 13px;
+}
+
+.fin-report-chart-title {
+  margin-bottom: 20px;
+
+  color: #0a284b;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+.fin-report-bars {
+  height: 245px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-around;
+
+  gap: 18px;
+
+  padding: 15px 10px 0;
+}
+
+.fin-report-bar-column {
+  height: 100%;
+
+  flex: 1;
+
+  max-width: 90px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 7px;
+}
+
+.fin-report-bar-value {
+  color: #4e6888;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.fin-report-bar-track {
+  width: 42px;
+
+  height: 170px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  overflow: hidden;
+
+  background: #edf4f8;
+
+  border-radius: 8px 8px 4px 4px;
+}
+
+.fin-report-bar-fill {
+  width: 100%;
+
+  background: #10afe9;
+
+  border-radius: 8px 8px 4px 4px;
+
+  transition: height 0.4s ease;
+}
+
+.fin-report-bar-column > span {
+  color: #7185a3;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   CUSTOMER STATEMENT
+========================================================= */
+
+.fin-statement-selector {
+  margin-bottom: 16px;
+}
+
+.fin-statement-selector label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #274666;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.fin-statement-controls {
+  display: flex;
+
+  gap: 10px;
+}
+
+.fin-statement-search {
+  width: 260px;
+  height: 42px;
+
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 9px;
+
+  color: #8396ad;
+}
+
+.fin-statement-search input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  font-family: inherit;
+
+  font-size: 12px;
+}
+
+.fin-statement-controls select {
+  min-width: 230px;
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #183454;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  outline: none;
+}
+
+.fin-statement-header {
+  margin-bottom: 16px;
+
+  padding: 16px 19px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  background: #ffffff;
+
+  border: 1px solid #dce4ed;
+
+  border-radius: 12px;
+}
+
+.fin-statement-header h3 {
+  margin: 0 0 3px;
+
+  color: #08264b;
+
+  font-size: 17px;
+}
+
+.fin-statement-header p {
+  margin: 0;
+
+  color: #7185a3;
+
+  font-size: 11px;
+}
+
+.fin-statement-header > div:last-child {
+  text-align: right;
+}
+
+.fin-statement-header > div:last-child span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #7d92af;
+
+  font-size: 10px;
+
+  text-transform: uppercase;
+}
+
+.fin-statement-header > div:last-child strong {
+  color: #08264b;
+
+  font-size: 19px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  .fin-reports-page {
+    padding: 20px 22px 30px;
+  }
+
+  .fin-report-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .fin-reports-page {
+    padding: 18px;
+  }
+
+  .fin-reports-title {
+    font-size: 25px;
+  }
+
+  .fin-report-card {
+    min-height: 180px;
+
+    padding: 21px;
+  }
+
+  .fin-report-modal-overlay {
+    padding: 15px;
+  }
+
+  .fin-report-modal {
+    max-height: calc(100vh - 30px);
+  }
+
+  .fin-report-modal-header {
+    padding: 16px 18px;
+  }
+
+  .fin-report-modal-body {
+    padding: 18px;
+  }
+
+  .fin-report-table {
+    min-width: 700px;
+  }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .fin-reports-page {
+    padding: 14px;
+  }
+
+  .fin-reports-header {
+    margin-bottom: 18px;
+  }
+
+  .fin-reports-title {
+    font-size: 23px;
+  }
+
+  .fin-reports-subtitle {
+    font-size: 13px;
+  }
+
+  .fin-report-card-grid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .fin-report-card {
+    min-height: 165px;
+
+    padding: 18px;
+  }
+
+  .fin-report-icon {
+    width: 45px;
+    height: 45px;
+
+    margin-bottom: 14px;
+  }
+
+  .fin-report-card-content h3 {
+    font-size: 15px;
+  }
+
+  .fin-report-card-content p {
+    font-size: 12px;
+  }
+
+  .fin-report-card-bottom {
+    margin-top: 15px;
+  }
+
+  .fin-report-metric {
+    font-size: 11px;
+  }
+
+  .fin-report-view-btn,
+  .fin-report-export-btn {
+    height: 31px;
+
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  /* Modal */
+
+  .fin-report-modal-overlay {
+    padding: 7px;
+  }
+
+  .fin-report-modal {
+    max-height: calc(100vh - 14px);
+
+    border-radius: 13px;
+  }
+
+  .fin-report-modal-header {
+    min-height: auto;
+
+    padding: 14px;
+
+    align-items: flex-start;
+  }
+
+  .fin-report-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .fin-report-modal-header p {
+    font-size: 11px;
+  }
+
+  .fin-report-modal-actions {
+    gap: 5px;
+  }
+
+  .fin-report-print-btn {
+    height: 34px;
+
+    padding: 0 9px;
+
+    font-size: 10px;
+  }
+
+  .fin-report-print-btn svg {
+    width: 13px;
+  }
+
+  .fin-report-close {
+    width: 34px;
+    height: 34px;
+  }
+
+  .fin-report-modal-body {
+    padding: 13px;
+  }
+
+  /* Summary */
+
+  .fin-report-mini-summary {
+    grid-template-columns: 1fr;
+
+    gap: 7px;
+
+    margin-bottom: 12px;
+  }
+
+  .fin-report-mini-summary > div {
+    min-height: 62px;
+
+    padding: 11px 14px;
+  }
+
+  .fin-report-mini-summary span {
+    font-size: 9px;
+  }
+
+  .fin-report-mini-summary strong {
+    font-size: 18px;
+  }
+
+  /* Tables */
+
+  .fin-report-table-title {
+    padding: 12px 14px;
+
+    font-size: 12px;
+  }
+
+  .fin-report-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .fin-report-table {
+    min-width: 680px;
+  }
+
+  .fin-report-table th {
+    height: 40px;
+
+    padding: 0 10px;
+
+    font-size: 9px;
+  }
+
+  .fin-report-table td {
+    padding: 9px 10px;
+
+    font-size: 10px;
+  }
+
+  /* Collection chart */
+
+  .fin-report-chart-card {
+    padding: 13px;
+  }
+
+  .fin-report-bars {
+    height: 210px;
+
+    gap: 7px;
+  }
+
+  .fin-report-bar-track {
+    width: 30px;
+
+    height: 140px;
+  }
+
+  /* Statement */
+
+  .fin-statement-controls {
+    flex-direction: column;
+  }
+
+  .fin-statement-search,
+  .fin-statement-controls select {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+  .fin-statement-header {
+    padding: 13px;
+
+    gap: 10px;
+  }
+
+  .fin-statement-header h3 {
+    font-size: 15px;
+  }
+
+  .fin-statement-header > div:last-child strong {
+    font-size: 16px;
+  }
+
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .fin-reports-page {
+    padding: 10px;
+  }
+
+  .fin-report-card {
+    padding: 15px;
+  }
+
+  .fin-report-card-bottom {
+    align-items: flex-end;
+
+    flex-direction: column;
+  }
+
+  .fin-report-card-actions {
+    width: 100%;
+  }
+
+  .fin-report-view-btn,
+  .fin-report-export-btn {
+    flex: 1;
+  }
+
+  .fin-report-modal-header {
+    flex-direction: column;
+  }
+
+  .fin-report-modal-actions {
+    width: 100%;
+  }
+
+  .fin-report-print-btn {
+    flex: 1;
+
+    justify-content: center;
+  }
+
+}
+
+/* =========================================================
+   PRINT / PDF
+========================================================= */
+
+@media print {
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .fin-report-modal,
+  .fin-report-modal * {
+    visibility: visible !important;
+  }
+
+  .fin-report-modal-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    padding: 0;
+
+    background: #ffffff;
+
+    display: block;
+  }
+
+  .fin-report-modal {
+    width: 100%;
+
+    max-height: none;
+
+    border: 0;
+
+    border-radius: 0;
+
+    box-shadow: none;
+  }
+
+  .fin-report-modal-header {
+    border-bottom: 2px solid #0b2545;
+  }
+
+  .fin-report-print-btn,
+  .fin-report-close {
+    display: none !important;
+  }
+
+  .fin-report-modal-body {
+    overflow: visible;
+
+    background: #ffffff;
+  }
+
+  .fin-report-table-wrapper {
+    overflow: visible;
+  }
+
+  .fin-report-table {
+    min-width: 0;
+
+    width: 100%;
+  }
+
+  .fin-report-table th,
+  .fin-report-table td {
+    font-size: 10px;
+  }
+
+  .fin-report-card,
+  .fin-report-table-card,
+  .fin-report-mini-summary > div {
+    box-shadow: none;
+  }
+
+  @page {
+    size: A4 landscape;
+
+    margin: 12mm;
+  }
+}

@@ -1,0 +1,65 @@
+.fin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.fin-layout-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  min-width: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.fin-layout-content {
+  flex: 1;
+  padding: 28px;
+}
+
+.fin-layout-payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fin-layout-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fin-layout-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.fin-layout-form-group input,
+.fin-layout-form-group select {
+  padding: 10px 14px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  color: var(--color-navy);
+}
+
+.fin-layout-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 992px) {
+  .fin-layout-wrapper {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .fin-layout-content {
+    padding: 16px;
+  }
+}

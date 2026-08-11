@@ -1,0 +1,1248 @@
+/* =========================================================
+   CUSTOMER LEDGER
+   Compact / fixed-fit responsive layout
+========================================================= */
+
+.fin-ledger-page {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+  padding: 20px 28px 24px;
+  box-sizing: border-box;
+  background: #f7f9fc;
+  color: #0b2545;
+  overflow: hidden;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.fin-ledger-page-header {
+  margin-bottom: 20px;
+}
+
+.fin-ledger-title {
+  margin: 0 0 4px;
+  color: #08264b;
+  font-size: 29px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.fin-ledger-subtitle {
+  margin: 0;
+  color: #7185a3;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.fin-ledger-layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 275px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* =========================================================
+   CUSTOMER PANEL
+========================================================= */
+
+.fin-ledger-customer-panel {
+  width: 100%;
+  height: 600px;
+  padding: 17px 10px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #dce4ed;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.fin-ledger-customer-heading {
+  padding: 0 12px 10px;
+  color: #647d9e;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.fin-ledger-search {
+  height: 36px;
+  margin: 0 3px 9px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-sizing: border-box;
+  border: 1px solid #e0e6ed;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #8a9db6;
+}
+
+.fin-ledger-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #193453;
+  font: inherit;
+  font-size: 12px;
+}
+
+.fin-ledger-search input::placeholder {
+  color: #9aa9bb;
+}
+
+.fin-ledger-customer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fin-ledger-customer-item {
+  width: 100%;
+  height: 75px;
+  padding: 9px 12px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.fin-ledger-customer-item:hover {
+  background: #f5f9fc;
+}
+
+.fin-ledger-customer-item.active {
+  background: #dff5fc;
+}
+
+.fin-ledger-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f0f4f8;
+  color: #69809e;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fin-ledger-avatar.active {
+  background: #10b3ed;
+  color: #fff;
+}
+
+.fin-ledger-customer-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fin-ledger-customer-name {
+  overflow: hidden;
+  color: #102b4e;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fin-ledger-customer-item.active .fin-ledger-customer-name {
+  color: #00a9e9;
+}
+
+.fin-ledger-customer-loans {
+  color: #8395ad;
+  font-size: 12px;
+}
+
+.fin-ledger-no-customers {
+  padding: 25px 10px;
+  color: #8394aa;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* =========================================================
+   RIGHT CONTENT
+========================================================= */
+
+.fin-ledger-content {
+  min-width: 0;
+}
+
+.fin-ledger-customer-header {
+  min-height: 60px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.fin-ledger-customer-header h2 {
+  margin: 0 0 3px;
+  color: #09264b;
+  font-size: 23px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.fin-ledger-customer-header p {
+  margin: 0;
+  color: #7185a3;
+  font-size: 14px;
+}
+
+.fin-ledger-customer-header p span {
+  color: #a1afbf;
+}
+
+/* Make the imported Button compact in this page */
+.fin-ledger-customer-header button {
+  min-height: 46px;
+  padding: 0 18px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.fin-ledger-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.fin-ledger-summary-card {
+  min-width: 0;
+  height: 105px;
+  padding: 20px 23px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #dce4ed;
+  border-left-width: 4px;
+  border-radius: 15px;
+}
+
+.fin-ledger-summary-card.disbursed {
+  border-left-color: #0ab3ed;
+}
+
+.fin-ledger-summary-card.received {
+  border-left-color: #6bd400;
+}
+
+.fin-ledger-summary-card.outstanding {
+  border-left-color: #ff7200;
+}
+
+.fin-ledger-summary-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #7d92af;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fin-ledger-summary-card strong {
+  color: #09264b;
+  font-size: 25px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.fin-ledger-table-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #dce4ed;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.fin-ledger-table-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.fin-ledger-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.fin-ledger-table th {
+  height: 54px;
+  padding: 0 18px;
+  box-sizing: border-box;
+  color: #6d85a5;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #dce4ed;
+}
+
+.fin-ledger-table td {
+  height: 62px;
+  padding: 0 18px;
+  box-sizing: border-box;
+  color: #152e50;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #e8edf2;
+}
+
+.fin-ledger-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.fin-ledger-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+/* Column widths */
+
+.fin-ledger-table th:nth-child(1),
+.fin-ledger-table td:nth-child(1) {
+  width: 16%;
+}
+
+.fin-ledger-table th:nth-child(2),
+.fin-ledger-table td:nth-child(2) {
+  width: 25%;
+}
+
+.fin-ledger-table th:nth-child(3),
+.fin-ledger-table td:nth-child(3),
+.fin-ledger-table th:nth-child(4),
+.fin-ledger-table td:nth-child(4) {
+  width: 14%;
+}
+
+.fin-ledger-table th:nth-child(5),
+.fin-ledger-table td:nth-child(5) {
+  width: 16%;
+}
+
+.fin-ledger-table th:nth-child(6),
+.fin-ledger-table td:nth-child(6) {
+  width: 15%;
+}
+
+.fin-ledger-date {
+  color: #263e5d;
+  font-size: 14px;
+}
+
+.fin-ledger-description {
+  color: #142d50;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.fin-ledger-debit {
+  color: #ff4242;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fin-ledger-credit {
+  color: #66ce00;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fin-ledger-dash {
+  color: #a0acba;
+  font-size: 17px;
+}
+
+.fin-ledger-balance {
+  color: #0b2545;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.fin-ledger-status {
+  display: inline-flex;
+  min-width: 61px;
+  height: 29px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fin-ledger-status-given,
+.fin-ledger-status-received {
+  background: #dff8e9;
+  color: #13a04b;
+}
+
+.fin-ledger-status-due {
+  background: #ffedcf;
+  color: #f26a00;
+}
+
+.fin-ledger-status-overdue {
+  background: #ffe1e3;
+  color: #ed343d;
+}
+
+.fin-ledger-status-closed {
+  background: #e9edf2;
+  color: #66758a;
+}
+
+.fin-ledger-empty {
+  height: 130px !important;
+  color: #8394aa !important;
+  text-align: center;
+}
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1280px) {
+  .fin-ledger-page {
+    padding: 17px 20px 20px;
+  }
+
+  .fin-ledger-layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .fin-ledger-customer-panel {
+    height: 560px;
+  }
+
+  .fin-ledger-customer-item {
+    height: 68px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .fin-ledger-avatar {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    font-size: 16px;
+  }
+
+  .fin-ledger-customer-name {
+    font-size: 14px;
+  }
+
+  .fin-ledger-customer-loans {
+    font-size: 11px;
+  }
+
+  .fin-ledger-title {
+    font-size: 27px;
+  }
+
+  .fin-ledger-summary-card {
+    height: 96px;
+    padding: 17px 19px;
+  }
+
+  .fin-ledger-summary-card strong {
+    font-size: 23px;
+  }
+
+  .fin-ledger-table th {
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .fin-ledger-table td {
+    padding: 0 14px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   SMALL LAPTOP / TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .fin-ledger-page {
+    padding: 15px;
+    overflow: visible;
+  }
+
+  .fin-ledger-layout {
+    grid-template-columns: 225px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .fin-ledger-customer-panel {
+    height: 530px;
+  }
+
+  .fin-ledger-customer-heading {
+    font-size: 12px;
+  }
+
+  .fin-ledger-customer-header h2 {
+    font-size: 20px;
+  }
+
+  .fin-ledger-customer-header p {
+    font-size: 12px;
+  }
+
+  .fin-ledger-customer-header button {
+    min-height: 42px;
+    padding: 0 13px;
+    font-size: 13px;
+  }
+
+  .fin-ledger-summary-grid {
+    gap: 10px;
+  }
+
+  .fin-ledger-summary-card {
+    height: 88px;
+    padding: 14px 16px;
+  }
+
+  .fin-ledger-summary-label {
+    font-size: 11px;
+  }
+
+  .fin-ledger-summary-card strong {
+    font-size: 20px;
+  }
+
+  .fin-ledger-table th {
+    padding: 0 10px;
+    font-size: 10px;
+  }
+
+  .fin-ledger-table td {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .fin-ledger-description,
+  .fin-ledger-debit,
+  .fin-ledger-credit,
+  .fin-ledger-balance {
+    font-size: 12px;
+  }
+
+  .fin-ledger-status {
+    min-width: 50px;
+    height: 25px;
+    padding: 0 7px;
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   TABLET PORTRAIT
+========================================================= */
+
+@media (max-width: 760px) {
+  .fin-ledger-page {
+    padding: 14px;
+  }
+
+  .fin-ledger-title {
+    font-size: 25px;
+  }
+
+  .fin-ledger-subtitle {
+    font-size: 14px;
+  }
+
+  .fin-ledger-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fin-ledger-customer-panel {
+    height: auto;
+    padding: 13px;
+  }
+
+  .fin-ledger-customer-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .fin-ledger-customer-item {
+    height: 62px;
+  }
+
+  .fin-ledger-content {
+    width: 100%;
+  }
+
+  .fin-ledger-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* =========================================================
+   LAPTOP / TABLET
+   Balanced columns — no clipping
+   ========================================================= */
+
+@media (min-width: 561px) and (max-width: 1280px) {
+
+  .fin-ledger-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  /* DATE */
+  .fin-ledger-table th:nth-child(1),
+  .fin-ledger-table td:nth-child(1) {
+    width: 18%;
+  }
+
+  /* DESCRIPTION */
+  .fin-ledger-table th:nth-child(2),
+  .fin-ledger-table td:nth-child(2) {
+    width: 22%;
+  }
+
+  /* DEBIT */
+  .fin-ledger-table th:nth-child(3),
+  .fin-ledger-table td:nth-child(3) {
+    width: 14%;
+  }
+
+  /* CREDIT */
+  .fin-ledger-table th:nth-child(4),
+  .fin-ledger-table td:nth-child(4) {
+    width: 14%;
+  }
+
+  /* BALANCE */
+  .fin-ledger-table th:nth-child(5),
+  .fin-ledger-table td:nth-child(5) {
+    width: 17%;
+  }
+
+  /* STATUS */
+  .fin-ledger-table th:nth-child(6),
+  .fin-ledger-table td:nth-child(6) {
+    width: 15%;
+  }
+
+
+  /* DATE — never truncate */
+  .fin-ledger-date {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+
+  /* MONEY VALUES — never show ₹15,0... */
+  .fin-ledger-debit,
+  .fin-ledger-credit,
+  .fin-ledger-balance {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+
+  /* Keep amount cells from being clipped */
+  .fin-ledger-table td:nth-child(3),
+  .fin-ledger-table td:nth-child(4),
+  .fin-ledger-table td:nth-child(5) {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+
+  /* Description can truncate if absolutely necessary */
+  .fin-ledger-description {
+    display: block;
+    max-width: 100%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  /* Status pill stays completely visible */
+  .fin-ledger-status {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .fin-ledger-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 56px);
+    padding: 10px 8px 18px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .fin-ledger-title {
+    font-size: 22px;
+  }
+
+  .fin-ledger-subtitle {
+    font-size: 12px;
+  }
+
+  .fin-ledger-page-header {
+    margin-bottom: 12px;
+  }
+
+  /* =======================================================
+     CUSTOMER PANEL
+     ======================================================= */
+
+  .fin-ledger-customer-panel {
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    padding: 9px;
+    border-radius: 11px;
+  }
+
+  .fin-ledger-customer-heading {
+    padding: 0 5px 7px;
+    font-size: 10px;
+  }
+
+  .fin-ledger-search {
+    width: auto;
+    height: 34px;
+    margin: 0 2px 7px;
+  }
+
+  .fin-ledger-customer-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .fin-ledger-customer-item {
+    width: 100%;
+    height: 56px;
+    min-width: 0;
+    padding: 7px 8px;
+    gap: 7px;
+    border-radius: 9px;
+  }
+
+  .fin-ledger-avatar {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    font-size: 13px;
+  }
+
+  .fin-ledger-customer-info {
+    min-width: 0;
+  }
+
+  .fin-ledger-customer-name {
+    font-size: 11px;
+  }
+
+  .fin-ledger-customer-loans {
+    font-size: 9px;
+  }
+
+  /* =======================================================
+     CUSTOMER HEADER
+     ======================================================= */
+
+  .fin-ledger-customer-header {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+  }
+
+  .fin-ledger-customer-header h2 {
+    font-size: 18px;
+  }
+
+  .fin-ledger-customer-header p {
+    font-size: 10px;
+  }
+
+  .fin-ledger-customer-header button {
+    width: 100%;
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+
+  /* =======================================================
+     SUMMARY CARDS
+     ======================================================= */
+
+  .fin-ledger-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .fin-ledger-summary-card {
+    width: 100%;
+    height: 62px;
+    min-height: 62px;
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .fin-ledger-summary-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .fin-ledger-summary-label {
+    margin-bottom: 3px;
+    font-size: 8px;
+  }
+
+  .fin-ledger-summary-card strong {
+    font-size: 15px;
+  }
+
+  /* =======================================================
+     LEDGER
+     Mobile format:
+       DATE          10-Aug-2026
+       DESCRIPTION   Loan Disbursed
+       DEBIT         ₹10,000
+       CREDIT        —
+       BALANCE       ₹10,000
+       STATUS        Given
+     ======================================================= */
+
+  .fin-ledger-table-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .fin-ledger-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .fin-ledger-table {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: separate;
+  }
+
+  .fin-ledger-table thead {
+    display: none;
+  }
+
+  .fin-ledger-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .fin-ledger-table tbody tr {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 7px 10px;
+    box-sizing: border-box;
+    background: #fff;
+    border-bottom: 1px solid #e8edf2;
+  }
+
+  .fin-ledger-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  /*
+    CRITICAL FIX:
+    The desktop CSS gives each nth-child a width such as
+    16%, 25%, 14%, etc. Those selectors are more specific
+    than .fin-ledger-table td.
+
+    On mobile every cell MUST have width:auto/100% so that
+    the grid has enough room for the value.
+  */
+  .fin-ledger-table th:nth-child(1),
+  .fin-ledger-table td:nth-child(1),
+  .fin-ledger-table th:nth-child(2),
+  .fin-ledger-table td:nth-child(2),
+  .fin-ledger-table th:nth-child(3),
+  .fin-ledger-table td:nth-child(3),
+  .fin-ledger-table th:nth-child(4),
+  .fin-ledger-table td:nth-child(4),
+  .fin-ledger-table th:nth-child(5),
+  .fin-ledger-table td:nth-child(5),
+  .fin-ledger-table th:nth-child(6),
+  .fin-ledger-table td:nth-child(6) {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .fin-ledger-table td {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 27px;
+
+    display: grid !important;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 8px;
+
+    padding: 4px 0;
+    box-sizing: border-box;
+
+    border: 0;
+
+    font-size: 10px;
+    line-height: 1.25;
+    text-align: left;
+
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  /*
+    Fixed label column.
+  */
+  .fin-ledger-table td::before {
+    content: attr(data-label);
+    display: block;
+
+    width: 92px;
+    min-width: 92px;
+    max-width: 92px;
+
+    color: #7890ad;
+    font-size: 8px;
+    line-height: 1.2;
+    font-weight: 750;
+    letter-spacing: 0.1px;
+    text-align: left;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /*
+    The actual value is the second grid item.
+    These rules prevent the value itself from becoming
+    a tiny/narrow flex item.
+  */
+  .fin-ledger-table td > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .fin-ledger-date,
+  .fin-ledger-description,
+  .fin-ledger-debit,
+  .fin-ledger-credit,
+  .fin-ledger-balance,
+  .fin-ledger-dash {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+
+    margin: 0;
+
+    text-align: left;
+    white-space: normal !important;
+    overflow: visible;
+    text-overflow: clip;
+
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .fin-ledger-date {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .fin-ledger-description {
+    font-size: 10px;
+    line-height: 1.25;
+    font-weight: 650;
+  }
+
+  .fin-ledger-debit,
+  .fin-ledger-credit {
+    font-size: 10px;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  .fin-ledger-balance {
+    font-size: 10.5px;
+    line-height: 1.25;
+    font-weight: 750;
+  }
+
+  .fin-ledger-dash {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .fin-ledger-status {
+    justify-self: start;
+    align-self: center;
+
+    min-width: 50px;
+    width: auto;
+    height: 24px;
+    padding: 0 8px;
+
+    font-size: 8.5px;
+    white-space: nowrap;
+  }
+
+  .fin-ledger-empty {
+    height: 80px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .fin-ledger-empty::before {
+    display: none !important;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE — 380px / 360px / 320px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .fin-ledger-page {
+    padding: 8px 6px 16px;
+  }
+
+  .fin-ledger-title {
+    font-size: 20px;
+  }
+
+  .fin-ledger-subtitle {
+    font-size: 11px;
+  }
+
+  .fin-ledger-customer-list {
+    grid-template-columns: 1fr;
+  }
+
+  .fin-ledger-customer-item {
+    height: 51px;
+    padding: 6px 8px;
+  }
+
+  .fin-ledger-avatar {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+    font-size: 12px;
+  }
+
+  .fin-ledger-customer-name {
+    font-size: 10.5px;
+  }
+
+  .fin-ledger-customer-loans {
+    font-size: 8.5px;
+  }
+
+  .fin-ledger-customer-header h2 {
+    font-size: 17px;
+  }
+
+  .fin-ledger-customer-header p {
+    font-size: 9px;
+  }
+
+  .fin-ledger-summary-grid {
+    gap: 5px;
+  }
+
+  .fin-ledger-summary-card {
+    height: 58px;
+    min-height: 58px;
+    padding: 7px 9px;
+  }
+
+  .fin-ledger-summary-label {
+    font-size: 7.5px;
+  }
+
+  .fin-ledger-summary-card strong {
+    font-size: 14px;
+  }
+
+  /* Keep all desktop nth-child widths overridden here too. */
+  .fin-ledger-table th:nth-child(1),
+  .fin-ledger-table td:nth-child(1),
+  .fin-ledger-table th:nth-child(2),
+  .fin-ledger-table td:nth-child(2),
+  .fin-ledger-table th:nth-child(3),
+  .fin-ledger-table td:nth-child(3),
+  .fin-ledger-table th:nth-child(4),
+  .fin-ledger-table td:nth-child(4),
+  .fin-ledger-table th:nth-child(5),
+  .fin-ledger-table td:nth-child(5),
+  .fin-ledger-table th:nth-child(6),
+  .fin-ledger-table td:nth-child(6) {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .fin-ledger-table tbody tr {
+    padding: 6px 8px;
+  }
+
+  .fin-ledger-table td {
+    grid-template-columns: 78px minmax(0, 1fr);
+    column-gap: 7px;
+    min-height: 25px;
+    padding: 3.5px 0;
+  }
+
+  .fin-ledger-table td::before {
+    width: 78px;
+    min-width: 78px;
+    max-width: 78px;
+    font-size: 7.5px;
+  }
+
+  .fin-ledger-date,
+  .fin-ledger-description,
+  .fin-ledger-debit,
+  .fin-ledger-credit,
+  .fin-ledger-balance {
+    font-size: 9px;
+  }
+
+  .fin-ledger-dash {
+    font-size: 12px;
+  }
+
+  .fin-ledger-status {
+    min-width: 47px;
+    height: 23px;
+    padding: 0 7px;
+    font-size: 8px;
+  }
+}
+
+
+/* =========================================================
+   GLOBAL MOBILE OVERFLOW SAFETY
+   ========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.fin-layout,
+.fin-layout-wrapper,
+.fin-layout-content,
+.fin-ledger-page,
+.fin-ledger-layout,
+.fin-ledger-content {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+

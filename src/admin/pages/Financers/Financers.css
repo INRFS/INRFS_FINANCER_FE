@@ -1,0 +1,129 @@
+.admin-financers-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-financers-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-white);
+  padding: 20px 24px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.admin-financers-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-navy);
+}
+
+.admin-financers-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.admin-financers-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-financers-table-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.admin-financers-table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-financers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.admin-financers-table th {
+  background: var(--color-bg);
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-financers-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-financers-id { color: var(--color-purple); font-weight: 700; }
+.admin-financers-name { color: var(--color-navy); font-weight: 700; }
+
+.admin-financers-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admin-financers-approve-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(123, 208, 0, 0.15);
+  color: #4a8200;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+}
+
+.admin-financers-suspend-btn {
+  color: var(--color-red);
+  padding: 6px;
+}
+
+.admin-financers-view-btn {
+  color: var(--color-text-muted);
+  padding: 6px;
+}
+
+.admin-financers-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-financers-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-financers-input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.admin-financers-input-group input {
+  padding: 10px 14px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.admin-financers-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}

@@ -1,0 +1,736 @@
+/* =========================================================
+   INRFS WELCOME SCREEN
+   ========================================================= */
+
+.inrfs-welcome-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      115deg,
+      #11b5ed 0%,
+      #2e8eea 28%,
+      #4c5ce5 58%,
+      #7629df 82%,
+      #8b12db 100%
+    );
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOWS
+   ========================================================= */
+
+.inrfs-welcome-glow {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  filter: blur(2px);
+
+  opacity: 0.16;
+}
+
+
+.inrfs-welcome-glow-one {
+  width: 480px;
+  height: 480px;
+
+  top: -220px;
+  left: -170px;
+
+  background: #ffffff;
+
+  opacity: 0.06;
+}
+
+
+.inrfs-welcome-glow-two {
+  width: 420px;
+  height: 420px;
+
+  right: -180px;
+  bottom: -180px;
+
+  background: #ffffff;
+
+  opacity: 0.07;
+}
+
+
+.inrfs-welcome-glow-three {
+  width: 260px;
+  height: 260px;
+
+  right: 18%;
+  top: -130px;
+
+  background: #5de9ff;
+
+  opacity: 0.09;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.inrfs-welcome-content {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+  max-width: 900px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 50px 30px;
+}
+
+
+/* =========================================================
+   LOGO CIRCLE
+   ========================================================= */
+
+.inrfs-welcome-logo-circle {
+  width: 96px;
+  height: 96px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 12px 35px rgba(7, 37, 100, 0.17);
+
+  margin-bottom: 34px;
+
+  animation: inrfs-welcome-logo-enter 0.7s ease-out;
+}
+
+
+.inrfs-welcome-logo {
+  width: 67px;
+  height: 67px;
+
+  object-fit: contain;
+
+  mix-blend-mode: multiply;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.inrfs-welcome-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 40px;
+
+  line-height: 1.2;
+
+  font-weight: 750;
+
+  letter-spacing: -1.2px;
+
+  text-align: center;
+
+  animation: inrfs-welcome-title-enter 0.7s ease-out;
+}
+
+
+.inrfs-welcome-title span {
+  display: inline-block;
+
+  margin-left: 3px;
+
+  font-size: 38px;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.inrfs-welcome-subtitle {
+  margin: 20px 0 0;
+
+  max-width: 680px;
+
+  color: rgba(255, 255, 255, 0.91);
+
+  font-size: 21px;
+
+  line-height: 1.5;
+
+  font-weight: 400;
+
+  text-align: center;
+
+  animation: inrfs-welcome-subtitle-enter 0.8s ease-out;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.inrfs-welcome-button {
+  width: 335px;
+
+  min-height: 62px;
+
+  margin-top: 48px;
+
+  padding: 0 25px;
+
+  box-sizing: border-box;
+
+  border: none;
+
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  color: #08aef0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  font-family: inherit;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 28px rgba(22, 41, 95, 0.15);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+
+  animation: inrfs-welcome-button-enter 0.9s ease-out;
+}
+
+
+.inrfs-welcome-button:hover {
+  transform: translateY(-3px);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 17px 35px rgba(22, 41, 95, 0.23);
+}
+
+
+.inrfs-welcome-button:active {
+  transform: translateY(-1px);
+}
+
+
+.inrfs-welcome-button svg {
+  flex-shrink: 0;
+
+  transition:
+    transform 0.22s ease;
+}
+
+
+.inrfs-welcome-button:hover svg {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.inrfs-welcome-footer {
+  position: absolute;
+
+  z-index: 5;
+
+  bottom: 24px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: rgba(255, 255, 255, 0.56);
+
+  font-size: 13px;
+
+  white-space: nowrap;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   ADMIN VARIANT
+   ========================================================= */
+
+.inrfs-welcome-admin {
+  background:
+    linear-gradient(
+      115deg,
+      #0caee8 0%,
+      #3787ed 30%,
+      #5554e5 58%,
+      #7426dd 82%,
+      #8b10d8 100%
+    );
+}
+
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes inrfs-welcome-logo-enter {
+
+  0% {
+    opacity: 0;
+    transform: scale(0.75) translateY(15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+}
+
+
+@keyframes inrfs-welcome-title-enter {
+
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+@keyframes inrfs-welcome-subtitle-enter {
+
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+@keyframes inrfs-welcome-button-enter {
+
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   LARGE SCREENS
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+  .inrfs-welcome-logo-circle {
+    width: 104px;
+    height: 104px;
+
+    margin-bottom: 38px;
+  }
+
+
+  .inrfs-welcome-logo {
+    width: 73px;
+    height: 73px;
+  }
+
+
+  .inrfs-welcome-title {
+    font-size: 44px;
+  }
+
+
+  .inrfs-welcome-title span {
+    font-size: 41px;
+  }
+
+
+  .inrfs-welcome-subtitle {
+    font-size: 22px;
+  }
+
+
+  .inrfs-welcome-button {
+    width: 350px;
+
+    min-height: 64px;
+
+    margin-top: 50px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .inrfs-welcome-content {
+    padding:
+      45px
+      25px;
+  }
+
+
+  .inrfs-welcome-logo-circle {
+    width: 90px;
+    height: 90px;
+
+    margin-bottom: 30px;
+  }
+
+
+  .inrfs-welcome-logo {
+    width: 63px;
+    height: 63px;
+  }
+
+
+  .inrfs-welcome-title {
+    font-size: 35px;
+  }
+
+
+  .inrfs-welcome-title span {
+    font-size: 33px;
+  }
+
+
+  .inrfs-welcome-subtitle {
+    font-size: 19px;
+
+    margin-top: 17px;
+  }
+
+
+  .inrfs-welcome-button {
+    margin-top: 42px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .inrfs-welcome-page {
+    min-height: 100dvh;
+
+    padding:
+      20px
+      15px;
+  }
+
+
+  .inrfs-welcome-content {
+    max-width: 100%;
+
+    padding:
+      30px
+      15px;
+  }
+
+
+  /* Logo */
+
+  .inrfs-welcome-logo-circle {
+    width: 82px;
+    height: 82px;
+
+    margin-bottom: 28px;
+
+    box-shadow:
+      0 9px 25px rgba(7, 37, 100, 0.17);
+  }
+
+
+  .inrfs-welcome-logo {
+    width: 57px;
+    height: 57px;
+  }
+
+
+  /* Title */
+
+  .inrfs-welcome-title {
+    max-width: 360px;
+
+    font-size: 29px;
+
+    line-height: 1.25;
+
+    letter-spacing: -0.7px;
+  }
+
+
+  .inrfs-welcome-title span {
+    font-size: 27px;
+
+    margin-left: 1px;
+  }
+
+
+  /* Subtitle */
+
+  .inrfs-welcome-subtitle {
+    max-width: 350px;
+
+    margin-top: 16px;
+
+    font-size: 17px;
+
+    line-height: 1.5;
+  }
+
+
+  /* Button */
+
+  .inrfs-welcome-button {
+    width: min(335px, 100%);
+
+    min-height: 56px;
+
+    margin-top: 38px;
+
+    border-radius: 13px;
+
+    font-size: 16px;
+  }
+
+
+  /* Footer */
+
+  .inrfs-welcome-footer {
+    bottom: 17px;
+
+    font-size: 11px;
+  }
+
+
+  /* Background */
+
+  .inrfs-welcome-glow-one {
+    width: 300px;
+    height: 300px;
+
+    left: -180px;
+    top: -130px;
+  }
+
+
+  .inrfs-welcome-glow-two {
+    width: 280px;
+    height: 280px;
+
+    right: -150px;
+    bottom: -120px;
+  }
+
+
+  .inrfs-welcome-glow-three {
+    width: 180px;
+    height: 180px;
+
+    right: -70px;
+    top: 10%;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .inrfs-welcome-page {
+    padding:
+      15px
+      10px;
+  }
+
+
+  .inrfs-welcome-content {
+    padding:
+      20px
+      10px;
+  }
+
+
+  .inrfs-welcome-logo-circle {
+    width: 74px;
+    height: 74px;
+
+    margin-bottom: 25px;
+  }
+
+
+  .inrfs-welcome-logo {
+    width: 51px;
+    height: 51px;
+  }
+
+
+  .inrfs-welcome-title {
+    font-size: 25px;
+  }
+
+
+  .inrfs-welcome-title span {
+    font-size: 23px;
+  }
+
+
+  .inrfs-welcome-subtitle {
+    max-width: 300px;
+
+    font-size: 15px;
+
+    margin-top: 14px;
+  }
+
+
+  .inrfs-welcome-button {
+    min-height: 52px;
+
+    margin-top: 32px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+  }
+
+
+  .inrfs-welcome-footer {
+    bottom: 12px;
+
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 320px) {
+
+  .inrfs-welcome-logo-circle {
+    width: 68px;
+    height: 68px;
+  }
+
+
+  .inrfs-welcome-logo {
+    width: 47px;
+    height: 47px;
+  }
+
+
+  .inrfs-welcome-title {
+    font-size: 23px;
+  }
+
+
+  .inrfs-welcome-title span {
+    font-size: 21px;
+  }
+
+
+  .inrfs-welcome-subtitle {
+    font-size: 14px;
+  }
+
+
+  .inrfs-welcome-button {
+    min-height: 50px;
+
+    font-size: 14px;
+  }
+
+}

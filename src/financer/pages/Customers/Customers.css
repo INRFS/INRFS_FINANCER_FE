@@ -1,0 +1,1753 @@
+/* =========================================================
+   CUSTOMERS PAGE
+   Compact / No Horizontal Scroll / Responsive
+   ========================================================= */
+
+.fin-customers-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 18px 22px 28px;
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.fin-customers-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.fin-customers-title {
+  margin: 0;
+  color: #0b2a50;
+  font-size: 24px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.fin-customers-subtitle {
+  margin: 5px 0 0;
+  color: #71829b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.fin-customers-stats-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.fin-customers-stat-card {
+  min-width: 0;
+  height: 70px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  background: #ffffff;
+  border: 1px solid #e4ebf3;
+  border-radius: 11px;
+
+  box-shadow: 0 2px 8px rgba(11, 42, 80, 0.035);
+}
+
+.fin-customers-stat-icon {
+  width: 37px;
+  height: 37px;
+  min-width: 37px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+}
+
+.fin-cust-icon-navy {
+  background: #eaf1fa;
+  color: #0b2a50;
+}
+
+.fin-cust-icon-green {
+  background: #edf8dc;
+  color: #4d8500;
+}
+
+.fin-cust-icon-cyan {
+  background: #e6f7fc;
+  color: #079fce;
+}
+
+.fin-cust-icon-red {
+  background: #fff0f0;
+  color: #ed3030;
+}
+
+.fin-customers-stat-label {
+  display: block;
+  margin-bottom: 3px;
+
+  color: #7d8da5;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.fin-customers-stat-val {
+  margin: 0;
+
+  color: #1e2f49;
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.fin-val-red {
+  color: #e32f35;
+}
+
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.fin-customers-toolbar {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 13px;
+}
+
+.fin-customers-search {
+  width: min(420px, 100%);
+  min-width: 0;
+}
+
+.fin-customers-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.fin-customers-filters label {
+  color: #687b96;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.fin-customers-select {
+  height: 38px;
+  min-width: 135px;
+
+  padding: 0 30px 0 11px;
+
+  color: #40536f;
+  background: #ffffff;
+
+  border: 1px solid #d9e2ed;
+  border-radius: 7px;
+
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.fin-customers-select:focus {
+  border-color: #10a8d8;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.fin-customers-table-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  background: #ffffff;
+  border: 1px solid #e3eaf2;
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow: 0 3px 12px rgba(11, 42, 80, 0.035);
+}
+
+
+/*
+  IMPORTANT:
+  No horizontal scrolling.
+*/
+.fin-customers-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+
+.fin-customers-table {
+  width: 100%;
+  max-width: 100%;
+
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  color: #586b85;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLE COLUMN WIDTHS
+   ========================================================= */
+
+.fin-customers-table th:nth-child(1) {
+  width: 23%;
+}
+
+.fin-customers-table th:nth-child(2) {
+  width: 15%;
+}
+
+.fin-customers-table th:nth-child(3) {
+  width: 11%;
+}
+
+.fin-customers-table th:nth-child(4) {
+  width: 11%;
+}
+
+.fin-customers-table th:nth-child(5) {
+  width: 12%;
+}
+
+.fin-customers-table th:nth-child(6) {
+  width: 12%;
+}
+
+.fin-customers-table th:nth-child(7) {
+  width: 9%;
+}
+
+.fin-customers-table th:nth-child(8) {
+  width: 7%;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.fin-customers-table thead {
+  background: #f7f9fc;
+}
+
+.fin-customers-table th {
+  height: 48px;
+
+  padding: 0 10px;
+
+  color: #7889a2;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+
+  text-align: left;
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e3eaf2;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.fin-customers-table tbody tr {
+  height: 72px;
+  transition: background 0.15s ease;
+}
+
+.fin-customers-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.fin-customers-table td {
+  padding: 8px 10px;
+
+  border-bottom: 1px solid #edf1f6;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fin-customers-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   CUSTOMER CELL
+   ========================================================= */
+
+.fin-customers-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.fin-customers-avatar {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eaf6fb;
+  color: #08a5d6;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.fin-customers-customer-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fin-customers-name {
+  display: block;
+
+  color: #2b3c56;
+  font-size: 13px;
+  font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fin-customers-id {
+  display: block;
+
+  color: #91a1b8;
+  font-size: 11px;
+  font-weight: 500;
+
+  letter-spacing: 0.15px;
+}
+
+
+/* =========================================================
+   TABLE VALUES
+   ========================================================= */
+
+.fin-customers-table td {
+  color: #5c6d85;
+}
+
+.fin-customers-table td strong {
+  color: #33445d;
+}
+
+.fin-customers-amt {
+  font-size: 13px;
+  font-weight: 750;
+  color: #293b55 !important;
+}
+
+.center-column {
+  text-align: center !important;
+}
+
+.action-column {
+  text-align: right !important;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.fin-customers-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.fin-customers-action-btn {
+  width: 29px;
+  height: 29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dfe7f0;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #6f8199;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.fin-customers-action-btn:hover {
+  color: #06a6d6;
+  border-color: #9eddf0;
+  background: #f0fbfe;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.fin-customers-empty {
+  height: 100px !important;
+
+  text-align: center !important;
+
+  color: #8b9ab0 !important;
+  font-size: 13px !important;
+}
+
+
+/* =========================================================
+   CUSTOMER WIZARD OVERLAY
+   ========================================================= */
+
+.customer-wizard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  background: rgba(8, 27, 51, 0.46);
+
+  backdrop-filter: blur(3px);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.customer-wizard-modal {
+  width: min(860px, 100%);
+
+  max-height: calc(100vh - 36px);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 20px 60px rgba(7, 31, 58, 0.22);
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.customer-wizard-header {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 26px 10px;
+}
+
+.customer-wizard-header h2 {
+  margin: 0;
+
+  color: #08294f;
+
+  font-size: 26px;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+.customer-wizard-header p {
+  margin: 5px 0 0;
+
+  color: #5f7899;
+
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.customer-wizard-close {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  color: #8da1ba;
+
+  cursor: pointer;
+
+  border-radius: 8px;
+}
+
+.customer-wizard-close:hover {
+  color: #173a62;
+  background: #f2f6fa;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.customer-wizard-progress {
+  flex-shrink: 0;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 13px;
+
+  padding: 0 26px 14px;
+}
+
+.customer-wizard-progress-item {
+  min-width: 0;
+}
+
+.customer-wizard-progress-line {
+  height: 5px;
+
+  margin-bottom: 8px;
+
+  border-radius: 10px;
+
+  background: #e2e7ed;
+
+  transition: background 0.2s ease;
+}
+
+.customer-wizard-progress-line.current,
+.customer-wizard-progress-line.completed {
+  background: #0aa8d9;
+}
+
+.customer-wizard-step-label {
+  display: block;
+
+  color: #91a2ba;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+.customer-wizard-step-label.current,
+.customer-wizard-step-label.completed {
+  color: #08a8db;
+}
+
+
+/* =========================================================
+   MODAL CONTENT
+   ========================================================= */
+
+.customer-wizard-content {
+  min-height: 0;
+
+  padding: 4px 26px 20px;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.customer-form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 14px 20px;
+}
+
+.customer-form-field {
+  min-width: 0;
+}
+
+.customer-form-field.full {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.customer-form-field label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #213b5d;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.customer-form-field label span {
+  color: #ef3a3a;
+}
+
+.customer-form-field input,
+.customer-form-field select {
+  width: 100%;
+  height: 44px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  color: #263a56;
+
+  background: #ffffff;
+
+  border: 1px solid #d9e2ec;
+  border-radius: 9px;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.customer-form-field input::placeholder {
+  color: #9aa9bc;
+}
+
+.customer-form-field input:focus,
+.customer-form-field select:focus {
+  border-color: #0ba8d9;
+
+  box-shadow: 0 0 0 3px rgba(11, 168, 217, 0.09);
+}
+
+
+/* =========================================================
+   WIZARD ACTIONS
+   ========================================================= */
+
+.customer-wizard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.customer-wizard-back,
+.customer-wizard-continue,
+.customer-wizard-save {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+}
+
+.customer-wizard-back {
+  min-width: 105px;
+
+  padding: 0 16px;
+
+  border: 1px solid #d9e2ec;
+
+  background: #ffffff;
+  color: #61748e;
+}
+
+.customer-wizard-back:hover {
+  background: #f7f9fc;
+}
+
+.customer-wizard-continue {
+  width: 100%;
+  height: 42px;
+
+  margin-top: 20px;
+
+  border: none;
+
+  background: #08a8da;
+  color: #ffffff;
+
+  box-shadow: 0 4px 12px rgba(8, 168, 218, 0.16);
+}
+
+.customer-wizard-continue:hover {
+  background: #0799c7;
+}
+
+.customer-wizard-continue.half {
+  width: 150px;
+  margin-top: 0;
+}
+
+.customer-wizard-save {
+  min-width: 145px;
+
+  gap: 6px;
+
+  padding: 0 17px;
+
+  border: none;
+
+  background: #08a8da;
+  color: #ffffff;
+}
+
+.customer-wizard-save:hover {
+  background: #0799c7;
+}
+
+
+/* =========================================================
+   DOCUMENT UPLOAD
+   ========================================================= */
+
+.customer-document-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px 14px;
+}
+
+.customer-document-upload {
+  min-width: 0;
+
+  min-height: 48px;
+
+  padding: 9px 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  border: 1px dashed #cbd8e6;
+  border-radius: 8px;
+
+  background: #fbfcfe;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.customer-document-upload:hover {
+  border-color: #0aa8d9;
+  background: #f3fbfd;
+}
+
+.customer-document-upload input {
+  display: none;
+}
+
+.customer-document-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: #0aa4d3;
+}
+
+.customer-document-left span {
+  min-width: 0;
+
+  color: #50657f;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.customer-document-browse {
+  flex-shrink: 0;
+
+  color: #0aa6d7;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+
+/*
+  Design goals:
+  - No horizontal page scroll.
+  - Desktop keeps the normal table layout.
+  - Tablet stacks the toolbar and keeps all useful table columns.
+  - Mobile uses a compact 5-column table and removes low-priority columns.
+  - Very small phones hide the status column so the action button always
+    has enough room.
+  - Wizard/modal becomes a full-height mobile sheet with vertical scrolling.
+*/
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1440px) {
+
+  .fin-customers-page {
+    padding: 20px 26px 30px;
+  }
+
+  .fin-customers-table {
+    font-size: 13px;
+  }
+
+  .fin-customers-table th {
+    font-size: 11px;
+  }
+
+  .fin-customers-table tbody tr {
+    height: 74px;
+  }
+
+  .customer-wizard-modal {
+    width: 880px;
+  }
+}
+
+
+/* =========================================================
+   LAPTOP / SMALL DESKTOP
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .fin-customers-page {
+    padding: 16px 16px 24px;
+  }
+
+  .fin-customers-stats-grid {
+    gap: 9px;
+  }
+
+  .fin-customers-stat-card {
+    padding: 10px;
+  }
+
+  .fin-customers-stat-label {
+    font-size: 10px;
+  }
+
+  .fin-customers-table th,
+  .fin-customers-table td {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .fin-customers-avatar {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .fin-customers-name {
+    font-size: 12px;
+  }
+
+  .fin-customers-id {
+    font-size: 10px;
+  }
+
+  .customer-wizard-modal {
+    width: min(820px, 100%);
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .fin-customers-page {
+    padding: 14px 12px 22px;
+  }
+
+  .fin-customers-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /*
+    Search and filter become separate rows.
+    This prevents the toolbar from becoming too narrow.
+  */
+  .fin-customers-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .fin-customers-search {
+    width: 100%;
+  }
+
+  .fin-customers-filters {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .fin-customers-select {
+    min-width: 150px;
+  }
+
+  /*
+    Keep the table usable on tablets.
+    Slightly smaller typography, but don't squeeze it aggressively.
+  */
+  .fin-customers-table {
+    font-size: 11px;
+  }
+
+  .fin-customers-table th {
+    font-size: 9.5px;
+  }
+
+  .fin-customers-table th,
+  .fin-customers-table td {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .fin-customers-table tbody tr {
+    height: 66px;
+  }
+
+  .fin-customers-avatar {
+    width: 31px;
+    height: 31px;
+    min-width: 31px;
+    font-size: 12px;
+  }
+
+  .fin-customers-name {
+    font-size: 11px;
+  }
+
+  .fin-customers-id {
+    font-size: 9px;
+  }
+
+  .fin-customers-mobile {
+    font-size: 10px;
+  }
+
+  .customer-wizard-header {
+    padding: 18px 20px 9px;
+  }
+
+  .customer-wizard-progress {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .customer-wizard-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-customers-page {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 10px 20px;
+    overflow-x: hidden;
+  }
+
+  .fin-customers-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+
+  .fin-customers-title {
+    font-size: 20px;
+  }
+
+  .fin-customers-subtitle {
+    font-size: 11px;
+  }
+
+  /*
+    Stats: two compact cards per row.
+  */
+  .fin-customers-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .fin-customers-stat-card {
+    width: 100%;
+    height: 62px;
+    padding: 8px 9px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .fin-customers-stat-icon {
+    width: 31px;
+    height: 31px;
+    min-width: 31px;
+  }
+
+  .fin-customers-stat-label {
+    margin-bottom: 2px;
+    font-size: 9px;
+  }
+
+  .fin-customers-stat-val {
+    font-size: 17px;
+  }
+
+  /*
+    Toolbar:
+    search is full width;
+    filter is a clean full-width row below it.
+  */
+  .fin-customers-toolbar {
+    width: 100%;
+    gap: 9px;
+    margin-bottom: 10px;
+  }
+
+  .fin-customers-search {
+    width: 100%;
+  }
+
+  .fin-customers-filters {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    justify-content: stretch;
+  }
+
+  .fin-customers-filters label {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .fin-customers-select {
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    font-size: 11px;
+  }
+
+  /*
+    TABLE:
+    Hide only lower-priority columns.
+    Visible:
+      1 Customer
+      2 Mobile
+      5 Outstanding
+      7 Status
+      8 Action
+
+    The previous CSS used very small 8-11% widths for status/action,
+    which caused the overlap visible in the screenshot.
+    These widths give the important columns enough room.
+  */
+
+  .fin-customers-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .fin-customers-table {
+    width: 650px;
+    min-width: 650px;
+    table-layout: fixed;
+  }
+
+
+  .fin-customers-table th:nth-child(3),
+  .fin-customers-table td:nth-child(3),
+  .fin-customers-table th:nth-child(4),
+  .fin-customers-table td:nth-child(4),
+  .fin-customers-table th:nth-child(6),
+  .fin-customers-table td:nth-child(6) {
+    display: none;
+  }
+
+  .fin-customers-table th:nth-child(1) {
+    width: 39%;
+  }
+
+  .fin-customers-table th:nth-child(2) {
+    width: 24%;
+  }
+
+  .fin-customers-table th:nth-child(5) {
+    width: 18%;
+  }
+
+  .fin-customers-table th:nth-child(7) {
+    width: 12%;
+  }
+
+  .fin-customers-table th:nth-child(8) {
+    width: 7%;
+  }
+
+  .fin-customers-table th,
+  .fin-customers-table td {
+    padding: 6px 4px;
+    min-width: 0;
+  }
+
+  .fin-customers-table th {
+    height: 40px;
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+
+  .fin-customers-table td {
+    height: 58px;
+    font-size: 9px;
+  }
+
+  .fin-customers-table tbody tr {
+    height: 58px;
+  }
+
+  .fin-customers-table td:nth-child(2),
+  .fin-customers-table td:nth-child(5),
+  .fin-customers-table td:nth-child(7) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /*
+    Customer cell remains readable even at 320px.
+  */
+  .fin-customers-name-cell {
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .fin-customers-avatar {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 11px;
+  }
+
+  .fin-customers-customer-info {
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .fin-customers-name {
+    font-size: 9.5px;
+    line-height: 1.2;
+  }
+
+  .fin-customers-id {
+    font-size: 8px;
+    line-height: 1.2;
+  }
+
+  .fin-customers-mobile {
+    font-size: 9px;
+  }
+
+  .fin-customers-amt {
+    font-size: 9.5px;
+  }
+
+  /*
+    Prevent the status/action cells from visually colliding.
+  */
+  .fin-customers-actions {
+    width: 100%;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .fin-customers-action-btn {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    padding: 0;
+  }
+
+  .center-column {
+    text-align: center !important;
+  }
+
+  .action-column {
+    text-align: center !important;
+  }
+
+
+  /* =======================================================
+     MOBILE WIZARD
+     ======================================================= */
+
+  .customer-wizard-overlay {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .customer-wizard-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .customer-wizard-header {
+    padding: 14px 15px 8px;
+    gap: 10px;
+  }
+
+  .customer-wizard-header h2 {
+    font-size: 20px;
+  }
+
+  .customer-wizard-header p {
+    font-size: 11px;
+  }
+
+  .customer-wizard-close {
+    width: 32px;
+    height: 32px;
+  }
+
+  .customer-wizard-progress {
+    gap: 5px;
+    padding: 0 15px 10px;
+  }
+
+  .customer-wizard-progress-line {
+    height: 4px;
+    margin-bottom: 5px;
+  }
+
+  .customer-wizard-step-label {
+    font-size: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .customer-wizard-content {
+    flex: 1;
+    min-height: 0;
+    padding: 3px 15px 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .customer-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .customer-form-field.full {
+    margin-bottom: 10px;
+  }
+
+  .customer-form-field label {
+    margin-bottom: 5px;
+    font-size: 11px;
+  }
+
+  .customer-form-field input,
+  .customer-form-field select {
+    width: 100%;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .customer-document-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .customer-document-upload {
+    min-height: 44px;
+  }
+
+  .customer-wizard-actions {
+    margin-top: 14px;
+    padding-bottom: max(2px, env(safe-area-inset-bottom));
+  }
+
+  .customer-wizard-back,
+  .customer-wizard-continue,
+  .customer-wizard-save {
+    min-height: 40px;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .customer-wizard-continue.half {
+    width: 130px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE — 430px and below
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-customers-page {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .fin-customers-stats-grid {
+    gap: 6px;
+  }
+
+  .fin-customers-stat-card {
+    gap: 6px;
+    padding: 7px;
+  }
+
+  .fin-customers-stat-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .fin-customers-stat-label {
+    font-size: 8px;
+  }
+
+  .fin-customers-stat-val {
+    font-size: 15px;
+  }
+
+  .fin-customers-filters {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .fin-customers-select {
+    height: 35px;
+  }
+
+  /*
+    320–430px:
+    Status is the least important piece of text because the
+    action button must remain easy to tap.
+    This removes the final source of cramped/overlapping cells.
+  */
+  .fin-customers-table th:nth-child(7),
+  .fin-customers-table td:nth-child(7) {
+    display: none;
+  }
+
+  .fin-customers-table th:nth-child(1) {
+    width: 43%;
+  }
+
+  .fin-customers-table th:nth-child(2) {
+    width: 27%;
+  }
+
+  .fin-customers-table th:nth-child(5) {
+    width: 20%;
+  }
+
+  .fin-customers-table th:nth-child(8) {
+    width: 10%;
+  }
+
+  .fin-customers-table th,
+  .fin-customers-table td {
+    padding: 5px 3px;
+  }
+
+  .fin-customers-table th {
+    height: 38px;
+    font-size: 7.5px;
+  }
+
+  .fin-customers-table td {
+    height: 56px;
+    font-size: 8.5px;
+  }
+
+  .fin-customers-table tbody tr {
+    height: 56px;
+  }
+
+  .fin-customers-avatar {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    font-size: 10px;
+  }
+
+  .fin-customers-name-cell {
+    gap: 4px;
+  }
+
+  .fin-customers-name {
+    font-size: 9px;
+  }
+
+  .fin-customers-id {
+    font-size: 7.5px;
+  }
+
+  .fin-customers-mobile {
+    font-size: 8.5px;
+  }
+
+  .fin-customers-amt {
+    font-size: 9px;
+  }
+
+  .fin-customers-action-btn {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .customer-wizard-header {
+    padding: 12px 12px 7px;
+  }
+
+  .customer-wizard-header h2 {
+    font-size: 18px;
+  }
+
+  .customer-wizard-progress {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .customer-wizard-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .customer-wizard-step-label {
+    font-size: 7px;
+  }
+
+  .customer-document-browse {
+    font-size: 9px;
+  }
+
+  .customer-document-left span {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA-SMALL PHONES — 360px and below
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .fin-customers-page {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .fin-customers-stats-grid {
+    gap: 5px;
+  }
+
+  .fin-customers-stat-card {
+    height: 60px;
+    padding: 6px;
+  }
+
+  .fin-customers-stat-icon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .fin-customers-stat-label {
+    font-size: 7.5px;
+  }
+
+  .fin-customers-stat-val {
+    font-size: 14px;
+  }
+
+  .fin-customers-table th {
+    font-size: 7px;
+  }
+
+  .fin-customers-table td {
+    font-size: 8px;
+  }
+
+  .fin-customers-avatar {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    font-size: 9px;
+  }
+
+  .fin-customers-name {
+    font-size: 8.5px;
+  }
+
+  .fin-customers-id {
+    font-size: 7px;
+  }
+
+  .fin-customers-mobile {
+    font-size: 8px;
+  }
+
+  .fin-customers-amt {
+    font-size: 8.5px;
+  }
+
+  .fin-customers-action-btn {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+  }
+
+  .customer-wizard-progress {
+    gap: 3px;
+  }
+
+  .customer-wizard-step-label {
+    font-size: 6.5px;
+  }
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONES
+   ========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+  .fin-customers-page {
+    padding-top: 9px;
+    padding-bottom: 14px;
+  }
+
+  .fin-customers-header {
+    margin-bottom: 8px;
+  }
+
+  .fin-customers-stats-grid {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .fin-customers-stat-card {
+    height: 56px;
+  }
+
+  .fin-customers-toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .fin-customers-search {
+    flex: 1 1 auto;
+  }
+
+  .fin-customers-filters {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .customer-wizard-modal {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .fin-customers-action-btn {
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .customer-wizard-close {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .fin-customers-select {
+    min-height: 40px;
+  }
+}
+
+
+/* =========================================================
+   SAFETY NET
+   ========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.fin-layout,
+.fin-layout-wrapper,
+.fin-layout-content,
+.fin-customers-page,
+.fin-customers-table-card,
+.fin-customers-table-wrapper {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}

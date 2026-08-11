@@ -1,0 +1,82 @@
+.admin-notifications-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-notifications-header {
+  background: var(--color-white);
+  padding: 20px 24px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.admin-notifications-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-navy);
+}
+
+.admin-notifications-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.admin-notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-notifications-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-notifications-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-notif-purple { color: var(--color-purple); }
+.admin-notif-cyan { color: var(--color-cyan); }
+
+.admin-notifications-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-notifications-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-notifications-top h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.admin-notifications-time {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.admin-notifications-body p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
