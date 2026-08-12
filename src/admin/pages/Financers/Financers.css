@@ -1,14 +1,13 @@
 /* =========================================================
-   FINANCER MANAGEMENT PAGE
+   FINANCERS - MAIN PAGE
 ========================================================= */
 
 .financer-management-page {
   width: 100%;
-  max-width: 100%;
-  padding: 28px 34px 40px;
-  box-sizing: border-box;
+  min-width: 0;
+  padding: 28px 32px 40px;
+  color: #202638;
 }
-
 
 /* =========================================================
    HEADER
@@ -16,216 +15,186 @@
 
 .financer-management-header {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 
-.financer-management-heading {
-  min-width: 0;
+.financer-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+  color: #8a94a8;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .financer-management-title {
   margin: 0;
-  color: #111827;
-  font-size: 27px;
-  line-height: 1.25;
+  color: #202638;
+  font-size: 28px;
+  line-height: 1.2;
   font-weight: 750;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
 }
 
 .financer-management-subtitle {
-  margin: 8px 0 0;
-  color: #71809a;
+  max-width: 700px;
+  margin: 7px 0 0;
+  color: #7b869a;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-
 /* =========================================================
-   SUMMARY GRID
+   SUMMARY
 ========================================================= */
 
 .financer-summary-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .financer-summary-card {
-  min-width: 0;
-  min-height: 105px;
   display: flex;
   align-items: center;
   gap: 13px;
-  padding: 17px;
-  box-sizing: border-box;
-
-  background: #ffffff;
-  border: 1px solid #e5eaf1;
-  border-radius: 13px;
-
-  box-shadow: 0 3px 12px rgba(20, 30, 50, 0.035);
-}
-
-.financer-summary-card--fee {
-  border-color: #e6d8ff;
-  background: linear-gradient(
-    145deg,
-    #ffffff 0%,
-    #fbf8ff 100%
-  );
-}
-
-.financer-summary-icon {
-  width: 43px;
-  height: 43px;
-  flex: 0 0 43px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-}
-
-.financer-summary-icon--customers {
-  color: #009ed8;
-  background: #e4f7fd;
-}
-
-.financer-summary-icon--principal {
-  color: #7b35e8;
-  background: #f0e7ff;
-}
-
-.financer-summary-icon--interest {
-  color: #13a56a;
-  background: #e5f8ed;
-}
-
-.financer-summary-icon--monthly {
-  color: #e99b00;
-  background: #fff5da;
-}
-
-.financer-summary-icon--fee {
-  color: #7528e8;
-  background: #eee3ff;
-}
-
-.financer-summary-content {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  padding: 18px;
+  border: 1px solid #e8ebf2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(31, 42, 68, 0.025);
 }
 
-.financer-summary-label {
-  color: #738199;
-  font-size: 10px;
-  line-height: 1.25;
-  font-weight: 750;
-  text-transform: uppercase;
-  letter-spacing: 0.055em;
+.financer-summary-card > div:last-child {
+  min-width: 0;
 }
 
-.financer-summary-value {
-  color: #111827;
+.financer-summary-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8a94a8;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.financer-summary-card strong {
+  display: block;
+  overflow: hidden;
+  color: #273047;
   font-size: 18px;
   line-height: 1.2;
   font-weight: 750;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.financer-summary-value--fee {
-  color: #7429e7;
+.financer-summary-icon {
+  display: flex;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
 }
 
+.financer-summary-icon--customers {
+  color: #6d35e8;
+  background: #f1eaff;
+}
+
+.financer-summary-icon--principal {
+  color: #16875d;
+  background: #e7f7ef;
+}
+
+.financer-summary-icon--interest {
+  color: #2e79c7;
+  background: #eaf4ff;
+}
+
+.financer-summary-icon--monthly {
+  color: #c57a16;
+  background: #fff4df;
+}
+
+.financer-summary-icon--fee {
+  color: #6d35e8;
+  background: #f1eaff;
+}
 
 /* =========================================================
-   FEE INFORMATION
+   SERVICE CHARGE INFORMATION
 ========================================================= */
 
 .financer-fee-info {
-  min-height: 67px;
-
   display: flex;
   align-items: center;
-  gap: 13px;
-
-  padding: 13px 17px;
-  margin-bottom: 20px;
-
-  box-sizing: border-box;
-
-  border: 1px solid #e7dcf9;
-  border-radius: 12px;
-
-  background: #faf8ff;
+  gap: 15px;
+  margin-bottom: 22px;
+  padding: 17px 20px;
+  border: 1px solid #e5d9ff;
+  border-radius: 14px;
+  background: #fbf9ff;
 }
 
 .financer-fee-info-icon {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-
   display: flex;
+  flex: 0 0 42px;
   align-items: center;
   justify-content: center;
-
-  color: #762ce5;
-  background: #eee5ff;
-  border-radius: 9px;
+  width: 42px;
+  height: 42px;
+  color: #6d35e8;
+  border-radius: 11px;
+  background: #eee6ff;
 }
 
 .financer-fee-info-content {
-  min-width: 0;
-  flex: 1;
-
   display: flex;
+  flex: 1;
+  min-width: 0;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .financer-fee-info-content strong {
-  color: #25283a;
-  font-size: 13px;
-  font-weight: 750;
+  color: #242a3b;
+  font-size: 14px;
 }
 
 .financer-fee-info-content span {
-  color: #7a8498;
+  color: #7e879a;
   font-size: 12px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .financer-fee-formula {
   display: flex;
   align-items: center;
-  gap: 7px;
-
-  padding-left: 16px;
-
-  color: #7529e5;
-  font-size: 12px;
-  white-space: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-.financer-fee-formula span {
-  padding: 7px 10px;
-  border-radius: 7px;
-  background: #eee4ff;
+.financer-fee-formula span,
+.financer-fee-formula strong {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #f0e8ff;
+  color: #6d35e8;
+  font-size: 12px;
 }
 
 .financer-fee-formula strong {
-  font-weight: 750;
+  background: transparent;
 }
-
 
 /* =========================================================
    TOOLBAR
@@ -235,344 +204,256 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-
-  margin-bottom: 13px;
+  gap: 18px;
+  margin-bottom: 12px;
 }
 
 .financer-search-container {
-  width: min(480px, 100%);
+  width: min(390px, 100%);
 }
 
 .financer-result-count {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  color: #7a879c;
-  font-size: 12px;
+  color: #8993a6;
+  font-size: 13px;
   white-space: nowrap;
 }
 
 .financer-result-count strong {
-  color: #30394a;
-  font-weight: 750;
+  color: #424b60;
+  font-weight: 700;
 }
 
-
 /* =========================================================
-   TABLE CARD
+   TABLE
 ========================================================= */
 
 .financer-table-card {
-  width: 100%;
   overflow: hidden;
-
+  border: 1px solid #e5e9f0;
+  border-radius: 15px;
   background: #ffffff;
-  border: 1px solid #e4e9f0;
-  border-radius: 13px;
-
-  box-shadow: 0 3px 12px rgba(20, 30, 50, 0.035);
 }
 
 .financer-table-scroll {
   width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
-
-  scrollbar-width: thin;
-  scrollbar-color: #cfd6e2 transparent;
 }
 
 .financer-data-table {
   width: 100%;
-  min-width: 1180px;
+  min-width: 980px;
+  border-collapse: collapse;
+}
 
-  border-collapse: separate;
-  border-spacing: 0;
+.financer-data-table thead {
+  background: #fafbfc;
 }
 
 .financer-data-table th {
-  height: 50px;
-  padding: 0 15px;
-
-  color: #7b879b;
-  background: #fafbfc;
-
-  border-bottom: 1px solid #e7ebf1;
-
+  padding: 15px 18px;
+  border-bottom: 1px solid #e8ebf0;
+  color: #8490a5;
   font-size: 10px;
   font-weight: 750;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.4px;
   text-align: left;
   white-space: nowrap;
 }
 
 .financer-data-table td {
-  padding: 15px;
-
-  color: #4d596c;
+  padding: 17px 18px;
   border-bottom: 1px solid #edf0f4;
-
-  font-size: 12px;
   vertical-align: middle;
 }
 
 .financer-data-table tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
-.financer-data-table tbody tr {
+.financer-table-row {
+  cursor: pointer;
   transition:
-    background-color 0.15s ease;
+    background 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-.financer-data-table tbody tr:hover {
-  background: #fcfbff;
+.financer-table-row:hover {
+  background: #fbfaff;
 }
-
-.financer-action-header {
-  text-align: right;
-}
-
-
-/* =========================================================
-   FINANCER IDENTITY
-========================================================= */
 
 .financer-identity {
-  min-width: 205px;
-
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
+  min-width: 230px;
 }
 
 .financer-identity-avatar {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-
   display: flex;
+  flex: 0 0 42px;
   align-items: center;
   justify-content: center;
-
-  color: #7429e6;
+  width: 42px;
+  height: 42px;
+  color: #6d35e8;
+  border-radius: 11px;
   background: #f0e8ff;
-
-  border-radius: 10px;
 }
 
 .financer-identity-details {
-  min-width: 0;
-
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  gap: 2px;
 }
 
 .financer-identity-details strong {
-  max-width: 180px;
-
-  color: #202738;
-  font-size: 12px;
-  font-weight: 750;
-
   overflow: hidden;
+  color: #273047;
+  font-size: 13px;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .financer-identity-details span {
-  color: #762ce3;
+  margin-top: 2px;
+  color: #6d35e8;
   font-size: 10px;
   font-weight: 700;
 }
 
 .financer-identity-details small {
-  max-width: 200px;
-
-  color: #8994a6;
+  margin-top: 3px;
+  color: #929bad;
   font-size: 10px;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
-
-
-/* =========================================================
-   TABLE CELLS
-========================================================= */
 
 .financer-number-cell {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
-
-  color: #283347;
+  color: #6d35e8;
 }
 
-.financer-number-cell svg {
-  color: #7a2be4;
+.financer-number-cell strong {
+  color: #354057;
+  font-size: 13px;
 }
 
 .financer-loan-count {
-  color: #303a4c;
+  color: #354057;
+  font-size: 13px;
 }
 
 .financer-money-cell {
-  color: #202b3c;
+  color: #2d3548;
+  font-size: 13px;
   white-space: nowrap;
 }
 
 .financer-interest-cell {
-  color: #139563;
+  color: #0b9564;
+  font-size: 13px;
   white-space: nowrap;
 }
 
-.financer-monthly-interest,
-.financer-platform-fee {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.financer-action-header {
+  text-align: right !important;
 }
-
-.financer-monthly-interest strong {
-  color: #333e51;
-  white-space: nowrap;
-}
-
-.financer-platform-fee strong {
-  color: #7428e4;
-  white-space: nowrap;
-}
-
-.financer-monthly-interest span,
-.financer-platform-fee span {
-  color: #909aab;
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   ACTION BUTTONS
-========================================================= */
 
 .financer-action-buttons {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
+  white-space: nowrap;
 }
 
-.financer-approve-action,
-.financer-suspend-action,
-.financer-view-action {
-  height: 32px;
-
+.financer-action-buttons button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-
+  min-height: 32px;
   border: 1px solid transparent;
-  border-radius: 7px;
-
-  background: transparent;
-
+  border-radius: 8px;
+  cursor: pointer;
   font-family: inherit;
   font-size: 11px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease;
+  font-weight: 650;
+  transition: 0.18s ease;
 }
 
 .financer-approve-action {
-  padding: 0 9px;
-
-  color: #0d9960;
-  background: #e9f9f1;
-  border-color: #ccefdc;
+  padding: 0 10px;
+  color: #168257;
+  border-color: #ccebdc !important;
+  background: #f0faf5;
 }
 
 .financer-approve-action:hover {
-  background: #d9f5e7;
+  background: #e2f6ec;
 }
 
 .financer-suspend-action,
-.financer-view-action {
-  width: 32px;
-  padding: 0;
+.financer-deactivate-action {
+  color: #b46b18;
+  border-color: #f3dfbe !important;
+  background: #fff9ef;
 }
 
 .financer-suspend-action {
-  color: #dc4c54;
-  background: #fff0f1;
-  border-color: #f5d8da;
+  width: 32px;
 }
 
-.financer-suspend-action:hover {
-  background: #ffe3e5;
+.financer-deactivate-action {
+  padding: 0 9px;
+}
+
+.financer-activate-action {
+  padding: 0 10px;
+  color: #168257;
+  border-color: #ccebdc !important;
+  background: #f0faf5;
 }
 
 .financer-view-action {
-  color: #6f2ce0;
-  background: #f3edff;
-  border-color: #e5d8fb;
+  width: 32px;
+  color: #6d35e8;
+  border-color: #e4d8fb !important;
+  background: #f8f5ff;
 }
 
 .financer-view-action:hover {
-  background: #e9ddff;
+  background: #eee7ff;
 }
-
-.financer-approve-action:active,
-.financer-suspend-action:active,
-.financer-view-action:active {
-  transform: scale(0.96);
-}
-
-
-/* =========================================================
-   EMPTY TABLE
-========================================================= */
 
 .financer-empty-state {
-  height: 210px;
-
+  height: 230px;
   text-align: center !important;
-  color: #8994a6 !important;
+}
+
+.financer-empty-state > * {
+  display: block;
+  margin: 7px auto;
 }
 
 .financer-empty-state svg {
-  display: block;
-  margin: 0 auto 10px;
-
-  color: #b5bfcd;
-}
-
-.financer-empty-state strong,
-.financer-empty-state span {
-  display: block;
+  color: #b0b8c7;
 }
 
 .financer-empty-state strong {
-  margin-bottom: 4px;
-  color: #4a5568;
-  font-size: 13px;
+  color: #525c70;
+  font-size: 14px;
 }
 
 .financer-empty-state span {
-  color: #8b96a8;
-  font-size: 11px;
+  color: #9aa3b3;
+  font-size: 12px;
 }
-
 
 /* =========================================================
    MOBILE CARDS
@@ -583,16 +464,12 @@
 }
 
 .financer-mobile-card {
-  width: 100%;
-  box-sizing: border-box;
-
   padding: 16px;
-
-  background: #ffffff;
   border: 1px solid #e5e9f0;
-  border-radius: 13px;
-
-  box-shadow: 0 3px 12px rgba(20, 30, 50, 0.035);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(31, 42, 68, 0.025);
+  cursor: pointer;
 }
 
 .financer-mobile-card-header {
@@ -600,54 +477,46 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-
-  padding-bottom: 13px;
-  border-bottom: 1px solid #edf0f4;
 }
 
 .financer-mobile-identity {
-  min-width: 0;
-
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .financer-mobile-avatar {
-  width: 39px;
-  height: 39px;
-  flex: 0 0 39px;
-
   display: flex;
+  flex: 0 0 40px;
   align-items: center;
   justify-content: center;
-
-  color: #752be5;
+  width: 40px;
+  height: 40px;
+  color: #6d35e8;
+  border-radius: 11px;
   background: #f0e8ff;
-  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 750;
 }
 
 .financer-mobile-identity > div:last-child {
   min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 
 .financer-mobile-identity strong {
-  max-width: 190px;
-
-  color: #202738;
-  font-size: 13px;
-
+  display: block;
   overflow: hidden;
+  color: #273047;
+  font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .financer-mobile-identity span {
-  color: #762ce3;
+  display: block;
+  margin-top: 3px;
+  color: #6d35e8;
   font-size: 10px;
   font-weight: 700;
 }
@@ -655,69 +524,45 @@
 .financer-mobile-owner {
   display: flex;
   justify-content: space-between;
-  gap: 15px;
-
-  padding: 11px 0;
-
+  gap: 10px;
+  margin: 15px 0;
+  padding-bottom: 13px;
   border-bottom: 1px solid #edf0f4;
 }
 
 .financer-mobile-owner span {
-  color: #8a95a7;
+  color: #8c95a7;
   font-size: 11px;
 }
 
 .financer-mobile-owner strong {
-  color: #414c5f;
-  font-size: 11px;
-  text-align: right;
+  color: #3b4356;
+  font-size: 12px;
 }
 
 .financer-mobile-stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-
-  padding: 13px 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
-.financer-mobile-stat {
-  min-width: 0;
-
-  padding: 10px;
-
-  background: #f9fafc;
-  border: 1px solid #edf0f4;
-  border-radius: 8px;
+.financer-mobile-stats > div {
+  padding: 11px;
+  border-radius: 9px;
+  background: #f8f9fb;
 }
 
-.financer-mobile-stat--fee {
-  background: #faf7ff;
-  border-color: #e9ddfb;
-}
-
-.financer-mobile-stat span {
+.financer-mobile-stats span {
   display: block;
   margin-bottom: 4px;
-
-  color: #8994a7;
-  font-size: 9px;
-  font-weight: 650;
+  color: #8d96a7;
+  font-size: 10px;
 }
 
-.financer-mobile-stat strong {
+.financer-mobile-stats strong {
   display: block;
-
-  color: #303b4e;
-  font-size: 12px;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.financer-mobile-stat--fee strong {
-  color: #7428e4;
+  color: #30384c;
+  font-size: 13px;
 }
 
 .financer-mobile-card-footer {
@@ -725,62 +570,71 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-
-  padding-top: 12px;
+  margin-top: 15px;
+  padding-top: 13px;
   border-top: 1px solid #edf0f4;
 }
 
 .financer-mobile-statuses {
   display: flex;
-  align-items: center;
+  gap: 15px;
 }
 
 .financer-mobile-statuses > div {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 .financer-mobile-statuses span {
-  color: #8a95a7;
+  color: #8b94a6;
   font-size: 10px;
-  font-weight: 650;
+}
+
+.financer-mobile-statuses strong {
+  color: #6d35e8;
+  font-size: 11px;
+}
+
+.financer-mobile-view {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 8px;
+  color: #6d35e8;
+  background: #f4efff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .financer-mobile-empty {
-  min-height: 180px;
-
   display: flex;
+  min-height: 220px;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 7px;
-
-  padding: 25px;
-
-  background: #ffffff;
   border: 1px solid #e5e9f0;
-  border-radius: 13px;
-
-  color: #8b96a8;
-}
-
-.financer-mobile-empty svg {
-  color: #b8c1cf;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #9aa3b3;
 }
 
 .financer-mobile-empty strong {
-  color: #4a5568;
-  font-size: 13px;
+  color: #525c70;
+  font-size: 14px;
 }
 
 .financer-mobile-empty span {
-  font-size: 11px;
+  font-size: 12px;
 }
 
-
 /* =========================================================
-   REGISTER FINANCER FORM
+   REGISTER FORM
 ========================================================= */
 
 .financer-register-form {
@@ -796,7 +650,7 @@
 }
 
 .financer-register-field label {
-  color: #3e485a;
+  color: #444d61;
   font-size: 12px;
   font-weight: 700;
 }
@@ -804,114 +658,676 @@
 .financer-register-field input {
   width: 100%;
   height: 42px;
-
   padding: 0 12px;
-
-  box-sizing: border-box;
-
-  color: #293447;
-  background: #ffffff;
-
-  border: 1px solid #dce2eb;
+  border: 1px solid #dfe3ea;
   border-radius: 8px;
-
   outline: none;
-
+  color: #30384b;
+  background: #ffffff;
   font-family: inherit;
   font-size: 13px;
-
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.financer-register-field input::placeholder {
-  color: #a3adbc;
 }
 
 .financer-register-field input:focus {
-  border-color: #8c4be8;
-  box-shadow: 0 0 0 3px rgba(140, 75, 232, 0.09);
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+}
+
+.financer-register-field small {
+  color: #929aaa;
+  font-size: 10px;
 }
 
 .financer-register-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 9px;
-
+  gap: 10px;
   margin-top: 5px;
 }
 
-
 /* =========================================================
-   LARGE DESKTOP
+   FINANCER DETAILS PAGE
 ========================================================= */
 
-@media (max-width: 1450px) {
+.financer-details-page {
+  width: 100%;
+  min-width: 0;
+  padding: 28px 32px 45px;
+  color: #202638;
+}
 
-  .financer-management-page {
-    padding-left: 28px;
-    padding-right: 28px;
-  }
+.financer-back-button {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 17px;
+  padding: 0;
+  border: 0;
+  color: #6d35e8;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
 
+/* =========================================================
+   PROFILE HEADER
+========================================================= */
+
+.financer-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  border: 1px solid #e5e9f0;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(31, 42, 68, 0.025);
+}
+
+.financer-profile-main {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.financer-profile-avatar {
+  display: flex;
+  flex: 0 0 58px;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  color: #6d35e8;
+  border-radius: 15px;
+  background: #f0e8ff;
+}
+
+.financer-profile-id {
+  margin-bottom: 3px;
+  color: #6d35e8;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.financer-profile-main h1 {
+  margin: 0;
+  color: #222a3d;
+  font-size: 22px;
+  font-weight: 750;
+}
+
+.financer-profile-main p {
+  margin: 5px 0 0;
+  color: #8a94a7;
+  font-size: 12px;
+}
+
+.financer-profile-statuses {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================================================
+   DETAIL KPI
+========================================================= */
+
+.financer-detail-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 13px;
+  margin: 16px 0;
+}
+
+.financer-detail-kpi {
+  position: relative;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e5e9f0;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.financer-detail-kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  color: #6d35e8;
+  background: #f1eaff;
+}
+
+.financer-detail-kpi span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8b94a7;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.financer-detail-kpi strong {
+  display: block;
+  overflow: hidden;
+  color: #293247;
+  font-size: 16px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.financer-detail-kpi small {
+  display: block;
+  margin-top: 4px;
+  color: #8e98aa;
+  font-size: 9px;
+}
+
+/* =========================================================
+   DETAIL TABS
+========================================================= */
+
+.financer-detail-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+  padding: 5px;
+  border: 1px solid #e5e9f0;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+.financer-detail-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #7e8799;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.financer-detail-tabs button:hover {
+  color: #5d31c7;
+  background: #faf8ff;
+}
+
+.financer-detail-tabs button.active {
+  color: #ffffff;
+  background: #6d35e8;
+  box-shadow: 0 2px 5px rgba(109, 53, 232, 0.16);
+}
+
+.financer-detail-tabs button span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 10px;
+  color: #6d35e8;
+  background: #f0e8ff;
+  font-size: 9px;
+}
+
+.financer-detail-tabs button.active span {
+  color: #6d35e8;
+  background: #ffffff;
+}
+
+/* =========================================================
+   DETAIL CONTENT
+========================================================= */
+
+.financer-detail-section {
+  overflow: hidden;
+  border: 1px solid #e5e9f0;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.financer-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 19px 20px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.financer-section-heading h2 {
+  margin: 0;
+  color: #293146;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.financer-section-heading p {
+  margin: 4px 0 0;
+  color: #8c95a7;
+  font-size: 11px;
+}
+
+.financer-section-count {
+  color: #6d35e8;
+  font-size: 11px;
+}
+
+/* =========================================================
+   OVERVIEW
+========================================================= */
+
+.financer-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.financer-overview-item {
+  min-height: 88px;
+  padding: 18px 20px;
+  border-right: 1px solid #edf0f4;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.financer-overview-item:nth-child(4n) {
+  border-right: 0;
+}
+
+.financer-overview-item:nth-last-child(-n + 4) {
+  border-bottom: 0;
+}
+
+.financer-overview-item > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #8c95a7;
+  font-size: 10px;
+}
+
+.financer-overview-item > strong {
+  color: #343d52;
+  font-size: 13px;
+}
+
+/* =========================================================
+   DETAIL TABLE
+========================================================= */
+
+.financer-detail-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.financer-detail-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.financer-detail-table th {
+  padding: 13px 18px;
+  border-bottom: 1px solid #e9edf2;
+  color: #8993a5;
+  background: #fafbfc;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.4px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.financer-detail-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #edf0f4;
+  color: #596277;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.financer-detail-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.financer-detail-table tbody tr:hover {
+  background: #fcfbff;
+}
+
+.detail-person {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.detail-person-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  color: #6d35e8;
+  background: #f1eaff;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.detail-person strong {
+  color: #343d51;
+  font-size: 11px;
+}
+
+/* =========================================================
+   EMPTY DETAIL
+========================================================= */
+
+.financer-detail-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 280px;
+  padding: 30px;
+  text-align: center;
+}
+
+.financer-detail-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 12px;
+  border-radius: 15px;
+  color: #6d35e8;
+  background: #f1eaff;
+}
+
+.financer-detail-empty strong {
+  color: #4b556a;
+  font-size: 14px;
+}
+
+.financer-detail-empty span {
+  max-width: 480px;
+  margin-top: 6px;
+  color: #929bab;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   SERVICE CHARGE DETAIL
+========================================================= */
+
+.service-charge-detail-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #e6dcf8;
+  border-radius: 13px;
+  background: #fbf9ff;
+}
+
+.service-charge-detail-icon {
+  display: flex;
+  flex: 0 0 48px;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  color: #6d35e8;
+  background: #eee7ff;
+}
+
+.service-charge-detail-main {
+  flex: 1;
+}
+
+.service-charge-detail-main span,
+.service-charge-detail-amount span {
+  display: block;
+  color: #8d96a8;
+  font-size: 10px;
+}
+
+.service-charge-detail-main strong {
+  display: block;
+  margin: 4px 0;
+  color: #6d35e8;
+  font-size: 22px;
+}
+
+.service-charge-detail-main p {
+  margin: 0;
+  color: #8992a4;
+  font-size: 10px;
+}
+
+.service-charge-detail-amount {
+  min-width: 170px;
+  padding-left: 20px;
+  border-left: 1px solid #e7def5;
+}
+
+.service-charge-detail-amount strong {
+  display: block;
+  margin: 4px 0 8px;
+  color: #2f374b;
+  font-size: 17px;
+}
+
+.service-charge-formula-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 0 20px 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f8f9fb;
+}
+
+.service-charge-formula-box span {
+  color: #8b94a6;
+  font-size: 10px;
+}
+
+.service-charge-formula-box strong {
+  color: #4a5367;
+  font-size: 12px;
+}
+
+/* =========================================================
+   NOT FOUND
+========================================================= */
+
+.financer-details-not-found {
+  display: flex;
+  min-height: 400px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: #8c95a7;
+}
+
+.financer-details-not-found h2 {
+  margin: 0;
+  color: #424b5f;
+  font-size: 18px;
+}
+
+.financer-details-not-found button {
+  margin-top: 5px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #6d35e8;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1280px) {
   .financer-summary-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .financer-detail-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
-
-
-/* =========================================================
-   TABLET / SMALL DESKTOP
-========================================================= */
-
-@media (max-width: 1100px) {
-
-  .financer-management-page {
-    padding: 24px 22px 35px;
-  }
-
-  .financer-summary-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .financer-summary-card {
-    min-height: 94px;
-  }
-
-  .financer-fee-info {
-    align-items: flex-start;
-  }
-
-  .financer-fee-formula {
-    margin-left: auto;
-  }
-
-}
-
 
 /* =========================================================
    TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
-
-  .financer-management-page {
-    padding: 22px 18px 32px;
+  .financer-management-page,
+  .financer-details-page {
+    padding: 22px 20px 35px;
   }
 
   .financer-management-header {
+    align-items: flex-start;
     flex-direction: column;
-    align-items: stretch;
   }
 
   .financer-management-header > button {
-    width: fit-content;
+    width: 100%;
+  }
+
+  .financer-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .financer-fee-info {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .financer-fee-formula {
+    width: 100%;
+    margin-left: 57px;
+  }
+
+  .financer-overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .financer-overview-item:nth-child(4n) {
+    border-right: 1px solid #edf0f4;
+  }
+
+  .financer-overview-item:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .financer-overview-item:nth-last-child(-n + 4) {
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .financer-overview-item:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .service-charge-detail-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .service-charge-detail-amount {
+    width: 100%;
+    padding-top: 15px;
+    padding-left: 0;
+    border-top: 1px solid #e7def5;
+    border-left: 0;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  .financer-management-page,
+  .financer-details-page {
+    padding: 17px 13px 30px;
+  }
+
+  .financer-management-title {
+    font-size: 22px;
+  }
+
+  .financer-management-subtitle {
+    font-size: 12px;
+  }
+
+  .financer-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .financer-summary-card {
+    padding: 14px;
+  }
+
+  .financer-fee-info {
+    padding: 14px;
+    gap: 11px;
+  }
+
+  .financer-fee-info-icon {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .financer-fee-info-content span {
+    font-size: 10px;
+  }
+
+  .financer-fee-formula {
+    display: block;
+    margin-left: 47px;
+  }
+
+  .financer-fee-formula span,
+  .financer-fee-formula strong {
+    display: inline-block;
+    margin-top: 4px;
   }
 
   .financer-management-toolbar {
-    align-items: flex-start;
+    align-items: stretch;
     flex-direction: column;
+    gap: 9px;
   }
 
   .financer-search-container {
@@ -919,13 +1335,8 @@
   }
 
   .financer-result-count {
-    width: 100%;
+    justify-content: flex-end;
   }
-
-  /*
-    Replace the wide desktop table with
-    mobile-friendly financer cards.
-  */
 
   .financer-table-card {
     display: none;
@@ -934,160 +1345,93 @@
   .financer-mobile-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
-  .financer-fee-info {
-    flex-wrap: wrap;
+  .financer-profile-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
   }
 
-  .financer-fee-formula {
+  .financer-profile-main {
     width: 100%;
-    margin-left: 49px;
-    padding-left: 0;
   }
 
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 600px) {
-
-  .financer-management-page {
-    padding: 18px 13px 28px;
+  .financer-profile-avatar {
+    flex-basis: 48px;
+    width: 48px;
+    height: 48px;
   }
 
-  .financer-management-header {
-    gap: 16px;
-    margin-bottom: 18px;
+  .financer-profile-main h1 {
+    font-size: 18px;
   }
 
-  .financer-management-title {
-    font-size: 22px;
-  }
-
-  .financer-management-subtitle {
-    margin-top: 6px;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  .financer-management-header > button {
+  .financer-profile-statuses {
     width: 100%;
-    justify-content: center;
   }
 
-
-  /* SUMMARY */
-
-  .financer-summary-grid {
-    grid-template-columns: 1fr;
+  .financer-detail-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
-    margin-bottom: 12px;
   }
 
-  .financer-summary-card {
-    min-height: 78px;
+  .financer-detail-kpi {
     padding: 13px;
   }
 
-  .financer-summary-icon {
-    width: 39px;
-    height: 39px;
-    flex-basis: 39px;
-  }
-
-  .financer-summary-label {
-    font-size: 9px;
-  }
-
-  .financer-summary-value {
-    font-size: 16px;
-  }
-
-
-  /* FEE INFO */
-
-  .financer-fee-info {
-    align-items: flex-start;
-    gap: 10px;
-
-    padding: 12px;
-    margin-bottom: 14px;
-  }
-
-  .financer-fee-info-icon {
+  .financer-detail-kpi-icon {
     width: 32px;
     height: 32px;
-    flex-basis: 32px;
+    margin-bottom: 9px;
   }
 
-  .financer-fee-info-content strong {
-    font-size: 11px;
+  .financer-detail-kpi strong {
+    font-size: 14px;
   }
 
-  .financer-fee-info-content span {
-    font-size: 10px;
+  .financer-detail-tabs {
+    margin-right: -13px;
+    margin-left: -13px;
+    padding-right: 13px;
+    padding-left: 13px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
   }
 
-  .financer-fee-formula {
-    margin-left: 42px;
-    font-size: 10px;
+  .financer-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
   }
 
-
-  /* TOOLBAR */
-
-  .financer-management-toolbar {
-    gap: 9px;
-    margin-bottom: 10px;
+  .financer-overview-grid {
+    grid-template-columns: 1fr;
   }
 
-  .financer-result-count {
-    font-size: 10px;
+  .financer-overview-item,
+  .financer-overview-item:nth-child(2n),
+  .financer-overview-item:nth-child(4n) {
+    border-right: 0;
+    border-bottom: 1px solid #edf0f4;
   }
 
-
-  /* MOBILE CARD */
-
-  .financer-mobile-card {
-    padding: 13px;
-    border-radius: 11px;
+  .financer-overview-item:last-child {
+    border-bottom: 0;
   }
 
-  .financer-mobile-stats {
-    gap: 7px;
+  .service-charge-detail-card {
+    margin: 13px;
+    padding: 15px;
   }
 
-  .financer-mobile-stat {
-    padding: 9px;
+  .service-charge-formula-box {
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 0 13px 13px;
   }
-
-  .financer-mobile-stat span {
-    font-size: 8px;
-  }
-
-  .financer-mobile-stat strong {
-    font-size: 11px;
-  }
-
-  .financer-mobile-card-footer {
-    align-items: flex-end;
-  }
-
-  .financer-mobile-card-footer .financer-action-buttons {
-    gap: 5px;
-  }
-
-  .financer-approve-action {
-    padding: 0 8px;
-  }
-
-
-  /* FORM */
 
   .financer-register-actions {
     flex-direction: column-reverse;
@@ -1095,62 +1439,35 @@
 
   .financer-register-actions > * {
     width: 100%;
-    justify-content: center;
   }
-
 }
 
-
 /* =========================================================
-   VERY SMALL PHONES
+   SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 380px) {
-
-  .financer-management-page {
-    padding-left: 10px;
+@media (max-width: 390px) {
+  .financer-management-page,
+  .financer-details-page {
     padding-right: 10px;
+    padding-left: 10px;
   }
 
-  .financer-management-title {
-    font-size: 20px;
-  }
-
-  .financer-summary-card {
-    padding: 11px;
-  }
-
-  .financer-summary-value {
-    font-size: 15px;
-  }
-
-  .financer-mobile-stats {
+  .financer-detail-kpi-grid {
     grid-template-columns: 1fr;
   }
 
+  .financer-mobile-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .financer-mobile-card-footer {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .financer-mobile-card-footer .financer-action-buttons {
-    justify-content: flex-end;
+  .financer-mobile-view {
+    width: 100%;
+    justify-content: center;
   }
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .financer-data-table tbody tr,
-  .financer-approve-action,
-  .financer-suspend-action,
-  .financer-view-action {
-    transition: none;
-  }
-
 }

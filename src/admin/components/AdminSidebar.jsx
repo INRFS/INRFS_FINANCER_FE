@@ -33,23 +33,23 @@ const adminNavigation = [
     icon: UsersRound,
   },
 
-  {
-    label: 'Customers Overview',
-    path: '/admin/customers',
-    icon: UserRound,
-  },
+  // {
+  //   label: 'Customers Overview',
+  //   path: '/admin/customers',
+  //   icon: UserRound,
+  // },
 
-  {
-    label: 'Loans Overview',
-    path: '/admin/loans',
-    icon: WalletCards,
-  },
+  // {
+  //   label: 'Loans Overview',
+  //   path: '/admin/loans',
+  //   icon: WalletCards,
+  // },
 
-  {
-    label: 'Financer Usage',
-    path: '/admin/financer-usage',
-    icon: BarChart3,
-  },
+  // {
+  //   label: 'Financer Usage',
+  //   path: '/admin/financer-usage',
+  //   icon: BarChart3,
+  // },
 
   {
     label: 'Service Charges',
