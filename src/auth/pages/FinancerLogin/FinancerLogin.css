@@ -748,3 +748,261 @@
   }
 
 } 
+
+
+
+
+
+/* =========================================================
+   PASSWORD FIELD
+   ========================================================= */
+
+.fin-login-field + .fin-login-field {
+  margin-top: 22px;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+   ========================================================= */
+
+.fin-forgot-password-row {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 8px;
+}
+
+.fin-forgot-password {
+  border: none;
+  padding: 0;
+
+  background: transparent;
+
+  color: #00aaf0;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.fin-forgot-password:hover {
+  color: #078fc8;
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD CARD
+   ========================================================= */
+
+.fin-forgot-card {
+  max-width: 504px;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD BACK TO LOGIN
+   ========================================================= */
+
+.fin-forgot-back {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 24px;
+}
+
+.fin-forgot-back button {
+  border: none;
+  padding: 0;
+
+  background: transparent;
+
+  color: #587594;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.fin-forgot-back button:hover {
+  color: #00aaf0;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD HEADING
+   ========================================================= */
+
+.fin-forgot-card .fin-login-heading {
+  margin-bottom: 36px;
+}
+
+.fin-forgot-card .fin-login-heading h1 {
+  font-size: 28px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .fin-login-field + .fin-login-field {
+    margin-top: 18px;
+  }
+
+  .fin-forgot-password {
+    font-size: 14px;
+  }
+
+  .fin-forgot-card .fin-login-heading {
+    margin-bottom: 30px;
+  }
+
+  .fin-forgot-card .fin-login-heading h1 {
+    font-size: 24px;
+  }
+
+  .fin-forgot-back {
+    margin-top: 20px;
+  }
+
+  .fin-forgot-back button {
+    font-size: 14px;
+  }
+}
+/* =========================================================
+   REGISTER PASSWORD FIELD
+   ========================================================= */
+
+.fin-register-form .fin-register-field:has(input[type="password"]) {
+  grid-column: 1 / -1;
+}
+
+.fin-register-form .fin-register-field input[type="password"] {
+  width: 100%;
+}
+
+
+/* =========================================================
+   LOGIN PASSWORD / FORGOT PASSWORD
+   ========================================================= */
+
+.fin-login-field input[type="password"] {
+  width: 100%;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+   ========================================================= */
+
+.fin-forgot-password-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.fin-forgot-password {
+  border: none;
+  padding: 0;
+  background: transparent;
+
+  color: #00aaf0;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fin-forgot-password:hover {
+  color: #078fc8;
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD CARD
+   ========================================================= */
+
+.fin-forgot-card {
+  max-width: 504px;
+}
+
+.fin-forgot-card .fin-login-heading {
+  margin-bottom: 36px;
+}
+
+.fin-forgot-card .fin-login-heading h1 {
+  font-size: 28px;
+}
+
+.fin-forgot-back {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.fin-forgot-back button {
+  border: none;
+  padding: 0;
+  background: transparent;
+
+  color: #587594;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fin-forgot-back button:hover {
+  color: #00aaf0;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .fin-forgot-password {
+    font-size: 14px;
+  }
+
+  .fin-forgot-card .fin-login-heading {
+    margin-bottom: 30px;
+  }
+
+  .fin-forgot-card .fin-login-heading h1 {
+    font-size: 24px;
+  }
+
+  .fin-forgot-back {
+    margin-top: 20px;
+  }
+
+  .fin-forgot-back button {
+    font-size: 14px;
+  }
+
+}
