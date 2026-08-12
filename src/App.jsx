@@ -53,7 +53,7 @@ import AdminDashboard from './admin/pages/Dashboard/AdminDashboard';
 import AdminFinancers from './admin/pages/Financers/Financers';
 import AdminCustomers from './admin/pages/Customers/AdminCustomers';
 import AdminLoans from './admin/pages/Loans/AdminLoans';
-
+import AdminFinancerDetails from './admin/pages/Financers/FinancerDetails';
 import AdminFinancerUsage from './admin/pages/UsageAnalytics/AdminUsageAnalytics';
 
 import AdminServiceCharges from './admin/pages/ServiceCharges/AdminServiceCharges';
@@ -330,7 +330,10 @@ export default function App() {
             path="financers"
             element={<AdminFinancers />}
           />
-
+<Route
+  path="financers/:financerId"
+  element={<AdminFinancerDetails />}
+/>
           {/* =================================================
               CUSTOMERS OVERVIEW
           ================================================== */}
