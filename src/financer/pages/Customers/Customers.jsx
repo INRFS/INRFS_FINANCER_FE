@@ -206,8 +206,8 @@ const tabList = [
   { key: 'loans', label: 'Loans' },
   { key: 'payments', label: 'Payments' },
   { key: 'ledger', label: 'Ledger' },
-  { key: 'notes', label: 'Notes' },
-  { key: 'sms', label: 'SMS History' },
+  // { key: 'notes', label: 'Notes' },
+  // { key: 'sms', label: 'SMS History' },
 ];
 
 /* =========================================================
@@ -1231,23 +1231,23 @@ function CustomerDetailsModal({
             Add Loan
           </button>
 
-          <button
+          {/* <button
             type="button"
             className="fin-customer-detail-btn"
             onClick={onRecordPayment}
           >
             <Wallet size={16} />
             Record Payment
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             type="button"
             className="fin-customer-detail-btn"
             onClick={onSendSms}
           >
             <MessageSquare size={16} />
             Send SMS
-          </button>
+          </button> */}
         </div>
 
         <div className="fin-customer-tabs" role="tablist">

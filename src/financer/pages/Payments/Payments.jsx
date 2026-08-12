@@ -1,1191 +1,1022 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from "react";
 import {
-  CalendarDays,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Clock3,
-  Download,
-  FileText,
   IndianRupee,
-  Plus,
+  Calendar,
+  Clock,
   RefreshCw,
   Search,
-  SlidersHorizontal,
   X,
-} from 'lucide-react';
-import './Payments.css';
+  Check,
+  CalendarClock,
+  Eye,
+} from "lucide-react";
+import "./Payments.css";
 
-/*
-  Payments.jsx
-  ------------------------------------------------------------
-  Complete Payments & Interest Schedule implementation.
+/* ============================================================
+   NORMALIZATION LAYER
+   The backend response shape can vary (loanId/loan_id, camel
+   or snake case, nested customer objects, etc). Every record
+   is passed through normalizePayment() so the rest of the UI
+   only ever deals with one consistent shape.
+   ============================================================ */
 
-  Flow:
-    Payments
-      -> Record Payment
-      -> Reschedule Loan Date
-      -> dedicated Reschedule form
-
-  Status rules:
-    Success  = payment.status === 'Success'
-    Overdue  = not successful + due date < today
-    Pending  = not successful + due date >= today
-
-  Replace INITIAL_LOANS with your API/store data when wiring this
-  into your existing application.
-*/
-
-const INITIAL_LOANS = [
-  {
-    loanId: 'LN000128',
-    customerId: 'CUS004',
-    customer: 'Vikram Singh',
-    mobile: '+91 98765 11111',
-    principal: 25000,
-    outstanding: 20000,
-    interestDue: 2000,
-    dueDate: '2026-08-05',
-    frequency: 'Monthly',
-    rate: 10,
-    payments: [
-      {
-        id: 'PAY128-1',
-        amount: 2000,
-        type: 'Interest',
-        date: '2026-08-05',
-        method: 'Google Pay',
-        reference: 'GP-12801',
-        notes: '',
-        status: 'Success',
-      },
-    ],
-    rescheduleHistory: [],
-  },
-  {
-    loanId: 'LN000126',
-    customerId: 'CUS001',
-    customer: 'Ramesh Kumar',
-    mobile: '+91 98001 11111',
-    principal: 11000,
-    outstanding: 11000,
-    interestDue: 550,
-    dueDate: '2026-08-08',
-    frequency: 'Weekly',
-    rate: 5,
-    payments: [
-      {
-        id: 'PAY126-1',
-        amount: 550,
-        type: 'Interest',
-        date: '2026-08-08',
-        method: 'Cash',
-        reference: '',
-        notes: '',
-        status: 'Success',
-      },
-    ],
-    rescheduleHistory: [],
-  },
-  {
-    loanId: 'LN000125',
-    customerId: 'CUS001',
-    customer: 'Ramesh Kumar',
-    mobile: '+91 98001 11111',
-    principal: 10000,
-    outstanding: 10000,
-    interestDue: 1000,
-    dueDate: '2026-08-12',
-    frequency: 'Monthly',
-    rate: 10,
-    payments: [
-      {
-        id: 'PAY125-1',
-        amount: 1000,
-        type: 'Interest',
-        date: '2026-08-12',
-        method: 'PhonePe',
-        reference: 'PP-12501',
-        notes: '',
-        status: 'Success',
-      },
-    ],
-    rescheduleHistory: [],
-  },
-  {
-    loanId: 'LN000129',
-    customerId: 'CUS009',
-    customer: 'Rajesh Patel',
-    mobile: '+91 99001 22222',
-    principal: 12000,
-    outstanding: 12000,
-    interestDue: 540,
-    dueDate: '2026-08-10',
-    frequency: 'Monthly',
-    rate: 4.5,
-    payments: [],
-    rescheduleHistory: [],
-  },
-  {
-    loanId: 'LN000130',
-    customerId: 'CUS010',
-    customer: 'Anita Shah',
-    mobile: '+91 99111 33333',
-    principal: 18000,
-    outstanding: 18000,
-    interestDue: 900,
-    dueDate: '2026-08-22',
-    frequency: 'Monthly',
-    rate: 5,
-    payments: [],
-    rescheduleHistory: [],
-  },
-];
-
-const PAYMENT_TYPES = ['Interest', 'Principal', 'Principal + Interest'];
-const PAYMENT_METHODS = ['Cash', 'PhonePe', 'Google Pay', 'UPI', 'Bank Transfer', 'Cheque'];
-
-const EMPTY_PAYMENT = {
-  date: todayISO(),
-  amount: '',
-  type: 'Interest',
-  method: 'PhonePe',
-  reference: '',
-  notes: '',
+const STATUS = {
+  SUCCESS: "success",
+  PENDING: "pending",
+  OVERDUE: "overdue",
+  RESCHEDULED: "rescheduled",
 };
 
-const EMPTY_RESCHEDULE = {
-  date: todayISO(),
-  newDueDate: '',
-  reason: '',
+const STATUS_LABEL = {
+  [STATUS.SUCCESS]: "Success",
+  [STATUS.PENDING]: "Pending",
+  [STATUS.OVERDUE]: "Overdue",
+  [STATUS.RESCHEDULED]: "Rescheduled",
 };
-
-function todayISO() {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 
 function toISODate(value) {
-  if (!value) return '';
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return '';
-
-  return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`;
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 10);
 }
 
-function formatDate(value) {
-  if (!value) return '-';
-  const date = new Date(`${toISODate(value)}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return value;
+function normalizePayment(raw) {
+  const dueDate =
+    toISODate(raw.dueDate ?? raw.due_date ?? raw.interestDueDate) ?? null;
+  const paymentDate =
+    toISODate(raw.paymentDate ?? raw.payment_date ?? raw.paidOn) ?? null;
 
-  return date.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const customer =
+    typeof raw.customer === "object" && raw.customer !== null
+      ? raw.customer
+      : { name: raw.customer, id: raw.customerId };
+
+  const rawStatus = (raw.status ?? raw.paymentStatus ?? "pending")
+    .toString()
+    .toLowerCase();
+
+  const status = Object.values(STATUS).includes(rawStatus)
+    ? rawStatus
+    : STATUS.PENDING;
+
+  return {
+    id: raw.id ?? raw.paymentId ?? `${raw.loanId}-${dueDate}`,
+    loanId: raw.loanId ?? raw.loan_id,
+    customerId: raw.customerId ?? raw.customer_id ?? customer?.id,
+    customerName: raw.customer ?? customer?.name ?? "Unknown customer",
+    interestDue: Number(raw.interestDue ?? raw.interest_due ?? raw.amount ?? 0),
+    amount: Number(raw.amount ?? raw.interestDue ?? raw.interest_due ?? 0),
+    outstanding: Number(raw.outstanding ?? 0),
+    dueDate,
+    paymentDate,
+    method: raw.method ?? raw.paymentMethod ?? null,
+    status,
+    paymentHistory: raw.paymentHistory ?? raw.payments ?? [],
+    rescheduleHistory: raw.rescheduleHistory ?? [],
+  };
 }
+
+/* ============================================================
+   DEMO SEED DATA
+   Stands in for a real backend response. Dates are generated
+   relative to "today" so the date grouping always demonstrates
+   correctly regardless of when this file is run. Replace
+   `initialData` prop with your live backend payload — nothing
+   else in this file needs to change.
+   ============================================================ */
+
+function buildSeedData() {
+  const today = new Date();
+  const iso = (offset) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + offset);
+    return d.toISOString().slice(0, 10);
+  };
+
+  return [
+    {
+      id: "PMT-1001",
+      loanId: "LN000125",
+      customerId: "CUS001",
+      customer: "Ramesh Kumar",
+      interestDue: 1000,
+      amount: 1000,
+      dueDate: iso(0),
+      status: STATUS.SUCCESS,
+      paymentDate: iso(0),
+      method: "PhonePe",
+    },
+    {
+      id: "PMT-1002",
+      loanId: "LN000126",
+      customerId: "CUS002",
+      customer: "Sunita Devi",
+      interestDue: 750,
+      amount: 750,
+      dueDate: iso(1),
+      status: STATUS.PENDING,
+      method: null,
+    },
+    {
+      id: "PMT-1003",
+      loanId: "LN000127",
+      customerId: "CUS003",
+      customer: "Anil Sharma",
+      interestDue: 700,
+      amount: 700,
+      dueDate: iso(1),
+      status: STATUS.OVERDUE,
+      method: null,
+    },
+    {
+      id: "PMT-1004",
+      loanId: "LN000128",
+      customerId: "CUS004",
+      customer: "Priya Singh",
+      interestDue: 550,
+      amount: 550,
+      dueDate: iso(2),
+      status: STATUS.SUCCESS,
+      paymentDate: iso(2),
+      method: "Cash",
+    },
+    {
+      id: "PMT-1005",
+      loanId: "LN000129",
+      customerId: "CUS005",
+      customer: "Vikram Rao",
+      interestDue: 1200,
+      amount: 1200,
+      dueDate: iso(3),
+      status: STATUS.RESCHEDULED,
+      method: null,
+      rescheduleHistory: [
+        { from: iso(-2), to: iso(3), reason: "Customer travelling", date: iso(-2) },
+      ],
+    },
+  ];
+}
+
+/* ============================================================
+   SMALL HELPERS
+   ============================================================ */
 
 function formatCurrency(value) {
-  return `₹${Number(value || 0).toLocaleString('en-IN')}`;
+  const n = Number(value) || 0;
+  return `₹${n.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 }
 
-function getPaymentStatus(payment, loan) {
-  if (payment.status === 'Success') return 'Success';
+function formatDueDateLabel(isoDate) {
+  const d = new Date(isoDate + "T00:00:00");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dayMs = 24 * 60 * 60 * 1000;
+  const diffDays = Math.round((d - today) / dayMs);
 
-  const dueDate = toISODate(payment.dueDate || loan?.dueDate);
-  if (dueDate && dueDate < todayISO()) return 'Overdue';
+  const dateStr = d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
-  return 'Pending';
+  if (diffDays === 0) return `Today — ${dateStr}`;
+  if (diffDays === -1) return `Yesterday — ${dateStr}`;
+  if (diffDays === 1) return `Tomorrow — ${dateStr}`;
+  return dateStr;
 }
 
-function getLoanStatus(loan) {
-  const latestSuccessful = loan.payments?.some(
-    (payment) => payment.status === 'Success'
+function isSameMonth(isoDate, ref) {
+  if (!isoDate) return false;
+  const d = new Date(isoDate + "T00:00:00");
+  return d.getFullYear() === ref.getFullYear() && d.getMonth() === ref.getMonth();
+}
+
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: STATUS.SUCCESS, label: "Success" },
+  { key: STATUS.PENDING, label: "Pending" },
+  { key: STATUS.OVERDUE, label: "Overdue" },
+  { key: STATUS.RESCHEDULED, label: "Rescheduled" },
+];
+
+/* ============================================================
+   MAIN COMPONENT
+   ============================================================ */
+
+export default function Payments({ initialData }) {
+  const [payments, setPayments] = useState(() =>
+    (initialData ?? buildSeedData()).map(normalizePayment)
   );
+  const [search, setSearch] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+const [viewPayment, setViewPayment] = useState(null);
+  const [recordModal, setRecordModal] = useState(null); // payment object
+  const [rescheduleModal, setRescheduleModal] = useState(null); // payment object
 
-  if (loan.outstanding <= 0) return 'Success';
-  if (loan.dueDate < todayISO() && !latestSuccessful) return 'Overdue';
+  /* ------------------------- summary cards ------------------------- */
 
-  return 'Pending';
-}
+  const summary = useMemo(() => {
+    const now = new Date();
+    let totalCollected = 0;
+    let thisMonth = 0;
+    let pendingCollection = 0;
+    let overdueCollection = 0;
 
-function getActivityRecords(loans) {
-  const records = [];
+    payments.forEach((p) => {
+      if (p.status === STATUS.SUCCESS) {
+        totalCollected += p.amount;
+        if (isSameMonth(p.paymentDate, now)) thisMonth += p.amount;
+      } else if (p.status === STATUS.PENDING) {
+        pendingCollection += p.amount;
+      } else if (p.status === STATUS.OVERDUE) {
+        overdueCollection += p.amount;
+      }
+    });
 
-  loans.forEach((loan) => {
-    (loan.payments || []).forEach((payment) => {
-      records.push({
-        ...payment,
-        loanId: loan.loanId,
-        customerId: loan.customerId,
-        customer: loan.customer,
-        interest: payment.type === 'Interest' ? payment.amount : 0,
-        dueDate: payment.dueDate || loan.dueDate,
-        derivedStatus: getPaymentStatus(payment, loan),
+    return { totalCollected, thisMonth, pendingCollection, overdueCollection };
+  }, [payments]);
+
+  /* ------------------------- status counts ------------------------- */
+
+  const statusCounts = useMemo(() => {
+    const counts = { all: payments.length };
+    Object.values(STATUS).forEach((s) => {
+      counts[s] = payments.filter((p) => p.status === s).length;
+    });
+    return counts;
+  }, [payments]);
+
+  /* ------------------------- filtering ------------------------- */
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return payments.filter((p) => {
+      if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (dateFilter && p.dueDate !== dateFilter) return false;
+      if (q) {
+        const haystack = `${p.loanId} ${p.customerName} ${p.customerId}`.toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [payments, search, dateFilter, statusFilter]);
+
+  /* ------------------------- grouping by due date ------------------------- */
+
+  const groups = useMemo(() => {
+    const map = new Map();
+    filtered.forEach((p) => {
+      const key = p.dueDate ?? "no-date";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(p);
+    });
+
+    return Array.from(map.entries())
+      .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+      .map(([date, records]) => {
+        const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
+        const paid = records.filter((r) => r.status === STATUS.SUCCESS).length;
+        const pending = records.filter((r) => r.status === STATUS.PENDING).length;
+        const overdue = records.filter((r) => r.status === STATUS.OVERDUE).length;
+        const rescheduled = records.filter((r) => r.status === STATUS.RESCHEDULED).length;
+        return { date, records, totalAmount, paid, pending, overdue, rescheduled };
       });
-    });
+  }, [filtered]);
 
-    /*
-      If there is no successful payment for the current due obligation,
-      expose one pending/overdue activity row so the user can collect it.
-    */
-    const hasOpenPayment = (loan.payments || []).some(
-      (payment) =>
-        payment.status !== 'Success' &&
-        toISODate(payment.dueDate || loan.dueDate) === toISODate(loan.dueDate)
-    );
+  /* ------------------------- actions ------------------------- */
 
-    const alreadyHasDuePayment = (loan.payments || []).some(
-      (payment) =>
-        toISODate(payment.dueDate || loan.dueDate) === toISODate(loan.dueDate)
-    );
-
-    if (!hasOpenPayment && !alreadyHasDuePayment && loan.outstanding > 0) {
-      records.push({
-        id: `DUE-${loan.loanId}`,
-        loanId: loan.loanId,
-        customerId: loan.customerId,
-        customer: loan.customer,
-        amount: loan.interestDue,
-        type: 'Interest',
-        date: loan.dueDate,
-        method: '-',
-        reference: '',
-        notes: '',
-        status: 'Pending',
-        dueDate: loan.dueDate,
-        interest: loan.interestDue,
-        derivedStatus: getLoanStatus(loan),
-        isDueRecord: true,
-      });
-    }
-  });
-
-  return records.sort((a, b) => {
-    const aDate = toISODate(a.date || a.dueDate);
-    const bDate = toISODate(b.date || b.dueDate);
-    return bDate.localeCompare(aDate);
-  });
-}
-
-export default function Payments() {
-  const [loans, setLoans] = useState(INITIAL_LOANS);
-  const [search, setSearch] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState('All Types');
-  const [statusFilter, setStatusFilter] = useState('All Statuses');
-  const [sortOldest, setSortOldest] = useState(true);
-
-  const [paymentModal, setPaymentModal] = useState({
-    open: false,
-    loanId: null,
-    recordId: null,
-  });
-
-  const [rescheduleModal, setRescheduleModal] = useState({
-    open: false,
-    loanId: null,
-  });
-
-  const [paymentForm, setPaymentForm] = useState(EMPTY_PAYMENT);
-  const [rescheduleForm, setRescheduleForm] = useState(EMPTY_RESCHEDULE);
-
-  const [message, setMessage] = useState(null);
-
-  const activity = useMemo(() => getActivityRecords(loans), [loans]);
-
-  const filteredActivity = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    const result = activity.filter((record) => {
-      const matchesSearch =
-        !query ||
-        record.loanId.toLowerCase().includes(query) ||
-        record.customer.toLowerCase().includes(query);
-
-      const matchesDate =
-        !dateFilter || toISODate(record.date || record.dueDate) === dateFilter;
-
-      const matchesType =
-        typeFilter === 'All Types' || record.type === typeFilter;
-
-      const matchesStatus =
-        statusFilter === 'All Statuses' ||
-        record.derivedStatus === statusFilter;
-
-      return matchesSearch && matchesDate && matchesType && matchesStatus;
-    });
-
-    return result.sort((a, b) => {
-      const aDate = toISODate(a.date || a.dueDate);
-      const bDate = toISODate(b.date || b.dueDate);
-      return sortOldest
-        ? aDate.localeCompare(bDate)
-        : bDate.localeCompare(aDate);
-    });
-  }, [
-    activity,
-    search,
-    dateFilter,
-    typeFilter,
-    statusFilter,
-    sortOldest,
-  ]);
-
-  const stats = useMemo(() => {
-    const records = activity;
-
-    const successful = records.filter(
-      (record) => record.derivedStatus === 'Success'
-    );
-
-    const pending = records.filter(
-      (record) => record.derivedStatus === 'Pending'
-    );
-
-    const overdue = records.filter(
-      (record) => record.derivedStatus === 'Overdue'
-    );
-
-    const currentMonth = todayISO().slice(0, 7);
-
-    return {
-      totalCollected: successful.reduce(
-        (sum, record) => sum + Number(record.amount || 0),
-        0
-      ),
-      thisMonth: successful
-        .filter((record) => toISODate(record.date).slice(0, 7) === currentMonth)
-        .reduce((sum, record) => sum + Number(record.amount || 0), 0),
-      pending: pending.reduce(
-        (sum, record) => sum + Number(record.amount || 0),
-        0
-      ),
-      overdue: overdue.reduce(
-        (sum, record) => sum + Number(record.amount || 0),
-        0
-      ),
-    };
-  }, [activity]);
-
-  const selectedPaymentLoan = loans.find(
-    (loan) => loan.loanId === paymentModal.loanId
-  );
-
-  const selectedRescheduleLoan = loans.find(
-    (loan) => loan.loanId === rescheduleModal.loanId
-  );
-
-  function showMessage(type, text) {
-    setMessage({ type, text });
-    window.setTimeout(() => setMessage(null), 2800);
-  }
-
-  function openPaymentModal(loanId, recordId = null) {
-    const loan = loans.find((item) => item.loanId === loanId);
-    if (!loan) return;
-
-    const record = activity.find(
-      (item) => item.loanId === loanId && item.id === recordId
-    );
-
-    setPaymentForm({
-      ...EMPTY_PAYMENT,
-      date: todayISO(),
-      amount: record?.amount ? String(record.amount) : '',
-      type: record?.type || 'Interest',
-    });
-
-    setPaymentModal({
-      open: true,
-      loanId,
-      recordId,
-    });
-  }
-
-  function closePaymentModal() {
-    setPaymentModal({ open: false, loanId: null, recordId: null });
-    setPaymentForm(EMPTY_PAYMENT);
-  }
-
-  function openRescheduleModal(loanId) {
-    const loan = loans.find((item) => item.loanId === loanId);
-    if (!loan) return;
-
-    setRescheduleForm({
-      ...EMPTY_RESCHEDULE,
-      date: todayISO(),
-      newDueDate: loan.dueDate,
-      reason: '',
-    });
-
-    setRescheduleModal({
-      open: true,
-      loanId,
-    });
-  }
-
-  function closeRescheduleModal() {
-    setRescheduleModal({ open: false, loanId: null });
-    setRescheduleForm(EMPTY_RESCHEDULE);
-  }
-
-  function updatePayment(field, value) {
-    setPaymentForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
-  }
-
-  function updateReschedule(field, value) {
-    setRescheduleForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
-  }
-
-  function recordPayment(event) {
-    event.preventDefault();
-
-    if (!selectedPaymentLoan) return;
-
-    const amount = Number(paymentForm.amount);
-
-    if (!paymentForm.date || !paymentForm.type || !paymentForm.method) {
-      showMessage('error', 'Please complete all required payment fields.');
-      return;
-    }
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      showMessage('error', 'Amount received must be greater than ₹0.');
-      return;
-    }
-
-    setLoans((previousLoans) =>
-      previousLoans.map((loan) => {
-        if (loan.loanId !== selectedPaymentLoan.loanId) return loan;
-
-        const newPayment = {
-          id: `PAY-${Date.now()}`,
-          amount,
-          type: paymentForm.type,
-          date: paymentForm.date,
-          method: paymentForm.method,
-          reference: paymentForm.reference.trim(),
-          notes: paymentForm.notes.trim(),
-          status: 'Success',
-          dueDate: loan.dueDate,
-        };
-
-        const principalPaid =
-          paymentForm.type === 'Principal'
-            ? amount
-            : paymentForm.type === 'Principal + Interest'
-              ? Math.min(amount, loan.outstanding)
-              : 0;
-
-        return {
-          ...loan,
-          outstanding: Math.max(0, loan.outstanding - principalPaid),
-          payments: [...(loan.payments || []), newPayment],
-        };
-      })
-    );
-
-    closePaymentModal();
-    showMessage('success', 'Payment recorded successfully. Status moved to Success.');
-  }
-
-  function rescheduleLoan(event) {
-    event.preventDefault();
-
-    if (!selectedRescheduleLoan) return;
-
-    if (!rescheduleForm.newDueDate) {
-      showMessage('error', 'Please select a new due date.');
-      return;
-    }
-
-    if (!rescheduleForm.reason.trim()) {
-      showMessage('error', 'Please enter the reason for rescheduling.');
-      return;
-    }
-
-    if (rescheduleForm.newDueDate <= todayISO()) {
-      showMessage('error', 'New due date must be a future date.');
-      return;
-    }
-
-    if (rescheduleForm.newDueDate === selectedRescheduleLoan.dueDate) {
-      showMessage('error', 'New due date must be different from the current due date.');
-      return;
-    }
-
-    setLoans((previousLoans) =>
-      previousLoans.map((loan) => {
-        if (loan.loanId !== selectedRescheduleLoan.loanId) return loan;
-
-        return {
-          ...loan,
-          dueDate: rescheduleForm.newDueDate,
-          rescheduleHistory: [
-            ...(loan.rescheduleHistory || []),
-            {
-              id: `RES-${Date.now()}`,
-              date: rescheduleForm.date,
-              fromDate: loan.dueDate,
-              toDate: rescheduleForm.newDueDate,
-              reason: rescheduleForm.reason.trim(),
-            },
-          ],
-          payments: (loan.payments || []).map((payment) => ({
-            ...payment,
-            dueDate:
-              payment.status === 'Success'
-                ? payment.dueDate
-                : payment.dueDate === loan.dueDate
-                  ? rescheduleForm.newDueDate
-                  : payment.dueDate,
-          })),
-        };
-      })
-    );
-
-    closeRescheduleModal();
-    showMessage('success', 'Loan due date rescheduled successfully.');
-  }
-
-  function exportPayments() {
-    const rows = [
-      [
-        'Loan ID',
-        'Customer',
-        'Type',
-        'Amount',
-        'Date',
-        'Method',
-        'Status',
-      ],
-      ...filteredActivity.map((record) => [
-        record.loanId,
-        record.customer,
-        record.type,
-        record.amount,
-        formatDate(record.date || record.dueDate),
-        record.method,
-        record.derivedStatus,
-      ]),
-    ];
-
-    const csv = rows
-      .map((row) =>
-        row
-          .map((value) => `"${String(value ?? '').replaceAll('"', '""')}"`)
-          .join(',')
+  const handleRecordPayment = useCallback((paymentId, method) => {
+    const todayISO = toISODate(new Date());
+    setPayments((prev) =>
+      prev.map((p) =>
+        p.id === paymentId
+          ? { ...p, status: STATUS.SUCCESS, paymentDate: todayISO, method }
+          : p
       )
-      .join('\n');
+    );
+    setRecordModal(null);
+  }, []);
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
+  const handleReschedule = useCallback((paymentId, newDueDate, reason) => {
+    setPayments((prev) =>
+      prev.map((p) => {
+        if (p.id !== paymentId) return p;
+        const historyEntry = {
+          from: p.dueDate,
+          to: newDueDate,
+          reason,
+          date: toISODate(new Date()),
+        };
+        return {
+          ...p,
+          status: STATUS.RESCHEDULED,
+          dueDate: newDueDate,
+          rescheduleHistory: [...(p.rescheduleHistory ?? []), historyEntry],
+        };
+      })
+    );
+    setRescheduleModal(null);
+  }, []);
 
-    anchor.href = url;
-    anchor.download = `payments-${todayISO()}.csv`;
-    anchor.click();
-
-    URL.revokeObjectURL(url);
-  }
+  /* ------------------------- render ------------------------- */
 
   return (
-    <div className="payments-page">
-      {message && (
-        <div className={`payments-toast payments-toast-${message.type}`}>
-          {message.type === 'success' ? <Check size={18} /> : <X size={18} />}
-          <span>{message.text}</span>
-        </div>
-      )}
-
-      <div className="payments-header">
-        <div>
-          <h1>Payments &amp; Interest Schedule</h1>
-          <p>Monitor collections, interest dues and payment transactions in one place.</p>
-        </div>
-
-        <div className="payments-header-actions">
-          <button
-            type="button"
-            className="payments-btn payments-btn-secondary"
-            onClick={exportPayments}
-          >
-            <Download size={18} />
-            Export
-          </button>
-
-          <button
-            type="button"
-            className="payments-btn payments-btn-primary"
-            onClick={() => openPaymentModal(INITIAL_LOANS[0]?.loanId)}
-          >
-            <Plus size={20} />
-            Record Payment
-          </button>
-        </div>
-      </div>
-
-      <section className="payments-stats-grid">
-        <StatCard
-          icon={<IndianRupee size={22} />}
-          tone="green"
+    <div className="pmt-page">
+      <header className="pmt-header">
+        <h1 className="pmt-title">Payments &amp; Interest Schedule</h1>
+        <p className="pmt-subtitle">
+          Monitor collections, interest dues and payment transactions by date.
+        </p>
+      </header>
+      <section className="pmt-cards" aria-label="Payment summary">
+        <SummaryCard
+          icon={<IndianRupee size={18} />}
           label="Total Collected"
-          value={formatCurrency(stats.totalCollected)}
-        />
-        <StatCard
-          icon={<CalendarDays size={22} />}
+          value={formatCurrency(summary.totalCollected)}
           tone="blue"
+        />
+        <SummaryCard
+          icon={<Calendar size={18} />}
           label="This Month"
-          value={formatCurrency(stats.thisMonth)}
+          value={formatCurrency(summary.thisMonth)}
+          tone="green"
         />
-        <StatCard
-          icon={<Clock3 size={22} />}
-          tone="yellow"
+        <SummaryCard
+          icon={<Clock size={18} />}
           label="Pending Collection"
-          value={formatCurrency(stats.pending)}
+          value={formatCurrency(summary.pendingCollection)}
+          tone="amber"
         />
-        <StatCard
-          icon={<RefreshCw size={22} />}
-          tone="red"
+        <SummaryCard
+          icon={<RefreshCw size={18} />}
           label="Overdue Collection"
-          value={formatCurrency(stats.overdue)}
+          value={formatCurrency(summary.overdueCollection)}
+          tone="red"
         />
       </section>
 
-      <section className="payments-filter-bar">
-        <div className="payments-search">
-          <Search size={19} />
+      <section className="pmt-filters">
+        <div className="pmt-search">
+          <Search size={16} className="pmt-search-icon" />
           <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            type="text"
             placeholder="Search loan ID or customer..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-          {search && (
-            <button
-              type="button"
-              aria-label="Clear search"
-              onClick={() => setSearch('')}
-            >
-              <X size={16} />
-            </button>
-          )}
         </div>
-
-        <div className="payments-date-filter">
+        <div className="pmt-date-filter">
+          <Calendar size={16} className="pmt-search-icon" />
           <input
             type="date"
+            placeholder="dd-mm-yyyy"
             value={dateFilter}
-            onChange={(event) => setDateFilter(event.target.value)}
+            onChange={(e) => setDateFilter(e.target.value)}
           />
         </div>
-
-        <FilterSelect
-          value={typeFilter}
-          onChange={setTypeFilter}
-          options={['All Types', ...PAYMENT_TYPES]}
-        />
-
-        <FilterSelect
-          value={statusFilter}
-          onChange={setStatusFilter}
-          options={['All Statuses', 'Success', 'Pending', 'Overdue']}
-        />
-
-        <button
-          type="button"
-          className={`payments-sort-btn ${sortOldest ? 'is-active' : ''}`}
-          onClick={() => setSortOldest((value) => !value)}
-        >
-          <SlidersHorizontal size={18} />
-          {sortOldest ? 'Earliest' : 'Latest'}
-        </button>
       </section>
 
-      <section className="payments-activity-card">
-        <div className="payments-activity-header">
+      <nav className="pmt-status-filters" aria-label="Filter by status">
+        {STATUS_FILTERS.map((s) => (
+          <button
+            key={s.key}
+            type="button"
+            className={`pmt-status-chip${statusFilter === s.key ? " is-active" : ""}`}
+            onClick={() => setStatusFilter(s.key)}
+          >
+            {s.label} <span className="pmt-status-count">{statusCounts[s.key] ?? 0}</span>
+          </button>
+        ))}
+      </nav>
+
+      <section className="pmt-activity">
+        <div className="pmt-activity-header">
           <div>
             <h2>Payment Activity</h2>
-            <p>Payments and upcoming interest obligations</p>
+            <p>Interest obligations and payment transactions grouped by due date</p>
           </div>
-
-          <span className="payments-record-count">
-            {filteredActivity.length} Records
-          </span>
+          <div className="pmt-activity-count">{filtered.length} records</div>
         </div>
 
-        <div className="payments-table-wrap">
-          <table className="payments-table">
-            <thead>
-              <tr>
-                <th>LOAN ID</th>
-                <th>CUSTOMER</th>
-                <th>TYPE</th>
-                <th>AMOUNT</th>
-                <th>INTEREST</th>
-                <th>DATE</th>
-                <th>METHOD</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
+        {groups.length === 0 && (
+          <div className="pmt-empty">No payment records match the current filters.</div>
+        )}
 
-            <tbody>
-              {filteredActivity.length === 0 ? (
-                <tr>
-                  <td colSpan="9">
-                    <EmptyState />
-                  </td>
-                </tr>
-              ) : (
-                filteredActivity.map((record) => (
-                  <PaymentRow
-                    key={record.id}
-                    record={record}
-                    onRecord={() => openPaymentModal(record.loanId, record.id)}
-                    onReschedule={() => openRescheduleModal(record.loanId)}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {paymentModal.open && selectedPaymentLoan && (
-        <ModalShell onClose={closePaymentModal}>
-          <form className="payments-modal-form" onSubmit={recordPayment}>
-            <ModalHeader
-              title="Record Payment"
-              subtitle={`${selectedPaymentLoan.customer} · ${selectedPaymentLoan.loanId}`}
-              onClose={closePaymentModal}
-            />
-
-            <div className="payments-form-body">
-              <div className="payments-form-grid">
-                <Field label="Payment Date" required>
-                  <input
-                    type="date"
-                    value={paymentForm.date}
-                    onChange={(event) => updatePayment('date', event.target.value)}
-                    required
-                  />
-                </Field>
-
-                <Field label="Amount Received (₹)" required>
-                  <input
-                    type="number"
-                    min="1"
-                    step="0.01"
-                    value={paymentForm.amount}
-                    onChange={(event) => updatePayment('amount', event.target.value)}
-                    placeholder="Enter amount"
-                    required
-                  />
-                </Field>
-              </div>
-
-              <Field label="Payment Type" required>
-                <div className="payments-segmented">
-                  {PAYMENT_TYPES.map((type) => (
-                    <button
-                      type="button"
-                      key={type}
-                      className={paymentForm.type === type ? 'is-selected' : ''}
-                      onClick={() => updatePayment('type', type)}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              </Field>
-
-              <div className="payments-form-grid">
-                <Field label="Payment Method" required>
-                  <div className="payments-select-wrap">
-                    <select
-                      value={paymentForm.method}
-                      onChange={(event) =>
-                        updatePayment('method', event.target.value)
-                      }
-                      required
-                    >
-                      {PAYMENT_METHODS.map((method) => (
-                        <option key={method}>{method}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={18} />
-                  </div>
-                </Field>
-
-                <Field label="Transaction Reference">
-                  <input
-                    value={paymentForm.reference}
-                    onChange={(event) =>
-                      updatePayment('reference', event.target.value)
-                    }
-                    placeholder="Optional"
-                  />
-                </Field>
-              </div>
-
-              <Field label="Notes">
-                <textarea
-                  value={paymentForm.notes}
-                  onChange={(event) => updatePayment('notes', event.target.value)}
-                  placeholder="Optional notes..."
-                  rows="3"
-                />
-              </Field>
-
-              <button
-                type="button"
-                className="payments-reschedule-action"
-                onClick={() => {
-                  closePaymentModal();
-                  openRescheduleModal(selectedPaymentLoan.loanId);
-                }}
-              >
-                <span className="payments-reschedule-icon">
-                  <CalendarDays size={19} />
-                </span>
-                <span className="payments-reschedule-copy">
-                  <strong>Reschedule Loan Date</strong>
-                  <small>Change the due date for this loan</small>
-                </span>
-                <ChevronRight size={20} />
-              </button>
-
-              <PaymentSummary
-                loan={selectedPaymentLoan}
-                amount={Number(paymentForm.amount || 0)}
-              />
-            </div>
-
-            <ModalFooter
-              onCancel={closePaymentModal}
-              submitLabel="Record Payment"
-            />
-          </form>
-        </ModalShell>
-      )}
-
-      {rescheduleModal.open && selectedRescheduleLoan && (
-        <ModalShell onClose={closeRescheduleModal}>
-          <form className="payments-modal-form" onSubmit={rescheduleLoan}>
-            <ModalHeader
-              title="Reschedule Loan Date"
-              subtitle={`${selectedRescheduleLoan.customer} · ${selectedRescheduleLoan.loanId}`}
-              onClose={closeRescheduleModal}
-            />
-
-            <div className="payments-form-body">
-              <div className="payments-current-date-card">
-                <div className="payments-current-date-icon">
-                  <CalendarDays size={20} />
-                </div>
-                <div>
-                  <span>Current Due Date</span>
-                  <strong>{formatDate(selectedRescheduleLoan.dueDate)}</strong>
-                </div>
-              </div>
-
-              <div className="payments-form-grid">
-                <Field label="New Due Date" required>
-                  <input
-                    type="date"
-                    min={todayISO()}
-                    value={rescheduleForm.newDueDate}
-                    onChange={(event) =>
-                      updateReschedule('newDueDate', event.target.value)
-                    }
-                    required
-                  />
-                </Field>
-
-                <Field label="Reschedule Date">
-                  <input
-                    type="date"
-                    value={rescheduleForm.date}
-                    onChange={(event) =>
-                      updateReschedule('date', event.target.value)
-                    }
-                  />
-                </Field>
-              </div>
-
-              <Field label="Reason" required>
-                <textarea
-                  value={rescheduleForm.reason}
-                  onChange={(event) =>
-                    updateReschedule('reason', event.target.value)
-                  }
-                  placeholder="Customer requested extension..."
-                  rows="4"
-                  required
-                />
-              </Field>
-
-              <div className="payments-info-box">
-                <FileText size={17} />
-                <span>
-                  Only this loan&apos;s due date will be changed. Existing
-                  payment records will remain unchanged.
-                </span>
-              </div>
-            </div>
-
-            <div className="payments-modal-footer">
-              <button
-                type="button"
-                className="payments-btn payments-btn-secondary payments-back-btn"
-                onClick={() => {
-                  closeRescheduleModal();
-                  openPaymentModal(selectedRescheduleLoan.loanId);
-                }}
-              >
-                <ChevronLeft size={18} />
-                Back
-              </button>
-
-              <button
-                type="submit"
-                className="payments-btn payments-btn-primary"
-              >
-                <Check size={18} />
-                Reschedule Loan
-              </button>
-            </div>
-          </form>
-        </ModalShell>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ icon, tone, label, value }) {
-  return (
-    <article className="payments-stat-card">
-      <div className={`payments-stat-icon payments-stat-icon-${tone}`}>
-        {icon}
-      </div>
-      <div>
-        <span>{label}</span>
-        <strong>{value}</strong>
-      </div>
-    </article>
-  );
-}
-
-function FilterSelect({ value, onChange, options }) {
-  return (
-    <div className="payments-filter-select">
-      <select value={value} onChange={(event) => onChange(event.target.value)}>
-        {options.map((option) => (
-          <option key={option}>{option}</option>
+        {groups.map((group) => (
+          <DateGroup
+            key={group.date}
+            group={group}
+            onRecord={(p) => setRecordModal(p)}
+            onReschedule={(p) => setRescheduleModal(p)}
+              onView={(p) => setViewPayment(p)}
+          />
         ))}
-      </select>
-      <ChevronDown size={17} />
+      </section>
+{viewPayment && (
+  <PaymentDetailsDrawer
+    payment={viewPayment}
+    onClose={() => setViewPayment(null)}
+  />
+)}
+      {recordModal && (
+        <RecordPaymentModal
+          payment={recordModal}
+          onClose={() => setRecordModal(null)}
+          onConfirm={handleRecordPayment}
+        />
+      )}
+
+      {rescheduleModal && (
+        <RescheduleModal
+          payment={rescheduleModal}
+          onClose={() => setRescheduleModal(null)}
+          onConfirm={handleReschedule}
+        />
+      )}
     </div>
   );
 }
 
-function PaymentRow({ record, onRecord, onReschedule }) {
-  const status = record.derivedStatus;
+/* ============================================================
+   SUMMARY CARD
+   ============================================================ */
+function PaymentDetailsDrawer({ payment, onClose }) {
+  const initials = (payment.customerName || "?")
+    .split(" ")
+    .map((word) => word[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
-    <tr>
-      <td>
-        <button type="button" className="payments-loan-link" onClick={onRecord}>
-          {record.loanId}
-        </button>
-      </td>
+    <div
+      className="pmt-details-modal-overlay"
+      onClick={onClose}
+    >
+      <div
+        className="pmt-details-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* HEADER */}
+        <div className="pmt-details-modal-header">
+          <div>
+            <span className="pmt-details-modal-eyebrow">
+              PAYMENT DETAILS
+            </span>
 
-      <td>
-        <strong className="payments-customer-name">{record.customer}</strong>
-      </td>
+            <h2>Payment Details</h2>
 
-      <td>
-        <span className="payments-type-text">{record.type}</span>
-      </td>
-
-      <td>
-        <strong className="payments-amount">
-          {formatCurrency(record.amount)}
-        </strong>
-      </td>
-
-      <td>
-        {record.interest ? formatCurrency(record.interest) : '—'}
-      </td>
-
-      <td>{formatDate(record.date || record.dueDate)}</td>
-
-      <td>
-        <span className="payments-method-pill">{record.method || '—'}</span>
-      </td>
-
-      <td>
-        <StatusBadge status={status} />
-      </td>
-
-      <td>
-        <div className="payments-row-actions">
-          {status !== 'Success' ? (
-            <button
-              type="button"
-              className="payments-action-btn payments-action-record"
-              onClick={onRecord}
-            >
-              Record
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="payments-action-btn"
-              onClick={onRecord}
-            >
-              View
-            </button>
-          )}
+            <p>{payment.id}</p>
+          </div>
 
           <button
             type="button"
-            className="payments-action-btn payments-action-calendar"
-            onClick={onReschedule}
-            aria-label={`Reschedule ${record.loanId}`}
-            title="Reschedule loan date"
+            className="pmt-details-modal-close"
+            onClick={onClose}
+            aria-label="Close"
           >
-            <CalendarDays size={16} />
+            <X size={20} />
           </button>
         </div>
-      </td>
-    </tr>
+
+        {/* CONTENT */}
+        <div className="pmt-details-modal-content">
+
+          {/* SUCCESS SUMMARY */}
+          <div className="pmt-payment-success-box">
+            <div className="pmt-payment-success-icon">
+              <Check size={21} />
+            </div>
+
+            <div className="pmt-payment-success-info">
+              <strong>Payment Successful</strong>
+
+              <span>
+                {payment.paymentDate
+                  ? formatDueDateLabel(payment.paymentDate)
+                  : "Payment completed"}
+              </span>
+            </div>
+
+            <div className="pmt-payment-success-amount">
+              {formatCurrency(payment.amount)}
+            </div>
+          </div>
+
+          {/* CUSTOMER */}
+          <section className="pmt-modal-section">
+
+            <div className="pmt-modal-section-title">
+              Customer
+            </div>
+
+            <div className="pmt-modal-customer">
+              <div className="pmt-modal-avatar">
+                {initials}
+              </div>
+
+              <div className="pmt-modal-customer-info">
+                <strong>
+                  {payment.customerName}
+                </strong>
+
+                <span>
+                  {payment.customerId}
+                </span>
+              </div>
+            </div>
+
+          </section>
+
+          {/* LOAN DETAILS */}
+          <section className="pmt-modal-section">
+
+            <div className="pmt-modal-section-title">
+              Loan Details
+            </div>
+
+            <div className="pmt-modal-detail-grid">
+
+              <div className="pmt-modal-detail">
+                <span>Loan ID</span>
+                <strong>{payment.loanId || "—"}</strong>
+              </div>
+
+              <div className="pmt-modal-detail">
+                <span>Interest Due</span>
+                <strong>
+                  {formatCurrency(payment.interestDue)}
+                </strong>
+              </div>
+
+              <div className="pmt-modal-detail">
+                <span>Amount Paid</span>
+                <strong className="pmt-modal-highlight">
+                  {formatCurrency(payment.amount)}
+                </strong>
+              </div>
+
+              <div className="pmt-modal-detail">
+                <span>Payment Method</span>
+                <strong>{payment.method || "—"}</strong>
+              </div>
+
+              <div className="pmt-modal-detail">
+                <span>Due Date</span>
+                <strong>
+                  {payment.dueDate
+                    ? formatDueDateLabel(payment.dueDate)
+                    : "—"}
+                </strong>
+              </div>
+
+              <div className="pmt-modal-detail">
+                <span>Payment Date</span>
+                <strong>
+                  {payment.paymentDate
+                    ? formatDueDateLabel(payment.paymentDate)
+                    : "—"}
+                </strong>
+              </div>
+
+            </div>
+
+          </section>
+
+          {/* STATUS */}
+          <section className="pmt-modal-section">
+
+            <div className="pmt-modal-section-title">
+              Payment Status
+            </div>
+
+            <div className="pmt-modal-status-row">
+              <span>Status</span>
+
+              <StatusBadge status={payment.status} />
+            </div>
+
+          </section>
+
+          {/* TIMELINE */}
+          <section className="pmt-modal-section pmt-modal-timeline-section">
+
+            <div className="pmt-modal-section-title">
+              Payment Timeline
+            </div>
+
+            <div className="pmt-modal-timeline">
+
+              <div className="pmt-modal-timeline-item">
+
+                <div className="pmt-modal-timeline-marker">
+                  <span />
+                </div>
+
+                <div className="pmt-modal-timeline-content">
+                  <strong>Payment Due</strong>
+
+                  <span>
+                    {payment.dueDate
+                      ? formatDueDateLabel(payment.dueDate)
+                      : "—"}
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="pmt-modal-timeline-item">
+
+                <div className="pmt-modal-timeline-marker">
+                  <span />
+                </div>
+
+                <div className="pmt-modal-timeline-content">
+                  <strong>Payment Recorded</strong>
+
+                  <span>
+                    {payment.paymentDate
+                      ? formatDueDateLabel(payment.paymentDate)
+                      : "—"}
+
+                    {payment.method
+                      ? ` • ${payment.method}`
+                      : ""}
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="pmt-modal-timeline-item pmt-modal-timeline-complete">
+
+                <div className="pmt-modal-timeline-marker">
+                  <Check size={11} />
+                </div>
+
+                <div className="pmt-modal-timeline-content">
+                  <strong>Payment Successful</strong>
+
+                  <span>
+                    {formatCurrency(payment.amount)} paid
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          {/* RESCHEDULE HISTORY */}
+          {payment.rescheduleHistory?.length > 0 && (
+            <section className="pmt-modal-section">
+
+              <div className="pmt-modal-section-title">
+                Reschedule History
+              </div>
+
+              <div className="pmt-modal-history-list">
+
+                {payment.rescheduleHistory.map(
+                  (item, index) => (
+                    <div
+                      className="pmt-modal-history-item"
+                      key={index}
+                    >
+                      <strong>
+                        {item.from} → {item.to}
+                      </strong>
+
+                      {item.reason && (
+                        <span>
+                          {item.reason}
+                        </span>
+                      )}
+                    </div>
+                  )
+                )}
+
+              </div>
+
+            </section>
+          )}
+
+        </div>
+
+        {/* FOOTER */}
+        <div className="pmt-details-modal-footer">
+
+          <button
+            type="button"
+            className="pmt-details-modal-close-btn"
+            onClick={onClose}
+          >
+            Close
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
+function DetailItem({ label, value, highlight = false }) {
+  return (
+    <div className="pmt-detail-item">
+      <span>{label}</span>
+
+      <strong className={highlight ? "is-highlight" : ""}>
+        {value || "—"}
+      </strong>
+    </div>
+  );
+}
+
+function SummaryCard({ icon, label, value, tone }) {
+  return (
+    <div className={`pmt-card pmt-card--${tone}`}>
+      <div className="pmt-card-icon">{icon}</div>
+      <div className="pmt-card-body">
+        <span className="pmt-card-label">{label}</span>
+        <span className="pmt-card-value">{value}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   DATE GROUP + TABLE
+   ============================================================ */
+
+function DateGroup({ group, onRecord, onReschedule, onView, }) {
+  const { date, records, totalAmount, paid, pending, overdue, rescheduled } = group;
+
+  const summaryParts = [
+    `${records.length} payment${records.length === 1 ? "" : "s"}`,
+    formatCurrency(totalAmount),
+  ];
+  if (paid) summaryParts.push(`${paid} paid`);
+  if (pending) summaryParts.push(`${pending} pending`);
+  if (overdue) summaryParts.push(`${overdue} overdue`);
+  if (rescheduled) summaryParts.push(`${rescheduled} rescheduled`);
+
+  return (
+    <div className="pmt-date-group">
+      <div className="pmt-date-group-header">
+        <h3>{date === "no-date" ? "No due date" : formatDueDateLabel(date)}</h3>
+        <span className="pmt-date-group-summary">{summaryParts.join(" • ")}</span>
+      </div>
+
+      <div className="pmt-table">
+        <div className="pmt-table-head">
+          <span>Customer</span>
+          <span>Loan ID</span>
+          <span>Interest</span>
+          <span>Amount</span>
+          <span>Method</span>
+          <span>Status</span>
+          <span>Actions</span>
+        </div>
+
+        {records.map((p) => (
+          <PaymentRow key={p.id} payment={p} onRecord={onRecord} onReschedule={onReschedule} onView={onView}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PaymentRow({
+  payment,
+  onRecord,
+  onReschedule,
+  onView,
+}) {
+  const initials = (payment.customerName || "?")
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  return (
+    <div className="pmt-table-row" data-label="Payment record">
+      <span className="pmt-cell pmt-cell-customer" data-th="Customer">
+        <span className="pmt-avatar">{initials}</span>
+        <span className="pmt-customer-info">
+          <span className="pmt-customer-name">{payment.customerName}</span>
+          <span className="pmt-customer-id">{payment.customerId}</span>
+        </span>
+      </span>
+
+      <span className="pmt-cell pmt-loan-id" data-th="Loan ID">
+        {payment.loanId}
+      </span>
+
+      <span className="pmt-cell" data-th="Interest">
+        <span className="pmt-amount">{formatCurrency(payment.interestDue)}</span>
+        <span className="pmt-cell-caption">Interest</span>
+      </span>
+
+      <span className="pmt-cell" data-th="Amount">
+        <span className="pmt-amount">{formatCurrency(payment.amount)}</span>
+      </span>
+
+      <span className="pmt-cell" data-th="Method">
+        {payment.method ? (
+          <span className="pmt-method-pill">{payment.method}</span>
+        ) : (
+          <span className="pmt-method-pill pmt-method-pill--empty">—</span>
+        )}
+      </span>
+
+      <span className="pmt-cell" data-th="Status">
+        <StatusBadge status={payment.status} />
+      </span>
+
+      <span className="pmt-cell pmt-cell-actions" data-th="Actions">
+        {(payment.status === STATUS.PENDING || payment.status === STATUS.OVERDUE) && (
+          <>
+            <button className="pmt-action pmt-action--primary" onClick={() => onRecord(payment)}>
+              <Check size={14} /> Record
+            </button>
+            <button className="pmt-action" onClick={() => onReschedule(payment)}>
+              <CalendarClock size={14} />
+            </button>
+          </>
+        )}
+        {payment.status === STATUS.RESCHEDULED && (
+          <>
+            <button className="pmt-action pmt-action--primary" onClick={() => onRecord(payment)}>
+              <Check size={14} /> Record
+            </button>
+            <button className="pmt-action" onClick={() => onReschedule(payment)}>
+              <CalendarClock size={14} />
+            </button>
+          </>
+        )}
+{payment.status === STATUS.SUCCESS && (
+  <button
+    type="button"
+    className="pmt-action pmt-view-action"
+    onClick={() => onView(payment)}
+  >
+    <Eye size={14} />
+    View
+  </button>
+)}
+      </span>
+    </div>
   );
 }
 
 function StatusBadge({ status }) {
-  return (
-    <span className={`payments-status payments-status-${status.toLowerCase()}`}>
-      {status}
-    </span>
-  );
+  return <span className={`pmt-badge pmt-badge--${status}`}>{STATUS_LABEL[status]}</span>;
 }
 
-function PaymentSummary({ loan, amount }) {
-  const amountDue = Number(loan.interestDue || 0);
-  const received = Math.min(amountDue, Number(amount || 0));
-  const outstanding = Math.max(0, amountDue - received);
+/* ============================================================
+   RECORD PAYMENT MODAL
+   ============================================================ */
+
+const METHODS = ["Cash", "UPI", "PhonePe", "Google Pay", "Bank Transfer"];
+
+function RecordPaymentModal({ payment, onClose, onConfirm }) {
+  const [step, setStep] = useState(1); // 1 = due, 2 = record, 3 = success
+  const [method, setMethod] = useState(METHODS[0]);
+
+  const handleConfirm = () => {
+    setStep(3);
+    setTimeout(() => onConfirm(payment.id, method), 550);
+  };
 
   return (
-    <div className="payments-summary">
-      <div>
-        <span>Amount Due</span>
-        <strong>{formatCurrency(amountDue)}</strong>
-      </div>
-      <div>
-        <span>Amount Received</span>
-        <strong className="payments-summary-green">
-          {formatCurrency(received)}
-        </strong>
-      </div>
-      <div className="payments-summary-divider" />
-      <div>
-        <span>Outstanding</span>
-        <strong className="payments-summary-orange">
-          {formatCurrency(outstanding)}
-        </strong>
+    <div className="pmt-modal-overlay" onClick={onClose}>
+      <div className="pmt-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="pmt-modal-close" onClick={onClose} aria-label="Close">
+          <X size={16} />
+        </button>
+
+        <ol className="pmt-steps">
+          <li className={step >= 1 ? "is-active" : ""}>
+            <span className="pmt-step-dot">1</span>Due
+          </li>
+          <li className={step >= 2 ? "is-active" : ""}>
+            <span className="pmt-step-dot">2</span>Record Payment
+          </li>
+          <li className={step >= 3 ? "is-active" : ""}>
+            <span className="pmt-step-dot">3</span>Success
+          </li>
+        </ol>
+
+        {step === 1 && (
+          <div className="pmt-modal-body">
+            <h3>Payment due</h3>
+            <p className="pmt-modal-line">
+              <strong>{payment.customerName}</strong> ({payment.customerId})
+            </p>
+            <p className="pmt-modal-line">
+              Loan <strong>{payment.loanId}</strong> — due{" "}
+              {payment.dueDate ? formatDueDateLabel(payment.dueDate) : "—"}
+            </p>
+            <p className="pmt-modal-amount">{formatCurrency(payment.amount)}</p>
+            <button className="pmt-modal-cta" onClick={() => setStep(2)}>
+              Continue
+            </button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="pmt-modal-body">
+            <h3>Record payment</h3>
+            <p className="pmt-modal-line">Select the payment method used.</p>
+            <div className="pmt-method-grid">
+              {METHODS.map((m) => (
+                <button
+                  key={m}
+                  className={`pmt-method-option${method === m ? " is-active" : ""}`}
+                  onClick={() => setMethod(m)}
+                  type="button"
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+            <button className="pmt-modal-cta" onClick={handleConfirm}>
+              Confirm payment of {formatCurrency(payment.amount)}
+            </button>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="pmt-modal-body pmt-modal-body--success">
+            <div className="pmt-success-icon">
+              <Check size={28} />
+            </div>
+            <h3>Payment recorded</h3>
+            <p className="pmt-modal-line">
+              {formatCurrency(payment.amount)} marked as paid via {method}.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function Field({ label, required, children }) {
-  return (
-    <label className="payments-field">
-      <span>
-        {label}
-        {required && <em>*</em>}
-      </span>
-      {children}
-    </label>
-  );
-}
+/* ============================================================
+   RESCHEDULE MODAL
+   ============================================================ */
 
-function ModalShell({ children, onClose }) {
+function RescheduleModal({ payment, onClose, onConfirm }) {
+  const [newDate, setNewDate] = useState("");
+  const [reason, setReason] = useState("");
+
+  const canSubmit = Boolean(newDate);
+
   return (
-    <div className="payments-modal-overlay" role="presentation">
-      <div
-        className="payments-modal"
-        role="dialog"
-        aria-modal="true"
-        onClick={(event) => event.stopPropagation()}
-      >
-        {children}
+    <div className="pmt-modal-overlay" onClick={onClose}>
+      <div className="pmt-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="pmt-modal-close" onClick={onClose} aria-label="Close">
+          <X size={16} />
+        </button>
+
+        <div className="pmt-modal-body">
+          <h3>Reschedule payment</h3>
+          <p className="pmt-modal-line">
+            <strong>{payment.customerName}</strong> — Loan {payment.loanId}
+          </p>
+
+          <label className="pmt-field">
+            <span>Current due date</span>
+            <input type="text" value={payment.dueDate ? formatDueDateLabel(payment.dueDate) : "—"} disabled />
+          </label>
+
+          <label className="pmt-field">
+            <span>New due date</span>
+            <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} />
+          </label>
+
+          <label className="pmt-field">
+            <span>Reason</span>
+            <textarea
+              rows={3}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. Customer requested extra time"
+            />
+          </label>
+
+          <button
+            className="pmt-modal-cta"
+            disabled={!canSubmit}
+            onClick={() => onConfirm(payment.id, newDate, reason)}
+          >
+            Confirm reschedule
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function ModalHeader({ title, subtitle, onClose }) {
-  return (
-    <div className="payments-modal-header">
-      <div>
-        <h2>{title}</h2>
-        <p>{subtitle}</p>
-      </div>
-
-      <button
-        type="button"
-        className="payments-modal-close"
-        onClick={onClose}
-        aria-label="Close"
-      >
-        <X size={25} />
-      </button>
-    </div>
-  );
-}
-
-function ModalFooter({ onCancel, submitLabel }) {
-  return (
-    <div className="payments-modal-footer">
-      <button
-        type="button"
-        className="payments-btn payments-btn-secondary"
-        onClick={onCancel}
-      >
-        Cancel
-      </button>
-
-      <button type="submit" className="payments-btn payments-btn-primary">
-        <Check size={18} />
-        {submitLabel}
-      </button>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="payments-empty">
-      <div>
-        <Search size={22} />
-      </div>
-      <strong>No payment records found</strong>
-      <span>Try changing the search or filters.</span>
     </div>
   );
 }

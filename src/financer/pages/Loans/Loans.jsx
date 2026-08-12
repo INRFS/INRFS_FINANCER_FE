@@ -798,13 +798,13 @@ export default function Loans() {
                       </button>
 
 
-                      <button
+                      {/* <button
                         type="button"
                         className="fin-loans-action-btn"
                         title="Edit Loan"
                       >
                         <Edit3 size={15} />
-                      </button>
+                      </button> */}
 
                     </div>
 

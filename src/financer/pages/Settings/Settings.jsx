@@ -22,18 +22,18 @@ export default function Settings() {
       name: 'Profile',
       icon: User,
     },
-    {
-      name: 'Notifications',
-      icon: Bell,
-    },
-    {
-      name: 'SMS Settings',
-      icon: MessageSquare,
-    },
-    {
-      name: 'Security',
-      icon: Shield,
-    },
+    // {
+    //   name: 'Notifications',
+    //   icon: Bell,
+    // },
+    // {
+    //   name: 'SMS Settings',
+    //   icon: MessageSquare,
+    // },
+    // {
+    //   name: 'Security',
+    //   icon: Shield,
+    // },
   ];
 
   const handleSubmit = (e) => {
