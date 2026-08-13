@@ -41,7 +41,7 @@ export default function PortalSelection() {
           <div className="inrfs-brand">
             <img
               src={logo}
-              alt="INRFS Logo"
+             alt="INRFS Financer Platform Logo"
               className="inrfs-brand-logo"
             />
 
@@ -52,11 +52,11 @@ export default function PortalSelection() {
           </div>
 
 <h1 className="inrfs-portal-welcome-title">
-  Welcome to INRFS Platform
+  INRFS Financer Platform
 </h1>
 
 <p className="inrfs-portal-welcome-subtitle">
-  Choose your portal to continue
+  Secure financial management platform for customers, loans, collections and administration.
 </p>
 
         </div>
