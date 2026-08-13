@@ -167,18 +167,57 @@ export default function Dashboard() {
               <span className="fin-legend-dot fin-dot-collected" /> Collected
             </div>
           </div>
-          <div className="fin-dashboard-chart-body">
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={mockMonthlyCollectionsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E1E7ED" />
-                <XAxis dataKey="month" tickLine={false} axisLine={{ stroke: '#E1E7ED' }} />
-                <YAxis tickLine={false} axisLine={false} />
-                <Tooltip formatter={(val) => [`₹${val}`, '']} />
-                <Bar dataKey="expected" fill="#E1E7ED" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="collected" fill="#10AFE9" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+<div className="fin-dashboard-chart-body">
+  <ResponsiveContainer width="100%" height={210}>
+    <BarChart
+      data={mockMonthlyCollectionsData}
+      margin={{ top: 8, right: 8, left: 12, bottom: 0 }}
+      barCategoryGap="28%"
+    >
+      <CartesianGrid
+        strokeDasharray="3 3"
+        vertical={false}
+        stroke="#E1E7ED"
+      />
+
+      <XAxis
+        dataKey="month"
+        tickLine={false}
+        axisLine={{ stroke: '#E1E7ED' }}
+        tick={{ fontSize: 11, fill: '#64748B' }}
+      />
+
+      <YAxis
+        tickLine={false}
+        axisLine={false}
+        width={42}
+        tick={{ fontSize: 10, fill: '#64748B' }}
+        tickFormatter={(value) => `₹${value / 1000}K`}
+      />
+
+      <Tooltip
+        formatter={(value) => [
+          `₹${Number(value).toLocaleString('en-IN')}`,
+          ''
+        ]}
+      />
+
+      <Bar
+        dataKey="expected"
+        fill="#E1E7ED"
+        radius={[3, 3, 0, 0]}
+        barSize={16}
+      />
+
+      <Bar
+        dataKey="collected"
+        fill="#10AFE9"
+        radius={[3, 3, 0, 0]}
+        barSize={16}
+      />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
         </div>
 
         <div className="fin-dashboard-chart-card">

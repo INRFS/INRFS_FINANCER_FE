@@ -1,30 +1,21 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Activity,
-  BarChart3,
-  CheckCircle2,
-  CreditCard,
+  Search,
   Download,
-  FileSpreadsheet,
+  FileDown,
+  RotateCcw,
   FileText,
-  MessageSquare,
-  Percent,
-  TrendingUp,
   Users,
+  CreditCard,
+  TrendingUp,
+  MessageSquare,
+  Building2,
+  ReceiptText,
+  CalendarDays,
+  Filter,
+  ChevronRight,
   X,
 } from 'lucide-react';
-
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
 
 import './AdminReports.css';
 
@@ -34,156 +25,176 @@ import {
 } from '../../data/mockAdminData';
 
 /* =========================================================
-   FORMATTERS
+   HELPERS
 ========================================================= */
 
-const formatNumber = (value) => {
-  return Number(value || 0).toLocaleString('en-IN');
-};
+const formatNumber = (value) =>
+  Number(value || 0).toLocaleString('en-IN');
 
-const formatCurrency = (value) => {
-  return `₹${formatNumber(value)}`;
-};
+const formatCurrency = (value) =>
+  `₹${formatNumber(value)}`;
 
-const formatCrore = (value) => {
-  return `₹${(Number(value || 0) / 10000000).toFixed(1)} Cr`;
-};
+const formatCrore = (value) =>
+  `₹${(Number(value || 0) / 10000000).toFixed(1)} Cr`;
 
-const formatReportValue = (value, key) => {
-  if (value === null || value === undefined) {
-    return '—';
-  }
+const formatHeader = (value) =>
+  String(value)
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/[-_]/g, ' ')
+    .replace(/^./, (text) => text.toUpperCase());
 
-  if (
-    key === 'amount' ||
-    key === 'value' ||
-    key === 'principal' ||
-    key === 'outstanding' ||
-    key === 'collected' ||
-    key === 'interest' ||
-    key === 'serviceCharge'
-  ) {
-    return formatCurrency(value);
-  }
+const formatValue = (value, key = '') => {
+  if (value === null || value === undefined || value === '') return '—';
 
-  if (
-    key === 'usage' ||
-    key === 'rate' ||
-    key === 'percentage'
-  ) {
-    return `${value}%`;
-  }
+  const currencyKeys = [
+    'amount',
+    'value',
+    'principal',
+    'outstanding',
+    'collected',
+    'interest',
+    'serviceCharge',
+    'revenue',
+    'total',
+    'balance',
+  ];
 
-  if (typeof value === 'number') {
-    return formatNumber(value);
-  }
+  const percentageKeys = ['usage', 'rate', 'percentage'];
+
+  if (currencyKeys.includes(key)) return formatCurrency(value);
+  if (percentageKeys.includes(key)) return `${value}%`;
+
+  if (typeof value === 'number') return formatNumber(value);
 
   return value;
 };
 
-const formatHeader = (value) => {
-  return String(value)
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/[-_]/g, ' ')
-    .replace(/^./, (text) => text.toUpperCase());
-};
-
-/* =========================================================
-   REPORT CATEGORY HELPERS
-========================================================= */
+const getCategory = (report) => report?.category || 'Platform';
 
 const reportCategories = [
-  'All',
-  'Financer',
-  'Customer',
-  'Loan',
-  'Collection',
-  'Billing',
-  'SMS',
-  'Platform',
+  { id: 'All', label: 'All Reports', icon: FileText },
+  { id: 'Financer', label: 'Financers', icon: Building2 },
+  { id: 'Customer', label: 'Customers', icon: Users },
+  { id: 'Loan', label: 'Loans', icon: CreditCard },
+  { id: 'Collection', label: 'Collections', icon: TrendingUp },
+  { id: 'Billing', label: 'Billing', icon: ReceiptText },
+  // { id: 'SMS', label: 'SMS', icon: MessageSquare },
+  { id: 'Platform', label: 'Platform', icon: Building2 },
 ];
 
-const getReportCategory = (report) => {
-  return report?.category || 'Platform';
+const getReportIcon = (category) => {
+  const match = reportCategories.find((item) => item.id === category);
+  return match?.icon || FileText;
 };
 
-/* =========================================================
-   TOOLTIP
-========================================================= */
+const getReportRows = (report) =>
+  Array.isArray(report?.data) ? report.data : [];
 
-const ReportTooltip = ({ active, payload, label }) => {
-  if (!active || !payload || !payload.length) {
-    return null;
+/*
+  Admin report data currently exposes period information as
+  strings such as "Aug 2026". The date/month/year controls below
+  therefore filter against that period information.
+*/
+const reportMatchesPeriod = (
+  report,
+  filterType,
+  selectedDate,
+  selectedMonth,
+  selectedYear
+) => {
+  if (filterType === 'all') return true;
+
+  const periods = Array.isArray(report?.periods)
+    ? report.periods
+    : [];
+
+  if (!periods.length) return true;
+
+  if (filterType === 'month') {
+    if (!selectedMonth && !selectedYear) return true;
+
+    return periods.some((period) => {
+      const text = String(period).toLowerCase();
+
+      const monthMatch =
+        !selectedMonth ||
+        text.includes(selectedMonth.toLowerCase());
+
+      const yearMatch =
+        !selectedYear ||
+        text.includes(selectedYear);
+
+      return monthMatch && yearMatch;
+    });
   }
 
-  return (
-    <div className="inrfs-reports-tooltip">
-      <p className="inrfs-reports-tooltip-title">
-        {label}
-      </p>
+  if (filterType === 'year') {
+    if (!selectedYear) return true;
 
-      {payload.map((item) => (
-        <p
-          key={item.dataKey}
-          className="inrfs-reports-tooltip-value"
-        >
-          {formatHeader(item.dataKey)}:{' '}
-          {typeof item.value === 'number'
-            ? formatNumber(item.value)
-            : item.value}
-        </p>
-      ))}
-    </div>
-  );
+    return periods.some((period) =>
+      String(period).includes(selectedYear)
+    );
+  }
+
+  if (filterType === 'date') {
+    if (!selectedDate) return true;
+
+    const date = new Date(`${selectedDate}T00:00:00`);
+
+    if (Number.isNaN(date.getTime())) return true;
+
+    const month = date.toLocaleString('en-US', {
+      month: 'short',
+    });
+
+    const year = String(date.getFullYear());
+
+    return periods.some((period) => {
+      const text = String(period).toLowerCase();
+      return (
+        text.includes(month.toLowerCase()) &&
+        text.includes(year)
+      );
+    });
+  }
+
+  return true;
 };
 
 /* =========================================================
    CSV EXPORT
 ========================================================= */
 
-const downloadCSV = (report) => {
-  if (!report?.data?.length) {
-    return;
-  }
+const downloadReportCSV = (report) => {
+  const rows = getReportRows(report);
 
-  const headers = Object.keys(report.data[0]);
+  if (!rows.length) return;
 
-  const rows = report.data.map((row) =>
+  const headers = Object.keys(rows[0]);
+
+  const csvRows = rows.map((row) =>
     headers
       .map((header) => {
         const value = row[header] ?? '';
-
-        if (
-          typeof value === 'string' &&
-          (value.includes(',') ||
-            value.includes('"') ||
-            value.includes('\n'))
-        ) {
-          return `"${value.replace(/"/g, '""')}"`;
-        }
-
-        return value;
+        return `"${String(value).replace(/"/g, '""')}"`;
       })
       .join(',')
   );
 
-  const csvContent = [
+  const csv = [
     headers.join(','),
-    ...rows,
+    ...csvRows,
   ].join('\n');
 
-  const blob = new Blob(
-    [csvContent],
-    {
-      type: 'text/csv;charset=utf-8;',
-    }
-  );
+  const blob = new Blob([csv], {
+    type: 'text/csv;charset=utf-8;',
+  });
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = `${report.id}-report.csv`;
+  link.download = `${report.id || 'report'}.csv`;
 
   document.body.appendChild(link);
   link.click();
@@ -192,75 +203,48 @@ const downloadCSV = (report) => {
   URL.revokeObjectURL(url);
 };
 
-const exportReports = (reports) => {
-  if (!reports?.length) {
-    return;
-  }
-
+const exportAllReports = (reports) => {
   const allRows = [];
 
   reports.forEach((report) => {
-    if (!Array.isArray(report.data)) {
-      return;
-    }
-
-    report.data.forEach((row) => {
+    getReportRows(report).forEach((row) => {
       allRows.push({
-        report: report.title,
-        category: report.category,
+        Report: report.title,
+        Category: getCategory(report),
         ...row,
       });
     });
   });
 
-  if (!allRows.length) {
-    return;
-  }
+  if (!allRows.length) return;
 
   const headers = Array.from(
-    new Set(
-      allRows.flatMap((row) =>
-        Object.keys(row)
-      )
-    )
+    new Set(allRows.flatMap((row) => Object.keys(row)))
   );
 
-  const rows = allRows.map((row) =>
+  const csvRows = allRows.map((row) =>
     headers
       .map((header) => {
         const value = row[header] ?? '';
-
-        if (
-          typeof value === 'string' &&
-          (value.includes(',') ||
-            value.includes('"') ||
-            value.includes('\n'))
-        ) {
-          return `"${value.replace(/"/g, '""')}"`;
-        }
-
-        return value;
+        return `"${String(value).replace(/"/g, '""')}"`;
       })
       .join(',')
   );
 
-  const csvContent = [
+  const csv = [
     headers.join(','),
-    ...rows,
+    ...csvRows,
   ].join('\n');
 
-  const blob = new Blob(
-    [csvContent],
-    {
-      type: 'text/csv;charset=utf-8;',
-    }
-  );
+  const blob = new Blob([csv], {
+    type: 'text/csv;charset=utf-8;',
+  });
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = 'INRFS-platform-reports.csv';
+  link.download = 'INRFS-admin-reports.csv';
 
   document.body.appendChild(link);
   link.click();
@@ -270,54 +254,41 @@ const exportReports = (reports) => {
 };
 
 /* =========================================================
-   REPORT MODAL
+   REPORT DETAIL DRAWER
 ========================================================= */
 
-function ReportModal({
-  report,
-  onClose,
-}) {
-  if (!report) {
-    return null;
-  }
+function ReportDrawer({ report, onClose }) {
+  if (!report) return null;
 
-  const columns =
-    report.data?.length
-      ? Object.keys(report.data[0])
-      : [];
+  const rows = getReportRows(report);
+  const columns = rows.length
+    ? Object.keys(rows[0])
+    : [];
 
   return (
     <div
-      className="inrfs-reports-modal-overlay"
+      className="admin-reports-drawer-overlay"
       onMouseDown={onClose}
     >
-      <div
-        className="inrfs-reports-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="inrfs-reports-modal-title"
-        onMouseDown={(event) =>
-          event.stopPropagation()
-        }
+      <aside
+        className="admin-reports-drawer"
+        onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="inrfs-reports-modal-header">
-          <div className="inrfs-reports-modal-heading">
-            <div className="inrfs-reports-modal-icon">
+        <div className="admin-reports-drawer-header">
+          <div className="admin-reports-drawer-title">
+            <div className="admin-reports-drawer-icon">
               <FileText size={19} />
             </div>
 
             <div>
-              <h2 id="inrfs-reports-modal-title">
-                {report.title}
-              </h2>
-
+              <h2>{report.title}</h2>
               <p>{report.description}</p>
             </div>
           </div>
 
           <button
             type="button"
-            className="inrfs-reports-modal-close"
+            className="admin-reports-close"
             onClick={onClose}
             aria-label="Close report"
           >
@@ -325,91 +296,55 @@ function ReportModal({
           </button>
         </div>
 
-        <div className="inrfs-reports-modal-meta">
-          <span>{report.category}</span>
-          <span>{report.period || 'Monthly'}</span>
+        <div className="admin-reports-drawer-meta">
+          <span>{getCategory(report)}</span>
+          <span>
+            {report.period || 'Monthly'}
+          </span>
+          <span>{rows.length} rows</span>
         </div>
 
-        <div className="inrfs-reports-modal-body">
-          {columns.length > 0 ? (
-            <>
-              <div className="inrfs-reports-modal-table-wrapper">
-                <table className="inrfs-reports-modal-table">
-                  <thead>
-                    <tr>
+        <div className="admin-reports-drawer-body">
+          {rows.length ? (
+            <div className="admin-reports-detail-table-wrap">
+              <table className="admin-reports-detail-table">
+                <thead>
+                  <tr>
+                    {columns.map((column) => (
+                      <th key={column}>
+                        {formatHeader(column)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
                       {columns.map((column) => (
-                        <th key={column}>
-                          {formatHeader(column)}
-                        </th>
+                        <td key={column}>
+                          {formatValue(
+                            row[column],
+                            column
+                          )}
+                        </td>
                       ))}
                     </tr>
-                  </thead>
-
-                  <tbody>
-                    {report.data.map(
-                      (row, rowIndex) => (
-                        <tr key={rowIndex}>
-                          {columns.map(
-                            (column) => (
-                              <td key={column}>
-                                {formatReportValue(
-                                  row[column],
-                                  column
-                                )}
-                              </td>
-                            )
-                          )}
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="inrfs-reports-modal-mobile-list">
-                {report.data.map(
-                  (row, rowIndex) => (
-                    <div
-                      className="inrfs-reports-modal-mobile-card"
-                      key={rowIndex}
-                    >
-                      {columns.map(
-                        (column) => (
-                          <div
-                            className="inrfs-reports-modal-mobile-row"
-                            key={column}
-                          >
-                            <span>
-                              {formatHeader(
-                                column
-                              )}
-                            </span>
-
-                            <strong>
-                              {formatReportValue(
-                                row[column],
-                                column
-                              )}
-                            </strong>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )
-                )}
-              </div>
-            </>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <div className="inrfs-reports-empty">
+            <div className="admin-reports-empty-detail">
               No data available for this report.
             </div>
           )}
         </div>
 
-        <div className="inrfs-reports-modal-footer">
+        <div className="admin-reports-drawer-footer">
           <button
             type="button"
-            className="inrfs-reports-modal-cancel"
+            className="admin-reports-secondary-btn"
             onClick={onClose}
           >
             Close
@@ -417,123 +352,163 @@ function ReportModal({
 
           <button
             type="button"
-            className="inrfs-reports-modal-export"
-            onClick={() =>
-              downloadCSV(report)
-            }
+            className="admin-reports-primary-btn"
+            onClick={() => downloadReportCSV(report)}
           >
             <Download size={15} />
             Export Report
           </button>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }
 
 /* =========================================================
-   MAIN PAGE
+   MAIN ADMIN REPORTS PAGE
 ========================================================= */
 
 export default function AdminReports() {
+  const [activeCategory, setActiveCategory] =
+    useState('All');
+
+  const [search, setSearch] = useState('');
+
+  const [filterType, setFilterType] =
+    useState('month');
+
+  const [selectedDate, setSelectedDate] =
+    useState('');
+
+  const [selectedMonth, setSelectedMonth] =
+    useState('');
+
+  const [selectedYear, setSelectedYear] =
+    useState('');
+
   const [selectedReport, setSelectedReport] =
     useState(null);
-
-  const [categoryFilter, setCategoryFilter] =
-    useState('All');
-
-  const [monthFilter, setMonthFilter] =
-    useState('All');
 
   const reports = Array.isArray(adminReports)
     ? adminReports
     : [];
 
   const filteredReports = useMemo(() => {
-    return reports.filter((report) => {
-      const matchesCategory =
-        categoryFilter === 'All' ||
-        getReportCategory(report) ===
-          categoryFilter;
+    const searchValue = search
+      .toLowerCase()
+      .trim();
 
-      const matchesMonth =
-        monthFilter === 'All' ||
-        !report.periods ||
-        report.periods.includes(monthFilter);
+    return reports.filter((report) => {
+      const categoryMatches =
+        activeCategory === 'All' ||
+        getCategory(report) === activeCategory;
+
+      const searchMatches =
+        !searchValue ||
+        String(report.title || '')
+          .toLowerCase()
+          .includes(searchValue) ||
+        String(report.description || '')
+          .toLowerCase()
+          .includes(searchValue) ||
+        String(getCategory(report))
+          .toLowerCase()
+          .includes(searchValue);
+
+      const periodMatches = reportMatchesPeriod(
+        report,
+        filterType,
+        selectedDate,
+        selectedMonth,
+        selectedYear
+      );
 
       return (
-        matchesCategory &&
-        matchesMonth
+        categoryMatches &&
+        searchMatches &&
+        periodMatches
       );
     });
   }, [
     reports,
-    categoryFilter,
-    monthFilter,
+    activeCategory,
+    search,
+    filterType,
+    selectedDate,
+    selectedMonth,
+    selectedYear,
   ]);
 
-  const availableMonths = useMemo(() => {
-    const months = new Set();
+  const resetFilters = () => {
+    setActiveCategory('All');
+    setSearch('');
+    setFilterType('month');
+    setSelectedDate('');
+    setSelectedMonth('');
+    setSelectedYear('');
+  };
 
-    reports.forEach((report) => {
-      if (Array.isArray(report.periods)) {
-        report.periods.forEach((month) =>
-          months.add(month)
-        );
-      }
-    });
+  const currentCollection = useMemo(() => {
+    const report = reports.find(
+      (item) => item.id === 'collection-performance'
+    );
 
-    return Array.from(months);
+    const row = report?.data?.find(
+      (item) =>
+        String(item.month || '').toLowerCase() ===
+        'aug'
+    );
+
+    return row?.collected || 0;
   }, [reports]);
 
+  const totalRows = filteredReports.reduce(
+    (total, report) =>
+      total + getReportRows(report).length,
+    0
+  );
+
   return (
-    <div className="inrfs-reports-page">
+    <div className="admin-reports-page">
       {/* =====================================================
-          PAGE HEADER
+          HEADER
       ====================================================== */}
 
-      <header className="inrfs-reports-header">
-        <div className="inrfs-reports-header-content">
-          <div>
-            <div className="inrfs-reports-title-row">
-              <div className="inrfs-reports-title-icon">
-                <BarChart3 size={21} />
-              </div>
-
-              <h1 className="inrfs-reports-title">
-                Reports
-              </h1>
-            </div>
-
-            <p className="inrfs-reports-subtitle">
-              Platform analytics, operational reports
-              and downloadable Admin insights.
-            </p>
+      <header className="admin-reports-header">
+        <div className="admin-reports-heading">
+          <div className="admin-reports-title-icon">
+            <FileText size={21} />
           </div>
 
-          <button
-            type="button"
-            className="inrfs-reports-export-all"
-            onClick={() =>
-              exportReports(filteredReports)
-            }
-          >
-            <Download size={17} />
-            <span>Export All</span>
-          </button>
+          <div>
+            <h1>Reports</h1>
+            <p>
+              View, filter and export platform reports
+            </p>
+          </div>
         </div>
+
+        <button
+          type="button"
+          className="admin-reports-export-all"
+          onClick={() =>
+            exportAllReports(filteredReports)
+          }
+        >
+          <Download size={16} />
+          Export All
+        </button>
       </header>
 
       {/* =====================================================
-          SUMMARY
+          ADMIN SUMMARY
       ====================================================== */}
 
-      <section className="inrfs-reports-summary-grid">
-        <div className="inrfs-reports-summary-card">
-          <div className="inrfs-reports-summary-icon inrfs-reports-summary-icon--blue">
-            <Users size={18} />
+      <section className="admin-reports-summary">
+        <div className="admin-report-stat-card">
+          <div className="admin-report-stat-icon blue">
+            <Building2 size={18} />
           </div>
-
           <div>
             <span>Total Financers</span>
             <strong>
@@ -544,11 +519,10 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="inrfs-reports-summary-card">
-          <div className="inrfs-reports-summary-icon inrfs-reports-summary-icon--purple">
+        <div className="admin-report-stat-card">
+          <div className="admin-report-stat-icon purple">
             <Users size={18} />
           </div>
-
           <div>
             <span>Total Customers</span>
             <strong>
@@ -559,11 +533,10 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="inrfs-reports-summary-card">
-          <div className="inrfs-reports-summary-icon inrfs-reports-summary-icon--green">
+        <div className="admin-report-stat-card">
+          <div className="admin-report-stat-icon green">
             <CreditCard size={18} />
           </div>
-
           <div>
             <span>Loan Portfolio</span>
             <strong>
@@ -574,421 +547,392 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="inrfs-reports-summary-card">
-          <div className="inrfs-reports-summary-icon inrfs-reports-summary-icon--orange">
+        <div className="admin-report-stat-card">
+          <div className="admin-report-stat-icon orange">
             <TrendingUp size={18} />
           </div>
-
           <div>
             <span>Collections</span>
             <strong>
-              {formatCrore(
-                reports.find(
-                (report) => report.id === 'collection-performance'
-              )?.data?.find(
-                (row) => row.month === 'Aug'
-              )?.collected
-              )}
+              {formatCrore(currentCollection)}
             </strong>
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          FILTERS
+          CATEGORY TABS
       ====================================================== */}
 
-      <section className="inrfs-reports-filter-card">
-        <div className="inrfs-reports-filter-heading">
-          <div>
-            <h2>Report Filters</h2>
-            <p>
-              Select a report category and period.
-            </p>
-          </div>
-
-          <span className="inrfs-reports-result-count">
-            {filteredReports.length} reports
-          </span>
-        </div>
-
-        <div className="inrfs-reports-filter-controls">
-          <div className="inrfs-reports-filter-field">
-            <label htmlFor="inrfs-report-category">
-              Report Category
-            </label>
-
-            <select
-              id="inrfs-report-category"
-              value={categoryFilter}
-              onChange={(event) =>
-                setCategoryFilter(
-                  event.target.value
-                )
-              }
-            >
-              {reportCategories.map(
-                (category) => (
-                  <option
-                    value={category}
-                    key={category}
-                  >
-                    {category}
-                  </option>
-                )
-              )}
-            </select>
-          </div>
-
-          <div className="inrfs-reports-filter-field">
-            <label htmlFor="inrfs-report-month">
-              Month / Period
-            </label>
-
-            <select
-              id="inrfs-report-month"
-              value={monthFilter}
-              onChange={(event) =>
-                setMonthFilter(
-                  event.target.value
-                )
-              }
-            >
-              <option value="All">
-                All Periods
-              </option>
-
-              {availableMonths.map(
-                (month) => (
-                  <option
-                    value={month}
-                    key={month}
-                  >
-                    {month}
-                  </option>
-                )
-              )}
-            </select>
-          </div>
-
-          <button
-            type="button"
-            className="inrfs-reports-reset-button"
-            onClick={() => {
-              setCategoryFilter('All');
-              setMonthFilter('All');
-            }}
-          >
-            Reset Filters
-          </button>
-        </div>
-      </section>
-
-      {/* =====================================================
-          FEATURED CHARTS
-      ====================================================== */}
-
-      <section className="inrfs-reports-charts-grid">
-        {/* Revenue */}
-
-        <div className="inrfs-reports-chart-card">
-          <div className="inrfs-reports-chart-header">
-            <div>
-              <h2>Subscription Revenue</h2>
-              <p>
-                Monthly recurring subscription
-                revenue.
-              </p>
-            </div>
-
-            <div className="inrfs-reports-chart-icon inrfs-reports-chart-icon--purple">
-              <TrendingUp size={17} />
-            </div>
-          </div>
-
-          <div className="inrfs-reports-chart-body">
-            <ResponsiveContainer
-              width="100%"
-              height="100%"
-            >
-              <BarChart
-                data={
-                  reports.find(
-                    (report) =>
-                      report.id ===
-                      'subscription-revenue'
-                  )?.data || []
-                }
-                margin={{
-                  top: 10,
-                  right: 8,
-                  left: -15,
-                  bottom: 0,
-                }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#e5e7eb"
-                />
-
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fontSize: 11,
-                    fill: '#6b7280',
-                  }}
-                />
-
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fontSize: 10,
-                    fill: '#9ca3af',
-                  }}
-                  tickFormatter={(value) =>
-                    `₹${value / 1000}K`
-                  }
-                />
-
-                <Tooltip
-                  content={<ReportTooltip />}
-                />
-
-                <Bar
-                  dataKey="revenue"
-                  fill="#8b5cf6"
-                  radius={[
-                    5,
-                    5,
-                    0,
-                    0,
-                  ]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Platform Growth */}
-
-        <div className="inrfs-reports-chart-card">
-          <div className="inrfs-reports-chart-header">
-            <div>
-              <h2>Platform Growth Trend</h2>
-              <p>
-                Financers, customers and loan
-                accounts.
-              </p>
-            </div>
-
-            <div className="inrfs-reports-chart-icon inrfs-reports-chart-icon--blue">
-              <Activity size={17} />
-            </div>
-          </div>
-
-          <div className="inrfs-reports-chart-body">
-            <ResponsiveContainer
-              width="100%"
-              height="100%"
-            >
-              <LineChart
-                data={
-                  reports.find(
-                    (report) =>
-                      report.id ===
-                      'platform-growth'
-                  )?.data || []
-                }
-                margin={{
-                  top: 10,
-                  right: 8,
-                  left: -15,
-                  bottom: 0,
-                }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#e5e7eb"
-                />
-
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fontSize: 11,
-                    fill: '#6b7280',
-                  }}
-                />
-
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fontSize: 10,
-                    fill: '#9ca3af',
-                  }}
-                />
-
-                <Tooltip
-                  content={<ReportTooltip />}
-                />
-
-                <Line
-                  type="monotone"
-                  dataKey="financers"
-                  stroke="#2563eb"
-                  strokeWidth={2}
-                  dot={false}
-                />
-
-                <Line
-                  type="monotone"
-                  dataKey="customers"
-                  stroke="#7c3aed"
-                  strokeWidth={2}
-                  dot={false}
-                />
-
-                <Line
-                  type="monotone"
-                  dataKey="loans"
-                  stroke="#16a34a"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="inrfs-reports-chart-legend">
-            <span>
-              <i className="inrfs-reports-legend-dot inrfs-reports-legend-dot--blue" />
-              Financers
-            </span>
-
-            <span>
-              <i className="inrfs-reports-legend-dot inrfs-reports-legend-dot--purple" />
-              Customers
-            </span>
-
-            <span>
-              <i className="inrfs-reports-legend-dot inrfs-reports-legend-dot--green" />
-              Loans
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          REPORT CARDS
-      ====================================================== */}
-
-      {filteredReports.length > 0 ? (
-        <section className="inrfs-reports-grid">
-          {filteredReports.map((report) => {
-            const Icon =
-              report.icon || FileText;
+      <section className="admin-reports-tabs-card">
+        <div className="admin-reports-tabs">
+          {reportCategories.map((category) => {
+            const Icon = category.icon;
+            const active =
+              activeCategory === category.id;
 
             return (
-              <article
-                className="inrfs-reports-card"
-                key={report.id}
+              <button
+                type="button"
+                key={category.id}
+                className={`admin-reports-tab ${
+                  active ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setActiveCategory(category.id)
+                }
               >
-                <div className="inrfs-reports-card-top">
-                  <div
-                    className={`inrfs-reports-card-icon ${
-                      report.iconClass ||
-                      'inrfs-reports-card-icon--default'
-                    }`}
-                  >
-                    <Icon size={20} />
-                  </div>
-
-                  <span className="inrfs-reports-category-badge">
-                    {report.category}
-                  </span>
-                </div>
-
-                <div className="inrfs-reports-card-content">
-                  <h3>{report.title}</h3>
-
-                  <p>{report.description}</p>
-                </div>
-
-                <div className="inrfs-reports-card-footer">
-                  <span>
-                    {report.data?.length || 0}{' '}
-                    data rows
-                  </span>
-
-                  <div className="inrfs-reports-card-actions">
-                    <button
-                      type="button"
-                      className="inrfs-reports-view-button"
-                      onClick={() =>
-                        setSelectedReport(
-                          report
-                        )
-                      }
-                    >
-                      <FileText size={14} />
-                      View
-                    </button>
-
-                    <button
-                      type="button"
-                      className="inrfs-reports-export-button"
-                      onClick={() =>
-                        downloadCSV(report)
-                      }
-                    >
-                      <FileSpreadsheet
-                        size={14}
-                      />
-                      Export
-                    </button>
-                  </div>
-                </div>
-              </article>
+                <Icon size={16} />
+                <span>{category.label}</span>
+              </button>
             );
           })}
-        </section>
-      ) : (
-        <section className="inrfs-reports-empty">
-          <div className="inrfs-reports-empty-icon">
-            <BarChart3 size={24} />
+        </div>
+      </section>
+
+      {/* =====================================================
+          FILTER TOOLBAR
+      ====================================================== */}
+
+      <section className="admin-reports-toolbar">
+        <div className="admin-reports-filter-row">
+          <div className="admin-reports-search">
+            <Search size={17} />
+            <input
+              type="text"
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+              placeholder="Search reports..."
+              aria-label="Search reports"
+            />
           </div>
 
-          <h3>No reports found</h3>
+          <div className="admin-reports-filter-type">
+            <Filter size={15} />
 
-          <p>
-            No reports match the selected category
-            and period.
-          </p>
+            <select
+              value={filterType}
+              onChange={(event) => {
+                setFilterType(
+                  event.target.value
+                );
+                setSelectedDate('');
+                setSelectedMonth('');
+                setSelectedYear('');
+              }}
+              aria-label="Filter type"
+            >
+              <option value="date">Date</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
+            </select>
+          </div>
+
+          {filterType === 'date' && (
+            <label className="admin-reports-date-input">
+              <span>Date</span>
+              <CalendarDays size={14} />
+
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(event) =>
+                  setSelectedDate(
+                    event.target.value
+                  )
+                }
+              />
+            </label>
+          )}
+
+          {filterType === 'month' && (
+            <>
+              <label className="admin-reports-select-field">
+                <span>Month</span>
+                <select
+                  value={selectedMonth}
+                  onChange={(event) =>
+                    setSelectedMonth(
+                      event.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    All Months
+                  </option>
+                  <option value="Jan">
+                    January
+                  </option>
+                  <option value="Feb">
+                    February
+                  </option>
+                  <option value="Mar">
+                    March
+                  </option>
+                  <option value="Apr">
+                    April
+                  </option>
+                  <option value="May">
+                    May
+                  </option>
+                  <option value="Jun">
+                    June
+                  </option>
+                  <option value="Jul">
+                    July
+                  </option>
+                  <option value="Aug">
+                    August
+                  </option>
+                  <option value="Sep">
+                    September
+                  </option>
+                  <option value="Oct">
+                    October
+                  </option>
+                  <option value="Nov">
+                    November
+                  </option>
+                  <option value="Dec">
+                    December
+                  </option>
+                </select>
+              </label>
+
+              <label className="admin-reports-select-field">
+                <span>Year</span>
+                <select
+                  value={selectedYear}
+                  onChange={(event) =>
+                    setSelectedYear(
+                      event.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    All Years
+                  </option>
+                  <option value="2025">
+                    2025
+                  </option>
+                  <option value="2026">
+                    2026
+                  </option>
+                  <option value="2027">
+                    2027
+                  </option>
+                </select>
+              </label>
+            </>
+          )}
+
+          {filterType === 'year' && (
+            <label className="admin-reports-select-field">
+              <span>Year</span>
+              <select
+                value={selectedYear}
+                onChange={(event) =>
+                  setSelectedYear(
+                    event.target.value
+                  )
+                }
+              >
+                <option value="">
+                  All Years
+                </option>
+                <option value="2025">
+                  2025
+                </option>
+                <option value="2026">
+                  2026
+                </option>
+                <option value="2027">
+                  2027
+                </option>
+              </select>
+            </label>
+          )}
 
           <button
             type="button"
-            onClick={() => {
-              setCategoryFilter('All');
-              setMonthFilter('All');
-            }}
+            className="admin-reports-reset"
+            onClick={resetFilters}
           >
-            Clear Filters
+            <RotateCcw size={15} />
+            Reset
           </button>
-        </section>
-      )}
+        </div>
+
+        <div className="admin-reports-toolbar-meta">
+          <span>
+            Showing{' '}
+            <strong>
+              {filteredReports.length}
+            </strong>{' '}
+            of {reports.length} reports
+          </span>
+
+          <span>
+            {totalRows} data rows
+          </span>
+        </div>
+      </section>
 
       {/* =====================================================
-          MODAL
+          REPORT LIST
       ====================================================== */}
 
-      <ReportModal
+      <section className="admin-reports-content">
+        <div className="admin-reports-content-header">
+          <div>
+            <h2>
+              {activeCategory === 'All'
+                ? 'All Reports'
+                : `${activeCategory} Reports`}
+            </h2>
+            <p>
+              Select a report to view detailed data
+              and export it.
+            </p>
+          </div>
+        </div>
+
+        {filteredReports.length > 0 ? (
+          <div className="admin-reports-table-wrap">
+            <table className="admin-reports-table">
+              <thead>
+                <tr>
+                  <th>REPORT</th>
+                  <th>CATEGORY</th>
+                  <th>DESCRIPTION</th>
+                  <th>PERIOD</th>
+                  <th>ROWS</th>
+                  <th className="action-column">
+                    ACTIONS
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredReports.map((report) => {
+                  const Icon = getReportIcon(
+                    getCategory(report)
+                  );
+
+                  return (
+                    <tr key={report.id}>
+                      <td>
+                        <div className="admin-report-name">
+                          <div className="admin-report-row-icon">
+                            <Icon size={18} />
+                          </div>
+
+                          <div>
+                            <strong>
+                              {report.title}
+                            </strong>
+
+                            <small>
+                              {report.id}
+                            </small>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <span
+                          className={`admin-report-category ${String(
+                            getCategory(report)
+                          ).toLowerCase()}`}
+                        >
+                          {getCategory(report)}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="admin-report-description">
+                          {report.description ||
+                            'Platform report'}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="admin-report-period">
+                          <CalendarDays size={14} />
+                          {report.period ||
+                            report.periods?.[0] ||
+                            'Monthly'}
+                        </span>
+                      </td>
+
+                      <td>
+                        <strong className="admin-report-row-count">
+                          {getReportRows(report).length}
+                        </strong>
+                      </td>
+
+                      <td>
+                        <div className="admin-report-actions">
+                          <button
+                            type="button"
+                            className="admin-report-view-btn"
+                            onClick={() =>
+                              setSelectedReport(
+                                report
+                              )
+                            }
+                          >
+                            <FileText size={14} />
+                            View
+                            <ChevronRight size={14} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="admin-report-export-btn"
+                            onClick={() =>
+                              downloadReportCSV(
+                                report
+                              )
+                            }
+                            aria-label={`Export ${report.title}`}
+                          >
+                            <Download size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="admin-reports-empty">
+            <div className="admin-reports-empty-icon">
+              <Search size={23} />
+            </div>
+
+            <h3>No reports found</h3>
+            <p>
+              Try changing the category, search or
+              reporting period.
+            </p>
+
+            <button
+              type="button"
+              onClick={resetFilters}
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* DETAIL DRAWER */}
+      <ReportDrawer
         report={selectedReport}
         onClose={() =>
           setSelectedReport(null)

@@ -69,11 +69,11 @@ const adminNavigation = [
     icon: Banknote,
   },
 
-  {
-    label: 'SMS Management',
-    path: '/admin/sms-management',
-    icon: MessageSquare,
-  },
+  // {
+  //   label: 'SMS Management',
+  //   path: '/admin/sms-management',
+  //   icon: MessageSquare,
+  // },
 
   {
     label: 'Reports',

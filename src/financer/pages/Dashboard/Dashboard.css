@@ -3,7 +3,32 @@
   flex-direction: column;
   gap: 24px;
 }
+.fin-dashboard-chart-card {
+  border-radius: 16px;
+}
 
+.fin-dashboard-chart-header {
+  padding: 14px 18px 4px;
+}
+
+.fin-dashboard-chart-header h3 {
+  font-size: 17px;
+  margin: 0;
+}
+
+.fin-dashboard-chart-header p {
+  font-size: 11px;
+  margin: 3px 0 0;
+}
+
+.fin-dashboard-chart-legend {
+  font-size: 11px;
+}
+
+.fin-dashboard-chart-body {
+  height: 220px;
+  padding: 0 10px 8px;
+}
 .fin-dashboard-header {
   display: flex;
   align-items: center;
