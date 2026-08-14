@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Check,
+} from 'lucide-react';
+
 import './FinancerLogin.css';
 
 import logo from '../../../assets/logo.png';
@@ -7,13 +14,46 @@ import logo from '../../../assets/logo.png';
 export default function FinancerLogin() {
   const navigate = useNavigate();
 
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  /* =====================================================
+     VIEW STATES
+  ===================================================== */
+
+  const [isRegistering, setIsRegistering] =
+    useState(false);
+
+  const [isForgotPassword, setIsForgotPassword] =
+    useState(false);
+
+
+  /* =====================================================
+     LOGIN STATE
+  ===================================================== */
 
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] =
+    useState(false);
 
-  const [forgotMobile, setForgotMobile] = useState('');
+  const [loginError, setLoginError] =
+    useState('');
+
+
+  /* =====================================================
+     FORGOT PASSWORD STATE
+  ===================================================== */
+
+  const [forgotMobile, setForgotMobile] =
+    useState('');
+
+
+  /* =====================================================
+     REGISTER STATE
+     
+     IMPORTANT:
+     Password is intentionally NOT collected here.
+     The system will generate the password after OTP
+     verification and send it to the registered email.
+  ===================================================== */
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -22,35 +62,54 @@ export default function FinancerLogin() {
     email: '',
     city: '',
     state: '',
-    password: '',
   });
+
 
   /* =====================================================
      LOGIN
-     ===================================================== */
+  ===================================================== */
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    // Login directly using mobile + password
-    // Replace this with your API login call when backend is ready.
-    console.log('Login:', {
-      mobile,
-      password,
-    });
+    if (!mobile.trim() || !password.trim()) {
+      setLoginError(
+        'Please enter your mobile number and password.'
+      );
+      return;
+    }
 
-    // Example:
-    // navigate('/financer/dashboard');
+    setLoginError('');
+
+    /*
+      Replace this with your real login API later.
+
+      Example:
+
+      const response = await loginFinancer({
+        mobile,
+        password,
+      });
+
+      if (!response.success) {
+        setLoginError(response.message);
+        return;
+      }
+    */
 
     navigate('/financer/dashboard');
   };
 
+
   /* =====================================================
-     REGISTER
-     ===================================================== */
+     REGISTER INPUT CHANGE
+  ===================================================== */
 
   const handleRegisterChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
     setFormData((previous) => ({
       ...previous,
@@ -58,12 +117,32 @@ export default function FinancerLogin() {
     }));
   };
 
+
+  /* =====================================================
+     REGISTER
+     
+     Registration does NOT create a password.
+     
+     Details are passed to OTP verification.
+  ===================================================== */
+
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
+
+    /*
+      The backend should:
+      1. Validate registration details
+      2. Generate/send OTP
+      3. Verify OTP
+      4. Create account
+      5. Generate temporary password
+      6. Email password to registered email
+    */
 
     navigate('/financer/verify-otp', {
       state: {
         mobile: formData.mobile,
+        email: formData.email,
         portal: 'financer',
         registration: true,
         registrationData: formData,
@@ -71,12 +150,17 @@ export default function FinancerLogin() {
     });
   };
 
+
   /* =====================================================
      FORGOT PASSWORD
-     ===================================================== */
+  ===================================================== */
 
   const handleForgotPasswordSubmit = (e) => {
     e.preventDefault();
+
+    if (!forgotMobile.trim()) {
+      return;
+    }
 
     navigate('/financer/verify-otp', {
       state: {
@@ -87,17 +171,57 @@ export default function FinancerLogin() {
     });
   };
 
+
+  /* =====================================================
+     SWITCH TO REGISTER
+  ===================================================== */
+
+  const openRegister = () => {
+    setIsRegistering(true);
+    setIsForgotPassword(false);
+    setLoginError('');
+  };
+
+
+  /* =====================================================
+     SWITCH TO LOGIN
+  ===================================================== */
+
+  const openLogin = () => {
+    setIsRegistering(false);
+    setIsForgotPassword(false);
+    setLoginError('');
+  };
+
+
+  /* =====================================================
+     FORGOT PASSWORD VIEW
+  ===================================================== */
+
+  const openForgotPassword = () => {
+    setIsForgotPassword(true);
+    setIsRegistering(false);
+    setLoginError('');
+  };
+
+
   /* =====================================================
      LOGIN VIEW
-     ===================================================== */
+  ===================================================== */
 
-  if (!isRegistering && !isForgotPassword) {
+  if (
+    !isRegistering &&
+    !isForgotPassword
+  ) {
     return (
       <div className="fin-login-page">
 
         <div className="fin-login-card">
 
-          {/* Brand */}
+          {/* =================================================
+              BRAND
+          ================================================= */}
+
           <div className="fin-login-brand">
 
             <img
@@ -108,29 +232,46 @@ export default function FinancerLogin() {
 
             <div className="fin-login-brand-text">
               <h2>INRFS</h2>
-              <span>Financer Platform</span>
+
+              <span>
+                Financer Platform
+              </span>
             </div>
 
           </div>
 
-          {/* Heading */}
+
+          {/* =================================================
+              HEADING
+          ================================================= */}
+
           <div className="fin-login-heading">
 
-            <h1>Welcome back</h1>
+            <h1>
+              Welcome back
+            </h1>
 
             <p>
-              Manage your customers and loans with ease.
+              Manage your customers and loans
+              with ease.
             </p>
 
           </div>
 
-          {/* Login Form */}
+
+          {/* =================================================
+              LOGIN FORM
+          ================================================= */}
+
           <form
             className="fin-login-form"
             onSubmit={handleLoginSubmit}
           >
 
-            {/* Mobile */}
+            {/* =================================================
+                MOBILE
+            ================================================= */}
+
             <div className="fin-login-field">
 
               <label htmlFor="login-mobile">
@@ -141,7 +282,10 @@ export default function FinancerLogin() {
                 id="login-mobile"
                 type="tel"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                onChange={(e) => {
+                  setMobile(e.target.value);
+                  setLoginError('');
+                }}
                 placeholder="+91 98765 43210"
                 autoComplete="tel"
                 required
@@ -149,42 +293,91 @@ export default function FinancerLogin() {
 
             </div>
 
-            {/* Password */}
+
+            {/* =================================================
+                PASSWORD
+            ================================================= */}
+
             <div className="fin-login-field">
 
-              <label htmlFor="login-password">
-                Password
-              </label>
+              <div className="fin-login-password-label">
 
-              <input
-                id="login-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                required
-              />
-
-              {/* Forgot Password */}
-              <div className="fin-forgot-password-row">
+                <label htmlFor="login-password">
+                  Password
+                </label>
 
                 <button
                   type="button"
                   className="fin-forgot-password"
-                  onClick={() => {
-                    setIsForgotPassword(true);
-                    setIsRegistering(false);
-                  }}
+                  onClick={openForgotPassword}
                 >
                   Forgot password?
                 </button>
 
               </div>
 
+
+              <div className="fin-login-password-wrapper">
+
+                <input
+                  id="login-password"
+                  type={
+                    showPassword
+                      ? 'text'
+                      : 'password'
+                  }
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setLoginError('');
+                  }}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="fin-password-toggle"
+                  onClick={() =>
+                    setShowPassword(
+                      (previous) =>
+                        !previous
+                    )
+                  }
+                  aria-label={
+                    showPassword
+                      ? 'Hide password'
+                      : 'Show password'
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff size={19} />
+                  ) : (
+                    <Eye size={19} />
+                  )}
+                </button>
+
+              </div>
+
             </div>
 
-            {/* Login Button */}
+
+            {/* =================================================
+                ERROR
+            ================================================= */}
+
+            {loginError && (
+              <div className="fin-login-error">
+                {loginError}
+              </div>
+            )}
+
+
+            {/* =================================================
+                LOGIN BUTTON
+            ================================================= */}
+
             <button
               type="submit"
               className="fin-login-submit"
@@ -194,32 +387,44 @@ export default function FinancerLogin() {
 
           </form>
 
-          {/* Register */}
+
+          {/* =================================================
+              REGISTER
+          ================================================= */}
+
           <div className="fin-login-register">
 
-            <span>New to INRFS?</span>
+            <span>
+              New to INRFS?
+            </span>
 
             <button
               type="button"
-              onClick={() => {
-                setIsRegistering(true);
-                setIsForgotPassword(false);
-              }}
+              onClick={openRegister}
             >
               Create account
             </button>
 
           </div>
 
-          {/* Divider */}
+
+          {/* =================================================
+              DIVIDER
+          ================================================= */}
+
           <div className="fin-login-divider"></div>
 
-          {/* Back */}
+
+          {/* =================================================
+              BACK
+          ================================================= */}
+
           <Link
             to="/"
             className="fin-login-back"
           >
-            ← Back to portal selection
+            <ArrowLeft size={15} />
+            Back to portal selection
           </Link>
 
         </div>
@@ -228,9 +433,10 @@ export default function FinancerLogin() {
     );
   }
 
+
   /* =====================================================
      FORGOT PASSWORD VIEW
-     ===================================================== */
+  ===================================================== */
 
   if (isForgotPassword) {
     return (
@@ -238,7 +444,10 @@ export default function FinancerLogin() {
 
         <div className="fin-login-card fin-forgot-card">
 
-          {/* Brand */}
+          {/* =================================================
+              BRAND
+          ================================================= */}
+
           <div className="fin-login-brand">
 
             <img
@@ -248,27 +457,47 @@ export default function FinancerLogin() {
             />
 
             <div className="fin-login-brand-text">
-              <h2>INRFS</h2>
-              <span>Financer Platform</span>
+
+              <h2>
+                INRFS
+              </h2>
+
+              <span>
+                Financer Platform
+              </span>
+
             </div>
 
           </div>
 
-          {/* Heading */}
+
+          {/* =================================================
+              HEADING
+          ================================================= */}
+
           <div className="fin-login-heading">
 
-            <h1>Forgot password?</h1>
+            <h1>
+              Forgot password?
+            </h1>
 
             <p>
-              Enter your registered mobile number to reset your password.
+              Enter your registered mobile
+              number to reset your password.
             </p>
 
           </div>
 
-          {/* Forgot Password Form */}
+
+          {/* =================================================
+              FORGOT FORM
+          ================================================= */}
+
           <form
             className="fin-login-form"
-            onSubmit={handleForgotPasswordSubmit}
+            onSubmit={
+              handleForgotPasswordSubmit
+            }
           >
 
             <div className="fin-login-field">
@@ -281,13 +510,18 @@ export default function FinancerLogin() {
                 id="forgot-mobile"
                 type="tel"
                 value={forgotMobile}
-                onChange={(e) => setForgotMobile(e.target.value)}
+                onChange={(e) =>
+                  setForgotMobile(
+                    e.target.value
+                  )
+                }
                 placeholder="+91 98765 43210"
                 autoComplete="tel"
                 required
               />
 
             </div>
+
 
             <button
               type="submit"
@@ -298,17 +532,19 @@ export default function FinancerLogin() {
 
           </form>
 
-          {/* Back to Login */}
+
+          {/* =================================================
+              BACK
+          ================================================= */}
+
           <div className="fin-forgot-back">
 
             <button
               type="button"
-              onClick={() => {
-                setIsForgotPassword(false);
-                setIsRegistering(false);
-              }}
+              onClick={openLogin}
             >
-              ← Back to Login
+              <ArrowLeft size={15} />
+              Back to Login
             </button>
 
           </div>
@@ -319,16 +555,20 @@ export default function FinancerLogin() {
     );
   }
 
+
   /* =====================================================
-     REGISTER VIEW
-     ===================================================== */
+     CREATE ACCOUNT VIEW
+  ===================================================== */
 
   return (
     <div className="fin-login-page">
 
       <div className="fin-login-card fin-register-card">
 
-        {/* Brand */}
+        {/* =================================================
+            BRAND
+        ================================================= */}
+
         <div className="fin-login-brand fin-register-brand">
 
           <img
@@ -338,30 +578,78 @@ export default function FinancerLogin() {
           />
 
           <div className="fin-login-brand-text">
-            <h2>INRFS</h2>
-            <span>Financer Platform</span>
+
+            <h2>
+              INRFS
+            </h2>
+
+            <span>
+              Financer Platform
+            </span>
+
           </div>
 
         </div>
 
-        {/* Register Heading */}
+
+        {/* =================================================
+            REGISTER HEADING
+        ================================================= */}
+
         <div className="fin-login-heading fin-register-heading">
 
-          <h1>Create your INRFS account</h1>
+          <h1>
+            Create your INRFS account
+          </h1>
 
           <p>
-            Join thousands of financers managing loans digitally
+            Enter your details to create
+            your financer account.
           </p>
 
         </div>
 
-        {/* Register Form */}
+
+        {/* =================================================
+            INFORMATION MESSAGE
+        ================================================= */}
+
+        <div className="fin-register-info">
+
+          <div className="fin-register-info-icon">
+            <Check size={15} />
+          </div>
+
+          <div>
+
+            <strong>
+              No password required
+            </strong>
+
+            <p>
+              After OTP verification, your
+              login password will be generated
+              and sent to your registered email.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* =================================================
+            REGISTER FORM
+        ================================================= */}
+
         <form
           className="fin-register-form"
           onSubmit={handleRegisterSubmit}
         >
 
-          {/* Full Name */}
+          {/* =================================================
+              FULL NAME
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="fullName">
@@ -375,12 +663,17 @@ export default function FinancerLogin() {
               value={formData.fullName}
               onChange={handleRegisterChange}
               placeholder="Suresh Patel"
+              autoComplete="name"
               required
             />
 
           </div>
 
-          {/* Business Name */}
+
+          {/* =================================================
+              BUSINESS NAME
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="businessName">
@@ -391,7 +684,9 @@ export default function FinancerLogin() {
               id="businessName"
               name="businessName"
               type="text"
-              value={formData.businessName}
+              value={
+                formData.businessName
+              }
               onChange={handleRegisterChange}
               placeholder="Patel Finance Services"
               required
@@ -399,7 +694,11 @@ export default function FinancerLogin() {
 
           </div>
 
-          {/* Mobile */}
+
+          {/* =================================================
+              MOBILE
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="register-mobile">
@@ -419,7 +718,11 @@ export default function FinancerLogin() {
 
           </div>
 
-          {/* Email */}
+
+          {/* =================================================
+              EMAIL
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="email">
@@ -439,7 +742,11 @@ export default function FinancerLogin() {
 
           </div>
 
-          {/* City */}
+
+          {/* =================================================
+              CITY
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="city">
@@ -458,7 +765,11 @@ export default function FinancerLogin() {
 
           </div>
 
-          {/* State */}
+
+          {/* =================================================
+              STATE
+          ================================================= */}
+
           <div className="fin-register-field">
 
             <label htmlFor="state">
@@ -477,27 +788,11 @@ export default function FinancerLogin() {
 
           </div>
 
-          {/* Password */}
-          <div className="fin-register-field">
 
-            <label htmlFor="register-password">
-              Password
-            </label>
+          {/* =================================================
+              SEND OTP
+          ================================================= */}
 
-            <input
-              id="register-password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleRegisterChange}
-              placeholder="Create a password"
-              autoComplete="new-password"
-              required
-            />
-
-          </div>
-
-          {/* Send OTP */}
           <button
             type="submit"
             className="fin-login-submit fin-register-submit"
@@ -507,7 +802,11 @@ export default function FinancerLogin() {
 
         </form>
 
-        {/* Existing account */}
+
+        {/* =================================================
+            EXISTING ACCOUNT
+        ================================================= */}
+
         <div className="fin-register-existing">
 
           <span>
@@ -516,10 +815,7 @@ export default function FinancerLogin() {
 
           <button
             type="button"
-            onClick={() => {
-              setIsRegistering(false);
-              setIsForgotPassword(false);
-            }}
+            onClick={openLogin}
           >
             Login
           </button>

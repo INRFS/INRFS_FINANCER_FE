@@ -808,7 +808,7 @@ export default function AdminDashboard({
           </div>
         </article>
 
-        <article className="inrfs-admin-chart-card">
+        {/* <article className="inrfs-admin-chart-card">
           <div className="inrfs-admin-chart-header">
             <div>
               <h2>SMS Usage Trend</h2>
@@ -896,9 +896,9 @@ export default function AdminDashboard({
               {formatNumber(dashboardStats.smsSent)} this month
             </strong>
           </div>
-        </article>
+        </article> */}
 
-        <article className="inrfs-admin-chart-card">
+        {/* <article className="inrfs-admin-chart-card">
           <div className="inrfs-admin-chart-header">
             <div>
               <h2>Financer Growth & Status</h2>
@@ -1045,7 +1045,7 @@ export default function AdminDashboard({
               </div>
             </div>
           </div>
-        </article>
+        </article> */}
       </section>
 
       {/* =====================================================
