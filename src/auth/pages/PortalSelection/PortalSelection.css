@@ -110,10 +110,23 @@
 
   letter-spacing: -1.2px;
 
-  color: #071936;
+  color: black;
 }
 
+.inrfs-welcome-title {
+  color: #081a3d !important;
+}
 
+.inrfs-welcome-subtitle {
+  color: #5b7894 !important;
+}
+.inrfs-brand-text h2 {
+  color: #000000 !important;
+}
+
+.inrfs-brand-text p {
+  color: #53718f !important;
+}
 .inrfs-brand-text p {
   margin: 7px 0 0;
 

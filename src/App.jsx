@@ -21,7 +21,7 @@ import FinancerLogin from './auth/pages/FinancerLogin/FinancerLogin';
 import AdminLogin from './auth/pages/AdminLogin/AdminLogin';
 import OTPVerification from './auth/pages/OTPVerification/OTPVerification';
 import Welcome from './auth/pages/Welcome/Welcome';
-
+import LandingPage from './auth/pages/LandingPage/LandingPage';
 // =========================================================
 // FINANCER LAYOUT & PAGES
 // =========================================================
@@ -123,7 +123,14 @@ export default function App() {
         {/* ===================================================
             PORTAL SELECTION
         ==================================================== */}
-
+<Route
+  path="/"
+  element={<LandingPage />}
+/>
+<Route
+  path="/portals"
+  element={<PortalSelection />}
+/>
         <Route
           path="/"
           element={<PortalSelection />}
