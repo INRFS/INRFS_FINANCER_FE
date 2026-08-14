@@ -1298,7 +1298,7 @@ export default function AdminDashboard({
           No "Financer Usage" item here anymore.
       ===================================================== */}
 
-      <section className="inrfs-admin-quick-actions">
+      {/* <section className="inrfs-admin-quick-actions">
         <div className="inrfs-admin-quick-header">
           <div>
             <h2>Quick Actions</h2>
@@ -1374,7 +1374,7 @@ export default function AdminDashboard({
             );
           })}
         </div>
-      </section>
+      </section> */}
 
       {activeAction && (
         <div
