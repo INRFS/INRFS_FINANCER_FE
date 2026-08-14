@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   ArrowLeft,
   Eye,
@@ -13,6 +13,10 @@ import logo from '../../../assets/logo.png';
 
 export default function FinancerLogin() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const registrationSuccess =
+    location.state?.registrationSuccess || false;
 
   /* =====================================================
      VIEW STATES
@@ -95,6 +99,9 @@ export default function FinancerLogin() {
         setLoginError(response.message);
         return;
       }
+
+      Only after successful authentication should the user
+      be allowed to access the dashboard.
     */
 
     navigate('/financer/dashboard');
@@ -214,7 +221,7 @@ export default function FinancerLogin() {
     !isForgotPassword
   ) {
     return (
-      <div className="fin-login-page">
+      <div className="fin-login-page fin-login-view">
 
         <div className="fin-login-card">
 
@@ -257,7 +264,21 @@ export default function FinancerLogin() {
             </p>
 
           </div>
+{registrationSuccess && (
+  <div className="fin-register-success">
+    <div className="fin-register-success-icon">
+      <Check size={18} />
+    </div>
 
+    <div>
+      <strong>Registration successful!</strong>
+      <p>
+        Your account has been created successfully. Your login
+        password has been sent to your registered email.
+      </p>
+    </div>
+  </div>
+)}
 
           {/* =================================================
               LOGIN FORM
@@ -561,7 +582,7 @@ export default function FinancerLogin() {
   ===================================================== */
 
   return (
-    <div className="fin-login-page">
+    <div className="fin-login-page fin-register-view">
 
       <div className="fin-login-card fin-register-card">
 
@@ -646,12 +667,8 @@ export default function FinancerLogin() {
           onSubmit={handleRegisterSubmit}
         >
 
-          {/* =================================================
-              FULL NAME
-          ================================================= */}
-
+          <div className="fin-register-row">
           <div className="fin-register-field">
-
             <label htmlFor="fullName">
               Full Name
             </label>
@@ -666,16 +683,9 @@ export default function FinancerLogin() {
               autoComplete="name"
               required
             />
-
           </div>
 
-
-          {/* =================================================
-              BUSINESS NAME
-          ================================================= */}
-
           <div className="fin-register-field">
-
             <label htmlFor="businessName">
               Business / Finance Name
             </label>
@@ -684,23 +694,16 @@ export default function FinancerLogin() {
               id="businessName"
               name="businessName"
               type="text"
-              value={
-                formData.businessName
-              }
+              value={formData.businessName}
               onChange={handleRegisterChange}
               placeholder="Patel Finance Services"
               required
             />
-
+          </div>
           </div>
 
-
-          {/* =================================================
-              MOBILE
-          ================================================= */}
-
+          <div className="fin-register-row">
           <div className="fin-register-field">
-
             <label htmlFor="register-mobile">
               Mobile Number
             </label>
@@ -709,22 +712,16 @@ export default function FinancerLogin() {
               id="register-mobile"
               name="mobile"
               type="tel"
+              inputMode="tel"
               value={formData.mobile}
               onChange={handleRegisterChange}
               placeholder="+91 98765 43210"
               autoComplete="tel"
               required
             />
-
           </div>
 
-
-          {/* =================================================
-              EMAIL
-          ================================================= */}
-
           <div className="fin-register-field">
-
             <label htmlFor="email">
               Email Address
             </label>
@@ -739,16 +736,11 @@ export default function FinancerLogin() {
               autoComplete="email"
               required
             />
-
+          </div>
           </div>
 
-
-          {/* =================================================
-              CITY
-          ================================================= */}
-
+          <div className="fin-register-row">
           <div className="fin-register-field">
-
             <label htmlFor="city">
               City
             </label>
@@ -762,16 +754,9 @@ export default function FinancerLogin() {
               placeholder="Ahmedabad"
               required
             />
-
           </div>
 
-
-          {/* =================================================
-              STATE
-          ================================================= */}
-
           <div className="fin-register-field">
-
             <label htmlFor="state">
               State
             </label>
@@ -785,13 +770,8 @@ export default function FinancerLogin() {
               placeholder="Gujarat"
               required
             />
-
           </div>
-
-
-          {/* =================================================
-              SEND OTP
-          ================================================= */}
+          </div>
 
           <button
             type="submit"
@@ -799,6 +779,7 @@ export default function FinancerLogin() {
           >
             Send OTP to Verify
           </button>
+
 
         </form>
 

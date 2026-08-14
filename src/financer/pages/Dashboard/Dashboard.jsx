@@ -58,9 +58,9 @@ export default function Dashboard() {
           <h1 className="fin-dashboard-title">Good Evening, Suresh 👋</h1>
           <p className="fin-dashboard-subtitle">Here's your loan and customer overview for today.</p>
         </div>
-        <div className="fin-dashboard-date-badge">
+        {/* <div className="fin-dashboard-date-badge">
           <Calendar size={16} /> 10-Sep-2026
-        </div>
+        </div> */}
       </div>
 
       {/* 8 Statistics Cards Grid */}

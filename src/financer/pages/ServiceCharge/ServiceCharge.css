@@ -971,3 +971,217 @@
     margin: 12mm;
   }
 }
+
+/* =========================================================
+   FIX ONLY: CALCULATION SIDE-BY-SIDE LAYOUT
+   Paste this at the VERY END of ServiceCharge.css
+========================================================= */
+
+.service-charge-calculation {
+  width: 100% !important;
+
+  margin-top: 20px !important;
+  padding: 14px !important;
+
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+
+  flex-wrap: nowrap !important;
+
+  gap: 10px !important;
+
+  background: #f8fafc !important;
+  border: 1px solid #e1e7ef !important;
+  border-radius: 12px !important;
+
+  box-sizing: border-box !important;
+}
+
+/* =========================================================
+   ALL THREE BOXES - SAME ROW
+========================================================= */
+
+.service-charge-calculation .service-charge-calc-box {
+  flex: 1 1 0 !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+
+  min-height: 100px !important;
+
+  padding: 15px 12px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+
+  text-align: center !important;
+
+  box-sizing: border-box !important;
+}
+
+/* =========================================================
+   OPERATORS × AND =
+========================================================= */
+
+.service-charge-calculation .service-charge-operator {
+  flex: 0 0 35px !important;
+
+  width: 35px !important;
+  min-width: 35px !important;
+
+  height: auto !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: #8295ad !important;
+
+  font-size: 20px !important;
+  font-weight: 600 !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   INTEREST BOX
+========================================================= */
+
+.service-charge-calculation .interest-box {
+  background: #f7f9fb !important;
+  border: 1px solid #e1e7ef !important;
+}
+
+/* =========================================================
+   SERVICE CHARGE BOX
+========================================================= */
+
+.service-charge-calculation .rate-box {
+  background: #f3e7ff !important;
+  border: 1px solid #dfc2ff !important;
+}
+
+/* =========================================================
+   PAYABLE BOX
+========================================================= */
+
+.service-charge-calculation .payable-box {
+  background: linear-gradient(
+    135deg,
+    #fbf7ff,
+    #f0e7ff
+  ) !important;
+
+  border: 2px solid #8500e8 !important;
+}
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.service-charge-calculation .service-charge-calc-box span {
+  margin-bottom: 8px !important;
+
+  color: #7d91aa !important;
+
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+.service-charge-calculation .service-charge-calc-box strong {
+  font-size: 21px !important;
+  line-height: 1.1 !important;
+}
+
+/* Rate colors */
+
+.service-charge-calculation .rate-box span,
+.service-charge-calculation .rate-box strong {
+  color: #8000df !important;
+}
+
+/* Payable colors */
+
+.service-charge-calculation .payable-box span,
+.service-charge-calculation .payable-box strong {
+  color: #7e00dc !important;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .service-charge-calculation {
+    gap: 6px !important;
+    padding: 10px !important;
+  }
+
+  .service-charge-calculation .service-charge-operator {
+    flex: 0 0 28px !important;
+
+    width: 28px !important;
+    min-width: 28px !important;
+
+    font-size: 18px !important;
+  }
+
+  .service-charge-calculation .service-charge-calc-box {
+    min-height: 85px !important;
+    padding: 12px 8px !important;
+  }
+
+  .service-charge-calculation .service-charge-calc-box span {
+    font-size: 9px !important;
+  }
+
+  .service-charge-calculation .service-charge-calc-box strong {
+    font-size: 18px !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE ONLY
+   Mobile lo vertical ga avvali
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .service-charge-calculation {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    flex-wrap: nowrap !important;
+
+    gap: 5px !important;
+  }
+
+  .service-charge-calculation .service-charge-calc-box {
+    width: 100% !important;
+
+    flex: none !important;
+
+    min-height: 64px !important;
+  }
+
+  .service-charge-calculation .service-charge-operator {
+    flex: 0 0 12px !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    height: 12px !important;
+
+    transform: rotate(90deg) !important;
+  }
+}

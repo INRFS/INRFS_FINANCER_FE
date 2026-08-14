@@ -10,10 +10,19 @@ export default function OTPVerification({ portal: propPortal }) {
   const location = useLocation();
 
   const isFinancerRoute = location.pathname.includes('/financer/');
+
   const portal =
     propPortal || (isFinancerRoute ? 'financer' : 'admin');
 
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState([
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+  ]);
+
   const [error, setError] = useState('');
 
   const inputRefs = useRef([]);
@@ -25,16 +34,13 @@ export default function OTPVerification({ portal: propPortal }) {
       ? '+91 98765 43210'
       : 'admin@inrfs.com');
 
-
   useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
   }, []);
 
-
   const handleChange = (index, value) => {
-
     // Allow only numbers
     if (!/^\d*$/.test(value)) {
       return;
@@ -52,26 +58,18 @@ export default function OTPVerification({ portal: propPortal }) {
     }
   };
 
-
   const handleKeyDown = (index, e) => {
-
     if (e.key === 'Backspace') {
-
       if (otp[index]) {
-
         const newOtp = [...otp];
 
         newOtp[index] = '';
 
         setOtp(newOtp);
-
       } else if (index > 0) {
-
         inputRefs.current[index - 1]?.focus();
-
       }
     }
-
 
     if (
       e.key === 'ArrowLeft' &&
@@ -79,7 +77,6 @@ export default function OTPVerification({ portal: propPortal }) {
     ) {
       inputRefs.current[index - 1]?.focus();
     }
-
 
     if (
       e.key === 'ArrowRight' &&
@@ -89,9 +86,7 @@ export default function OTPVerification({ portal: propPortal }) {
     }
   };
 
-
   const handlePaste = (e) => {
-
     e.preventDefault();
 
     const pastedValue = e.clipboardData
@@ -103,11 +98,20 @@ export default function OTPVerification({ portal: propPortal }) {
       return;
     }
 
-    const newOtp = ['', '', '', '', '', ''];
+    const newOtp = [
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ];
 
-    pastedValue.split('').forEach((digit, index) => {
-      newOtp[index] = digit;
-    });
+    pastedValue
+      .split('')
+      .forEach((digit, index) => {
+        newOtp[index] = digit;
+      });
 
     setOtp(newOtp);
 
@@ -119,53 +123,133 @@ export default function OTPVerification({ portal: propPortal }) {
     inputRefs.current[focusIndex]?.focus();
   };
 
-
   const handleVerify = (e) => {
-
     e.preventDefault();
 
     const enteredOtp = otp.join('');
 
     if (enteredOtp.length !== 6) {
-      setError('Please enter the complete 6-digit OTP.');
+      setError(
+        'Please enter the complete 6-digit OTP.'
+      );
       return;
     }
 
+    /*
+      -------------------------------------------------------
+      DEMO OTP
+      -------------------------------------------------------
 
-    // Demo OTP
-    if (enteredOtp === '123456') {
+      For testing:
+      OTP = 123456
 
-      if (portal === 'financer') {
+      Replace this validation with your real OTP API later.
+    */
 
-        localStorage.setItem(
-          'inrfs_financer_authenticated',
-          'true'
-        );
-
-        navigate('/financer/welcome');
-
-      } else {
-
-        localStorage.setItem(
-          'inrfs_admin_authenticated',
-          'true'
-        );
-
-        navigate('/admin/welcome');
-      }
-
-    } else {
-
+    if (enteredOtp !== '123456') {
       setError(
         'Invalid OTP. Please enter 123456 for testing.'
       );
-
+      return;
     }
+
+    /*
+      =======================================================
+      FINANCER FLOW
+      =======================================================
+
+      IMPORTANT:
+
+      After financer registration OTP verification:
+
+      Register
+          ↓
+      OTP Verification
+          ↓
+      Account Created
+          ↓
+      Password Generated
+          ↓
+      Password Sent To Email
+          ↓
+      LOGIN PAGE
+          ↓
+      User enters Mobile + Password
+          ↓
+      Dashboard
+
+      We MUST NOT:
+        - set financer authenticated
+        - navigate to /financer/welcome
+        - navigate to /financer/dashboard
+    */
+
+    if (portal === 'financer') {
+      /*
+        Registration flow
+      */
+      if (location.state?.registration) {
+        navigate('/financer/login', {
+          replace: true,
+          state: {
+            registrationSuccess: true,
+            email: location.state?.email,
+            mobile: location.state?.mobile,
+          },
+        });
+
+        return;
+      }
+
+      /*
+        Forgot-password flow
+
+        After OTP verification, send the user back
+        to the login page instead of automatically
+        authenticating them.
+      */
+      if (location.state?.resetPassword) {
+        navigate('/financer/login', {
+          replace: true,
+          state: {
+            passwordResetSuccess: true,
+            mobile: location.state?.mobile,
+          },
+        });
+
+        return;
+      }
+
+      /*
+        Fallback financer flow.
+
+        Do NOT automatically authenticate the financer.
+        Always require normal login.
+      */
+      navigate('/financer/login', {
+        replace: true,
+      });
+
+      return;
+    }
+
+    /*
+      =======================================================
+      ADMIN FLOW
+      =======================================================
+
+      Keep existing admin behavior.
+    */
+
+    localStorage.setItem(
+      'inrfs_admin_authenticated',
+      'true'
+    );
+
+    navigate('/admin/welcome');
   };
 
-
   const handleChangeNumber = () => {
-
     navigate(
       portal === 'financer'
         ? '/financer/login'
@@ -173,23 +257,30 @@ export default function OTPVerification({ portal: propPortal }) {
     );
   };
 
-
   const handleResend = () => {
-
-    setOtp(['', '', '', '', '', '']);
+    setOtp([
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ]);
 
     setError('');
 
     inputRefs.current[0]?.focus();
   };
 
-
   return (
     <div className="fin-auth-otp-page">
 
       <div className="fin-auth-otp-card">
 
-        {/* Brand */}
+        {/* =================================================
+            BRAND
+        ================================================= */}
+
         <div className="fin-auth-otp-brand">
 
           <img
@@ -200,19 +291,31 @@ export default function OTPVerification({ portal: propPortal }) {
 
           <div className="fin-auth-otp-brand-text">
             <h2>INRFS</h2>
-            <span>Financer Platform</span>
+
+            <span>
+              Financer Platform
+            </span>
           </div>
 
         </div>
 
 
-        {/* Phone icon */}
+        {/* =================================================
+            PHONE ICON
+        ================================================= */}
+
         <div className="fin-auth-otp-phone-icon">
-          <Phone size={31} strokeWidth={2} />
+          <Phone
+            size={31}
+            strokeWidth={2}
+          />
         </div>
 
 
-        {/* Heading */}
+        {/* =================================================
+            HEADING
+        ================================================= */}
+
         <div className="fin-auth-otp-heading">
 
           <h1>
@@ -220,7 +323,8 @@ export default function OTPVerification({ portal: propPortal }) {
           </h1>
 
           <p>
-            Enter the 6-digit OTP sent to your mobile number.
+            Enter the 6-digit OTP sent to your
+            mobile number.
           </p>
 
           <strong>
@@ -230,7 +334,10 @@ export default function OTPVerification({ portal: propPortal }) {
         </div>
 
 
-        {/* OTP Form */}
+        {/* =================================================
+            OTP FORM
+        ================================================= */}
+
         <form
           className="fin-auth-otp-form"
           onSubmit={handleVerify}
@@ -246,7 +353,8 @@ export default function OTPVerification({ portal: propPortal }) {
               <input
                 key={index}
                 ref={(element) => {
-                  inputRefs.current[index] = element;
+                  inputRefs.current[index] =
+                    element;
                 }}
                 className="fin-auth-otp-input"
                 type="text"
@@ -265,9 +373,14 @@ export default function OTPVerification({ portal: propPortal }) {
                   )
                 }
                 onKeyDown={(e) =>
-                  handleKeyDown(index, e)
+                  handleKeyDown(
+                    index,
+                    e
+                  )
                 }
-                aria-label={`OTP digit ${index + 1}`}
+                aria-label={`OTP digit ${
+                  index + 1
+                }`}
               />
 
             ))}
@@ -275,12 +388,20 @@ export default function OTPVerification({ portal: propPortal }) {
           </div>
 
 
+          {/* =================================================
+              ERROR
+          ================================================= */}
+
           {error && (
             <div className="fin-auth-otp-error">
               {error}
             </div>
           )}
 
+
+          {/* =================================================
+              VERIFY BUTTON
+          ================================================= */}
 
           <button
             type="submit"
@@ -292,7 +413,10 @@ export default function OTPVerification({ portal: propPortal }) {
         </form>
 
 
-        {/* Secondary actions */}
+        {/* =================================================
+            SECONDARY ACTIONS
+        ================================================= */}
+
         <div className="fin-auth-otp-actions">
 
           <button
@@ -314,13 +438,19 @@ export default function OTPVerification({ portal: propPortal }) {
         </div>
 
 
-        {/* Demo text */}
+        {/* =================================================
+            DEMO TEXT
+        ================================================= */}
+
         <p className="fin-auth-otp-demo">
-          Demo: Enter any 6 digits to proceed
+          Demo: Enter 123456 to proceed
         </p>
 
 
-        {/* Back */}
+        {/* =================================================
+            BACK TO LOGIN
+        ================================================= */}
+
         <button
           type="button"
           className="fin-auth-otp-back"

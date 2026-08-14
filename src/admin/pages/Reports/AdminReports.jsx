@@ -267,16 +267,16 @@ function ReportDrawer({ report, onClose }) {
 
   return (
     <div
-      className="admin-reports-drawer-overlay"
+      className="ir-reports-drawer-overlay"
       onMouseDown={onClose}
     >
       <aside
-        className="admin-reports-drawer"
+        className="ir-reports-drawer"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="admin-reports-drawer-header">
-          <div className="admin-reports-drawer-title">
-            <div className="admin-reports-drawer-icon">
+        <div className="ir-reports-drawer-header">
+          <div className="ir-reports-drawer-title">
+            <div className="ir-reports-drawer-icon">
               <FileText size={19} />
             </div>
 
@@ -288,7 +288,7 @@ function ReportDrawer({ report, onClose }) {
 
           <button
             type="button"
-            className="admin-reports-close"
+            className="ir-reports-close"
             onClick={onClose}
             aria-label="Close report"
           >
@@ -296,7 +296,7 @@ function ReportDrawer({ report, onClose }) {
           </button>
         </div>
 
-        <div className="admin-reports-drawer-meta">
+        <div className="ir-reports-drawer-meta">
           <span>{getCategory(report)}</span>
           <span>
             {report.period || 'Monthly'}
@@ -304,10 +304,10 @@ function ReportDrawer({ report, onClose }) {
           <span>{rows.length} rows</span>
         </div>
 
-        <div className="admin-reports-drawer-body">
+        <div className="ir-reports-drawer-body">
           {rows.length ? (
-            <div className="admin-reports-detail-table-wrap">
-              <table className="admin-reports-detail-table">
+            <div className="ir-reports-detail-table-wrap">
+              <table className="ir-reports-detail-table">
                 <thead>
                   <tr>
                     {columns.map((column) => (
@@ -335,16 +335,16 @@ function ReportDrawer({ report, onClose }) {
               </table>
             </div>
           ) : (
-            <div className="admin-reports-empty-detail">
+            <div className="ir-reports-empty-detail">
               No data available for this report.
             </div>
           )}
         </div>
 
-        <div className="admin-reports-drawer-footer">
+        <div className="ir-reports-drawer-footer">
           <button
             type="button"
-            className="admin-reports-secondary-btn"
+            className="ir-reports-secondary-btn"
             onClick={onClose}
           >
             Close
@@ -352,7 +352,7 @@ function ReportDrawer({ report, onClose }) {
 
           <button
             type="button"
-            className="admin-reports-primary-btn"
+            className="ir-reports-primary-btn"
             onClick={() => downloadReportCSV(report)}
           >
             <Download size={15} />
@@ -469,14 +469,14 @@ export default function AdminReports() {
   );
 
   return (
-    <div className="admin-reports-page">
+    <div className="ir-reports-page">
       {/* =====================================================
           HEADER
       ====================================================== */}
 
-      <header className="admin-reports-header">
-        <div className="admin-reports-heading">
-          <div className="admin-reports-title-icon">
+      <header className="ir-reports-header">
+        <div className="ir-reports-heading">
+          <div className="ir-reports-title-icon">
             <FileText size={21} />
           </div>
 
@@ -490,7 +490,7 @@ export default function AdminReports() {
 
         <button
           type="button"
-          className="admin-reports-export-all"
+          className="ir-reports-export-all"
           onClick={() =>
             exportAllReports(filteredReports)
           }
@@ -504,9 +504,9 @@ export default function AdminReports() {
           ADMIN SUMMARY
       ====================================================== */}
 
-      <section className="admin-reports-summary">
-        <div className="admin-report-stat-card">
-          <div className="admin-report-stat-icon blue">
+      <section className="ir-reports-summary">
+        <div className="ir-report-stat-card">
+          <div className="ir-report-stat-icon blue">
             <Building2 size={18} />
           </div>
           <div>
@@ -519,8 +519,8 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="admin-report-stat-card">
-          <div className="admin-report-stat-icon purple">
+        <div className="ir-report-stat-card">
+          <div className="ir-report-stat-icon purple">
             <Users size={18} />
           </div>
           <div>
@@ -533,8 +533,8 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="admin-report-stat-card">
-          <div className="admin-report-stat-icon green">
+        <div className="ir-report-stat-card">
+          <div className="ir-report-stat-icon green">
             <CreditCard size={18} />
           </div>
           <div>
@@ -547,8 +547,8 @@ export default function AdminReports() {
           </div>
         </div>
 
-        <div className="admin-report-stat-card">
-          <div className="admin-report-stat-icon orange">
+        <div className="ir-report-stat-card">
+          <div className="ir-report-stat-icon orange">
             <TrendingUp size={18} />
           </div>
           <div>
@@ -564,8 +564,8 @@ export default function AdminReports() {
           CATEGORY TABS
       ====================================================== */}
 
-      <section className="admin-reports-tabs-card">
-        <div className="admin-reports-tabs">
+      <section className="ir-reports-tabs-card">
+        <div className="ir-reports-tabs">
           {reportCategories.map((category) => {
             const Icon = category.icon;
             const active =
@@ -575,7 +575,7 @@ export default function AdminReports() {
               <button
                 type="button"
                 key={category.id}
-                className={`admin-reports-tab ${
+                className={`ir-reports-tab ${
                   active ? 'active' : ''
                 }`}
                 onClick={() =>
@@ -594,9 +594,9 @@ export default function AdminReports() {
           FILTER TOOLBAR
       ====================================================== */}
 
-      <section className="admin-reports-toolbar">
-        <div className="admin-reports-filter-row">
-          <div className="admin-reports-search">
+      <section className="ir-reports-toolbar">
+        <div className="ir-reports-filter-row">
+          <div className="ir-reports-search">
             <Search size={17} />
             <input
               type="text"
@@ -609,7 +609,7 @@ export default function AdminReports() {
             />
           </div>
 
-          <div className="admin-reports-filter-type">
+          <div className="ir-reports-filter-type">
             <Filter size={15} />
 
             <select
@@ -631,7 +631,7 @@ export default function AdminReports() {
           </div>
 
           {filterType === 'date' && (
-            <label className="admin-reports-date-input">
+            <label className="ir-reports-date-input">
               <span>Date</span>
               <CalendarDays size={14} />
 
@@ -649,7 +649,7 @@ export default function AdminReports() {
 
           {filterType === 'month' && (
             <>
-              <label className="admin-reports-select-field">
+              <label className="ir-reports-select-field">
                 <span>Month</span>
                 <select
                   value={selectedMonth}
@@ -701,7 +701,7 @@ export default function AdminReports() {
                 </select>
               </label>
 
-              <label className="admin-reports-select-field">
+              <label className="ir-reports-select-field">
                 <span>Year</span>
                 <select
                   value={selectedYear}
@@ -729,7 +729,7 @@ export default function AdminReports() {
           )}
 
           {filterType === 'year' && (
-            <label className="admin-reports-select-field">
+            <label className="ir-reports-select-field">
               <span>Year</span>
               <select
                 value={selectedYear}
@@ -757,7 +757,7 @@ export default function AdminReports() {
 
           <button
             type="button"
-            className="admin-reports-reset"
+            className="ir-reports-reset"
             onClick={resetFilters}
           >
             <RotateCcw size={15} />
@@ -765,7 +765,7 @@ export default function AdminReports() {
           </button>
         </div>
 
-        <div className="admin-reports-toolbar-meta">
+        <div className="ir-reports-toolbar-meta">
           <span>
             Showing{' '}
             <strong>
@@ -784,8 +784,8 @@ export default function AdminReports() {
           REPORT LIST
       ====================================================== */}
 
-      <section className="admin-reports-content">
-        <div className="admin-reports-content-header">
+      <section className="ir-reports-content">
+        <div className="ir-reports-content-header">
           <div>
             <h2>
               {activeCategory === 'All'
@@ -800,8 +800,8 @@ export default function AdminReports() {
         </div>
 
         {filteredReports.length > 0 ? (
-          <div className="admin-reports-table-wrap">
-            <table className="admin-reports-table">
+          <div className="ir-reports-table-wrap">
+            <table className="ir-reports-table">
               <thead>
                 <tr>
                   <th>REPORT</th>
@@ -824,8 +824,8 @@ export default function AdminReports() {
                   return (
                     <tr key={report.id}>
                       <td>
-                        <div className="admin-report-name">
-                          <div className="admin-report-row-icon">
+                        <div className="ir-report-name">
+                          <div className="ir-report-row-icon">
                             <Icon size={18} />
                           </div>
 
@@ -843,7 +843,7 @@ export default function AdminReports() {
 
                       <td>
                         <span
-                          className={`admin-report-category ${String(
+                          className={`ir-report-category ${String(
                             getCategory(report)
                           ).toLowerCase()}`}
                         >
@@ -852,14 +852,14 @@ export default function AdminReports() {
                       </td>
 
                       <td>
-                        <span className="admin-report-description">
+                        <span className="ir-report-description">
                           {report.description ||
                             'Platform report'}
                         </span>
                       </td>
 
                       <td>
-                        <span className="admin-report-period">
+                        <span className="ir-report-period">
                           <CalendarDays size={14} />
                           {report.period ||
                             report.periods?.[0] ||
@@ -868,16 +868,16 @@ export default function AdminReports() {
                       </td>
 
                       <td>
-                        <strong className="admin-report-row-count">
+                        <strong className="ir-report-row-count">
                           {getReportRows(report).length}
                         </strong>
                       </td>
 
                       <td>
-                        <div className="admin-report-actions">
+                        <div className="ir-report-actions">
                           <button
                             type="button"
-                            className="admin-report-view-btn"
+                            className="ir-report-view-btn"
                             onClick={() =>
                               setSelectedReport(
                                 report
@@ -891,7 +891,7 @@ export default function AdminReports() {
 
                           <button
                             type="button"
-                            className="admin-report-export-btn"
+                            className="ir-report-export-btn"
                             onClick={() =>
                               downloadReportCSV(
                                 report
@@ -910,8 +910,8 @@ export default function AdminReports() {
             </table>
           </div>
         ) : (
-          <div className="admin-reports-empty">
-            <div className="admin-reports-empty-icon">
+          <div className="ir-reports-empty">
+            <div className="ir-reports-empty-icon">
               <Search size={23} />
             </div>
 

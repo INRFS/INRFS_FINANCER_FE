@@ -159,16 +159,48 @@ export default function Loans() {
   const enteredRate =
     Number(newLoanForm.interestRate) || 0;
 
+  /*
+    The entered rate belongs to the selected frequency.
+
+    We convert everything through an annual simple-interest basis:
+
+      Daily   = 365 periods / year
+      Weekly  = 52 periods / year
+      Monthly = 12 periods / year
+
+    Example:
+      ₹10,000 at 10% Monthly
+
+      Monthly = 10.00%
+      Weekly  = 10% × 12 / 52 = 2.31%
+      Daily   = 10% × 12 / 365 = 0.33%
+
+    This keeps the interest amount equivalent regardless of
+    which frequency the user selects.
+  */
+
+  const periodsPerYear = {
+    Daily: 365,
+    Weekly: 52,
+    Monthly: 12,
+  };
+
+  const selectedPeriodsPerYear =
+    periodsPerYear[
+      newLoanForm.interestFrequency
+    ] || 12;
+
+  const annualRate =
+    enteredRate * selectedPeriodsPerYear;
 
   const dailyRate =
-    enteredRate * 0.05;
+    annualRate / periodsPerYear.Daily;
 
   const weeklyRate =
-    enteredRate * 0.35;
+    annualRate / periodsPerYear.Weekly;
 
   const monthlyRate =
-    enteredRate;
-
+    annualRate / periodsPerYear.Monthly;
 
   const dailyAmount =
     amount * (dailyRate / 100);
@@ -179,23 +211,21 @@ export default function Loans() {
   const monthlyAmount =
     amount * (monthlyRate / 100);
 
-
   const getFrequencyRate = (frequency) => {
+    const periods =
+      periodsPerYear[frequency] || 12;
 
-    switch (frequency) {
+    return annualRate / periods;
+  };
 
-      case 'Daily':
-        return dailyRate;
-
-      case 'Weekly':
-        return weeklyRate;
-
-      case 'Monthly':
-        return monthlyRate;
-
-      default:
-        return monthlyRate;
+  const formatRate = (rate) => {
+    if (!Number.isFinite(rate)) {
+      return '0';
     }
+
+    return rate % 1 === 0
+      ? String(rate)
+      : rate.toFixed(2);
   };
 
 
@@ -1366,7 +1396,7 @@ export default function Loans() {
                       dailyAmount
                     )}
                     <small>
-                      /Day
+                      interest / Day
                     </small>
                   </strong>
 
@@ -1398,7 +1428,7 @@ export default function Loans() {
                       weeklyAmount
                     )}
                     <small>
-                      /Week
+                      interest / Week
                     </small>
                   </strong>
 
@@ -1430,13 +1460,19 @@ export default function Loans() {
                       monthlyAmount
                     )}
                     <small>
-                      /Month
+                      interest / Month
                     </small>
                   </strong>
 
                 </div>
 
               </div>
+
+              {/* <p className="fin-interest-conversion-note">
+                Enter the rate for the selected frequency.
+                The Daily, Weekly and Monthly rates above are
+                automatically converted to equivalent rates.
+              </p> */}
 
 
               {/* =================================================
