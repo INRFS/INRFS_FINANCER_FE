@@ -6,14 +6,11 @@ import {
   Plus,
   CheckCircle,
   Building2,
-  Ban,
   Eye,
   IndianRupee,
   TrendingUp,
   Percent,
   WalletCards,
-  Power,
-  PowerOff,
   ChevronRight,
 } from 'lucide-react';
 
@@ -203,46 +200,6 @@ export default function Financers() {
       )
     );
   };
-
-  const handleActivate = (id) => {
-    setFinancers((current) =>
-      current.map((financer) =>
-        financer.id === id
-          ? {
-              ...financer,
-              status: 'Active',
-            }
-          : financer
-      )
-    );
-  };
-
-  const handleDeactivate = (id) => {
-    setFinancers((current) =>
-      current.map((financer) =>
-        financer.id === id
-          ? {
-              ...financer,
-              status: 'Inactive',
-            }
-          : financer
-      )
-    );
-  };
-
-  const handleSuspend = (id) => {
-    setFinancers((current) =>
-      current.map((financer) =>
-        financer.id === id
-          ? {
-              ...financer,
-              status: 'Suspended',
-            }
-          : financer
-      )
-    );
-  };
-
   const handleView = (financer) => {
     navigate(`/admin/financers/${financer.id}`);
   };
@@ -480,7 +437,6 @@ export default function Financers() {
                 <th>ACTIVE LOANS</th>
                 <th>TOTAL PRINCIPAL</th>
                 <th>TOTAL INTEREST</th>
-                <th>KYC</th>
                 <th>STATUS</th>
                 <th className="financer-action-header">
                   ACTION
@@ -564,13 +520,6 @@ export default function Financers() {
                           {formatCurrency(totalInterest)}
                         </strong>
                       </td>
-
-                      <td>
-                        <StatusBadge
-                          status={financer.kycStatus}
-                        />
-                      </td>
-
                       <td>
                         <StatusBadge
                           status={financer.status}
@@ -582,77 +531,7 @@ export default function Financers() {
                           event.stopPropagation()
                         }
                       >
-
                         <div className="financer-action-buttons">
-
-                          {financer.status ===
-                            'Pending Approval' && (
-                            <button
-                              type="button"
-                              className="financer-approve-action"
-                              onClick={() =>
-                                handleApprove(financer.id)
-                              }
-                              title="Approve"
-                            >
-                              <CheckCircle size={16} />
-                              <span>Approve</span>
-                            </button>
-                          )}
-
-                          {financer.status === 'Active' && (
-                            <>
-                              <button
-                                type="button"
-                                className="financer-suspend-action"
-                                onClick={() =>
-                                  handleSuspend(financer.id)
-                                }
-                                title="Suspend"
-                              >
-                                <Ban size={16} />
-                              </button>
-
-                              <button
-                                type="button"
-                                className="financer-deactivate-action"
-                                onClick={() =>
-                                  handleDeactivate(financer.id)
-                                }
-                                title="Deactivate"
-                              >
-                                <PowerOff size={15} />
-                                <span>Deactivate</span>
-                              </button>
-                            </>
-                          )}
-
-                          {financer.status === 'Inactive' && (
-                            <button
-                              type="button"
-                              className="financer-activate-action"
-                              onClick={() =>
-                                handleActivate(financer.id)
-                              }
-                            >
-                              <Power size={15} />
-                              <span>Activate</span>
-                            </button>
-                          )}
-
-                          {financer.status === 'Suspended' && (
-                            <button
-                              type="button"
-                              className="financer-activate-action"
-                              onClick={() =>
-                                handleActivate(financer.id)
-                              }
-                            >
-                              <Power size={15} />
-                              <span>Activate</span>
-                            </button>
-                          )}
-
                           <button
                             type="button"
                             className="financer-view-action"
@@ -663,7 +542,6 @@ export default function Financers() {
                           >
                             <Eye size={16} />
                           </button>
-
                         </div>
 
                       </td>
@@ -674,7 +552,7 @@ export default function Financers() {
               ) : (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="7"
                     className="financer-empty-state"
                   >
                     <UsersRound size={34} />
@@ -787,14 +665,6 @@ export default function Financers() {
                 <div className="financer-mobile-card-footer">
 
                   <div className="financer-mobile-statuses">
-
-                    <div>
-                      <span>KYC</span>
-                      <StatusBadge
-                        status={financer.kycStatus}
-                      />
-                    </div>
-
                     <div>
                       <span>Service Charge</span>
                       <strong>
