@@ -51,11 +51,11 @@ export default function PortalSelection() {
             </div>
           </div>
 
-<h1 className="inrfs-portal-welcome-title">
+<h1 className="inrfs-welcome-title">
   INRFS Financer Platform
 </h1>
 
-<p className="inrfs-portal-welcome-subtitle">
+<p className="inrfs-welcome-subtitle">
   Secure financial management platform for customers, loans, collections and administration.
 </p>
 

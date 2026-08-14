@@ -1,16 +1,22 @@
 /* =========================================================
-   INRFS MONTHLY BILLING
-   UNIQUE PREFIX:
-   .inrfs-monthly-billing-
+   PAGE
 ========================================================= */
 
 .inrfs-monthly-billing-page {
   width: 100%;
-  min-height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 24px;
   box-sizing: border-box;
-  padding: 28px;
+  color: #1f2a44;
   background: #f7f9fc;
-  color: #172033;
+  overflow-x: hidden;
+}
+
+.inrfs-monthly-billing-page *,
+.inrfs-monthly-billing-page *::before,
+.inrfs-monthly-billing-page *::after {
+  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -21,14 +27,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 22px;
-  margin-bottom: 22px;
+  gap: 24px;
+  margin-bottom: 20px;
 }
 
 .inrfs-monthly-billing-header-copy {
   display: flex;
-  align-items: flex-start;
-  gap: 13px;
+  align-items: center;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -39,49 +45,47 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(16, 174, 239, 0.09);
-  color: #10aeef;
+  border-radius: 13px;
+  color: #6d35e8;
+  background: #f0e8ff;
 }
 
-.inrfs-monthly-billing-header h1 {
+.inrfs-monthly-billing-header-copy h1 {
   margin: 0;
-  color: #172033;
+  color: #172238;
   font-size: 25px;
-  line-height: 1.25;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.02em;
 }
 
-.inrfs-monthly-billing-header p {
+.inrfs-monthly-billing-header-copy p {
   margin: 6px 0 0;
-  color: #8190a5;
-  font-size: 13px;
+  color: #8292ac;
+  font-size: 14px;
   line-height: 1.5;
 }
 
 .inrfs-monthly-billing-header-month {
+  height: 44px;
+  min-width: 190px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 180px;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 0 11px;
-  border: 1px solid #dfe5ec;
-  border-radius: 8px;
+  gap: 9px;
+  padding: 0 13px;
+  border: 1px solid #dce3ee;
+  border-radius: 10px;
   background: #ffffff;
-  color: #8190a5;
+  color: #6f7e97;
 }
 
 .inrfs-monthly-billing-header-month select {
   width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
+  border: 0;
+  outline: 0;
   background: transparent;
-  color: #536176;
-  font-size: 12px;
+  color: #46566f;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -93,53 +97,53 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .inrfs-monthly-billing-summary-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   min-width: 0;
-  padding: 16px;
-  border: 1px solid #e5eaf0;
-  border-radius: 11px;
+  min-height: 112px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 18px;
+  border: 1px solid #e1e7f0;
+  border-radius: 15px;
   background: #ffffff;
-  box-shadow: 0 2px 7px rgba(20, 35, 60, 0.025);
 }
 
 .inrfs-monthly-billing-summary-icon {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 11px;
 }
 
 .inrfs-monthly-billing-summary-card.is-purple
   .inrfs-monthly-billing-summary-icon {
-  background: rgba(125, 31, 232, 0.09);
-  color: #7d1fe8;
+  color: #7435e8;
+  background: #f1e9ff;
 }
 
 .inrfs-monthly-billing-summary-card.is-green
   .inrfs-monthly-billing-summary-icon {
-  background: rgba(24, 196, 106, 0.09);
-  color: #18c46a;
+  color: #15945b;
+  background: #e8f8f0;
 }
 
 .inrfs-monthly-billing-summary-card.is-orange
   .inrfs-monthly-billing-summary-icon {
-  background: rgba(255, 121, 11, 0.09);
-  color: #ff790b;
+  color: #c77b08;
+  background: #fff5df;
 }
 
 .inrfs-monthly-billing-summary-card.is-blue
   .inrfs-monthly-billing-summary-icon {
-  background: rgba(16, 174, 239, 0.09);
-  color: #10aeef;
+  color: #1677bd;
+  background: #e9f5ff;
 }
 
 .inrfs-monthly-billing-summary-content {
@@ -148,27 +152,25 @@
 
 .inrfs-monthly-billing-summary-content span {
   display: block;
-  margin-bottom: 4px;
-  color: #8190a5;
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 0.55px;
+  color: #8392aa;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .inrfs-monthly-billing-summary-content strong {
   display: block;
-  color: #172033;
-  font-size: 19px;
-  line-height: 1.2;
-  font-weight: 700;
-  white-space: nowrap;
+  margin-top: 4px;
+  color: #1c2940;
+  font-size: 20px;
+  line-height: 1.25;
 }
 
 .inrfs-monthly-billing-summary-content small {
   display: block;
-  margin-top: 4px;
-  color: #9aa5b4;
-  font-size: 10px;
+  margin-top: 5px;
+  color: #9aa7ba;
+  font-size: 12px;
 }
 
 /* =========================================================
@@ -176,175 +178,225 @@
 ========================================================= */
 
 .inrfs-monthly-billing-overview {
+  margin-bottom: 18px;
+  padding: 19px;
+  border: 1px solid #e0e6ef;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.inrfs-monthly-billing-overview-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 16px;
-  padding: 18px 20px;
-  border: 1px solid #e5eaf0;
-  border-radius: 11px;
-  background: #ffffff;
 }
 
-.inrfs-monthly-billing-overview-heading h2,
-.inrfs-monthly-billing-card-header h2 {
+.inrfs-monthly-billing-overview-heading h2 {
   margin: 0;
-  color: #172033;
-  font-size: 16px;
-  font-weight: 700;
+  color: #1d293e;
+  font-size: 17px;
 }
 
-.inrfs-monthly-billing-overview-heading p,
-.inrfs-monthly-billing-card-header p {
+.inrfs-monthly-billing-overview-heading p {
   margin: 5px 0 0;
-  color: #8190a5;
-  font-size: 11px;
-  line-height: 1.45;
+  color: #8998af;
+  font-size: 13px;
+}
+
+.inrfs-monthly-billing-flow-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #7d8da7;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .inrfs-monthly-billing-overview-items {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
 .inrfs-monthly-billing-overview-item {
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 95px;
-  padding: 8px 11px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid #e6eaf1;
+  border-radius: 11px;
 }
 
-.inrfs-monthly-billing-overview-item > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.inrfs-monthly-billing-overview-item svg {
+  flex: 0 0 auto;
+}
+
+.inrfs-monthly-billing-overview-item div {
+  min-width: 0;
 }
 
 .inrfs-monthly-billing-overview-item span {
-  font-size: 10px;
+  display: block;
+  color: #8190a7;
+  font-size: 12px;
 }
 
 .inrfs-monthly-billing-overview-item strong {
-  font-size: 15px;
+  display: block;
+  margin-top: 2px;
+  color: #26334a;
+  font-size: 17px;
 }
 
 .inrfs-monthly-billing-overview-item.is-paid {
-  color: #148b4d;
-  background: rgba(24, 196, 106, 0.08);
+  color: #15945b;
+  background: #f2fbf6;
+}
+
+.inrfs-monthly-billing-overview-item.is-partial {
+  color: #b27a0a;
+  background: #fffaf0;
 }
 
 .inrfs-monthly-billing-overview-item.is-pending {
-  color: #b86b05;
-  background: rgba(255, 170, 0, 0.09);
+  color: #6e7d96;
+  background: #f7f9fc;
 }
 
 .inrfs-monthly-billing-overview-item.is-overdue {
-  color: #d54848;
-  background: rgba(224, 76, 76, 0.08);
+  color: #d45d46;
+  background: #fff5f2;
 }
 
 /* =========================================================
-   MAIN BILLING CARD
+   MAIN CARD
 ========================================================= */
 
 .inrfs-monthly-billing-card {
-  overflow: hidden;
-  border: 1px solid #e5eaf0;
-  border-radius: 12px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dfe5ee;
+  border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0 2px 7px rgba(20, 35, 60, 0.025);
+  overflow: hidden;
 }
 
 .inrfs-monthly-billing-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 20px 22px;
+  gap: 20px;
+  padding: 23px 24px 19px;
+}
+
+.inrfs-monthly-billing-card-header h2 {
+  margin: 0;
+  color: #1c293e;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.inrfs-monthly-billing-card-header p {
+  margin: 5px 0 0;
+  color: #8796ad;
+  font-size: 13px;
 }
 
 .inrfs-monthly-billing-count {
-  display: inline-flex;
-  align-items: center;
-  min-height: 27px;
-  padding: 0 9px;
+  flex: 0 0 auto;
+  padding: 8px 13px;
   border-radius: 999px;
-  background: #f2f4f8;
-  color: #69768a;
-  font-size: 10px;
-  font-weight: 650;
-  white-space: nowrap;
+  background: #f1f3f8;
+  color: #6c7b93;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* =========================================================
    FILTER BAR
+   SEARCH + STATUS SIDE BY SIDE
 ========================================================= */
 
 .inrfs-monthly-billing-filter-bar {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) 220px;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  align-items: center;
   gap: 12px;
-  padding: 0 22px 17px;
+  padding: 0 24px 20px;
+}
+
+.inrfs-monthly-billing-search,
+.inrfs-monthly-billing-status-select-wrap {
+  min-width: 0;
 }
 
 .inrfs-monthly-billing-search {
-  position: relative;
+  height: 48px;
   display: flex;
   align-items: center;
+  gap: 11px;
+  padding: 0 14px;
+  border: 1px solid #dbe2ec;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #8292aa;
+  transition: border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-.inrfs-monthly-billing-search > svg {
-  position: absolute;
-  left: 12px;
-  color: #8190a5;
-  pointer-events: none;
+.inrfs-monthly-billing-search:focus-within {
+  border-color: #7042ed;
+  box-shadow: 0 0 0 3px rgba(112, 66, 237, 0.09);
 }
 
 .inrfs-monthly-billing-search input {
+  min-width: 0;
   width: 100%;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 0 38px 0 36px;
-  border: 1px solid #dfe5ec;
-  border-radius: 8px;
-  outline: none;
-  background: #ffffff;
-  color: #172033;
-  font-size: 12px;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  color: #334159;
+  background: transparent;
+  font-size: 14px;
 }
 
-.inrfs-monthly-billing-search input:focus {
-  border-color: #10aeef;
-  box-shadow: 0 0 0 3px rgba(16, 174, 239, 0.08);
+.inrfs-monthly-billing-search input::placeholder {
+  color: #9aa6b8;
 }
 
-.inrfs-monthly-billing-search > button {
-  position: absolute;
-  right: 9px;
+.inrfs-monthly-billing-search button {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background: transparent;
-  color: #8190a5;
+  border: 0;
+  border-radius: 7px;
+  background: #f1f3f7;
+  color: #75839a;
   cursor: pointer;
 }
 
 .inrfs-monthly-billing-status-filter {
   width: 100%;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 0 10px;
-  border: 1px solid #dfe5ec;
-  border-radius: 8px;
-  outline: none;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #dbe2ec;
+  border-radius: 11px;
+  outline: 0;
   background: #ffffff;
-  color: #536176;
-  font-size: 12px;
+  color: #52617a;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.inrfs-monthly-billing-status-filter:focus {
+  border-color: #7042ed;
+  box-shadow: 0 0 0 3px rgba(112, 66, 237, 0.09);
 }
 
 /* =========================================================
@@ -354,141 +406,157 @@
 .inrfs-monthly-billing-table-wrap {
   width: 100%;
   overflow-x: auto;
-  border-top: 1px solid #edf0f4;
+  overflow-y: hidden;
+  border-top: 1px solid #e7ebf1;
 }
 
 .inrfs-monthly-billing-table {
   width: 100%;
-  min-width: 1120px;
+  min-width: 1060px;
   border-collapse: collapse;
+  table-layout: auto;
+}
+
+.inrfs-monthly-billing-table thead {
+  background: #f8fafc;
 }
 
 .inrfs-monthly-billing-table th {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e9edf2;
-  background: #fafbfd;
-  color: #8190a5;
-  text-align: left;
-  font-size: 9px;
+  padding: 14px 13px;
+  border-bottom: 1px solid #e3e8ef;
+  color: #8191aa;
+  font-size: 11px;
   font-weight: 750;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.045em;
+  text-align: left;
   white-space: nowrap;
 }
 
 .inrfs-monthly-billing-table td {
-  padding: 14px;
-  border-bottom: 1px solid #eef1f5;
-  color: #526075;
-  font-size: 11px;
+  padding: 16px 13px;
+  border-bottom: 1px solid #e9edf3;
   vertical-align: middle;
+  color: #46566f;
+  font-size: 13px;
 }
 
-.inrfs-monthly-billing-table tbody tr:last-child td {
-  border-bottom: none;
+.inrfs-monthly-billing-table tbody tr {
+  transition: background 0.15s ease;
 }
 
 .inrfs-monthly-billing-table tbody tr:hover {
   background: #fbfcfe;
 }
 
+.inrfs-monthly-billing-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
 /* =========================================================
-   FINANCER CELL
+   FINANCER
 ========================================================= */
 
 .inrfs-monthly-billing-financer-cell {
+  min-width: 185px;
   display: flex;
   align-items: center;
-  gap: 9px;
-  min-width: 190px;
+  gap: 11px;
 }
 
 .inrfs-monthly-billing-financer-avatar {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
-  background: rgba(16, 174, 239, 0.09);
-  color: #10aeef;
+  border-radius: 11px;
+  color: #08a7df;
+  background: #e9f8fe;
+}
+
+.inrfs-monthly-billing-financer-avatar.large {
+  width: 46px;
+  height: 46px;
+  flex-basis: 46px;
+}
+
+.inrfs-monthly-billing-financer-cell > div:last-child {
+  min-width: 0;
 }
 
 .inrfs-monthly-billing-financer-cell strong {
   display: block;
-  color: #202b3d;
-  font-size: 11px;
-  font-weight: 650;
+  max-width: 220px;
+  overflow: hidden;
+  color: #27344a;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .inrfs-monthly-billing-financer-cell span {
   display: block;
-  margin-top: 2px;
-  color: #8190a5;
-  font-size: 9px;
+  margin-top: 3px;
+  color: #91a0b5;
+  font-size: 11px;
 }
 
 .inrfs-monthly-billing-financer-cell small {
   display: block;
   margin-top: 2px;
-  color: #a2acb9;
-  font-size: 8px;
+  color: #a4afbf;
+  font-size: 10px;
 }
 
 /* =========================================================
-   MONTH
+   TABLE VALUES
 ========================================================= */
 
 .inrfs-monthly-billing-month-cell {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  color: #65758f;
   white-space: nowrap;
 }
 
-.inrfs-monthly-billing-month-cell svg {
-  color: #8190a5;
-}
-
-/* =========================================================
-   MONEY VALUES
-========================================================= */
-
 .inrfs-monthly-billing-interest-value {
-  color: #445167;
-  font-size: 11px;
+  color: #4c5c75;
+  white-space: nowrap;
 }
 
 .inrfs-monthly-billing-percentage {
   display: inline-flex;
-  min-height: 25px;
   align-items: center;
-  padding: 0 8px;
-  border-radius: 6px;
-  background: rgba(125, 31, 232, 0.08);
-  color: #7d1fe8;
-  font-size: 10px;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: #7332e8;
+  background: #f3ebff;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .inrfs-monthly-billing-charge-value {
-  color: #7d1fe8;
-  font-size: 11px;
+  color: #7529ed;
+  white-space: nowrap;
 }
 
 .inrfs-monthly-billing-collected-value {
-  color: #148b4d;
-  font-size: 11px;
+  color: #129457;
+  white-space: nowrap;
 }
 
 .inrfs-monthly-billing-outstanding-value {
-  color: #d45b0b;
-  font-size: 11px;
+  color: #db6418;
+  white-space: nowrap;
 }
 
 .inrfs-monthly-billing-zero-value {
-  color: #8190a5;
-  font-size: 11px;
+  color: #8b99ad;
+  white-space: nowrap;
 }
 
 /* =========================================================
@@ -496,102 +564,87 @@
 ========================================================= */
 
 .inrfs-monthly-billing-status {
+  width: max-content;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 27px;
-  padding: 0 9px;
-  box-sizing: border-box;
+  gap: 6px;
+  padding: 7px 10px;
   border-radius: 999px;
-  font-size: 9px;
-  font-weight: 650;
+  font-size: 11px;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .inrfs-monthly-billing-status.is-paid {
-  color: #148b4d;
-  background: rgba(24, 196, 106, 0.1);
-}
-
-.inrfs-monthly-billing-status.is-pending {
-  color: #b86b05;
-  background: rgba(255, 170, 0, 0.11);
+  color: #168b57;
+  background: #e8f8ef;
 }
 
 .inrfs-monthly-billing-status.is-partial {
-  color: #9a6a05;
-  background: rgba(255, 193, 7, 0.12);
+  color: #a56b00;
+  background: #fff5dc;
+}
+
+.inrfs-monthly-billing-status.is-pending {
+  color: #687891;
+  background: #eef2f7;
 }
 
 .inrfs-monthly-billing-status.is-overdue {
-  color: #d54848;
-  background: rgba(224, 76, 76, 0.1);
+  color: #d25a40;
+  background: #ffebe6;
 }
 
-/* =========================================================
-   ROW ACTIONS
-========================================================= */
-
-.inrfs-monthly-billing-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.inrfs-monthly-billing-due-date {
+  display: block;
+  margin-top: 5px;
+  color: #9aa7b8;
+  font-size: 10px;
   white-space: nowrap;
 }
 
-.inrfs-monthly-billing-view-btn {
+/* =========================================================
+   MANAGE BUTTON
+========================================================= */
+
+.inrfs-monthly-billing-manage-btn {
+  height: 38px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  min-height: 31px;
-  padding: 0 9px;
-  border: 1px solid #dfe5ec;
-  border-radius: 7px;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #ded3ff;
+  border-radius: 9px;
   background: #ffffff;
-  color: #536176;
-  font-size: 10px;
-  font-weight: 650;
+  color: #6832df;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
+  transition: 0.18s ease;
 }
 
-.inrfs-monthly-billing-view-btn:hover {
-  border-color: #cbd4df;
-  background: #f7f9fc;
-}
-
-.inrfs-monthly-billing-download-icon-btn {
-  width: 31px;
-  height: 31px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(125, 31, 232, 0.18);
-  border-radius: 7px;
-  background: rgba(125, 31, 232, 0.05);
-  color: #7d1fe8;
-  cursor: pointer;
-}
-
-.inrfs-monthly-billing-download-icon-btn:hover {
-  background: rgba(125, 31, 232, 0.1);
+.inrfs-monthly-billing-manage-btn:hover {
+  border-color: #7039e8;
+  background: #f7f2ff;
+  transform: translateY(-1px);
 }
 
 /* =========================================================
-   EMPTY STATE
+   EMPTY
 ========================================================= */
 
 .inrfs-monthly-billing-empty {
-  height: 190px;
+  height: 220px;
   text-align: center !important;
-  color: #8190a5 !important;
 }
 
 .inrfs-monthly-billing-empty svg {
   display: block;
   margin: 0 auto 10px;
-  color: #b0bac7;
+  color: #a5b0c0;
 }
 
 .inrfs-monthly-billing-empty strong,
@@ -600,95 +653,227 @@
 }
 
 .inrfs-monthly-billing-empty strong {
-  margin-bottom: 4px;
-  color: #536176;
-  font-size: 13px;
+  color: #4a5870;
+}
+
+.inrfs-monthly-billing-empty span {
+  margin-top: 5px;
+  color: #9aa7b8;
+  font-size: 12px;
 }
 
 /* =========================================================
-   MOBILE CARDS
+   MOBILE LIST
 ========================================================= */
 
 .inrfs-monthly-billing-mobile-list {
   display: none;
 }
 
+.inrfs-monthly-billing-mobile-card {
+  margin: 12px;
+  padding: 15px;
+  border: 1px solid #e1e7ef;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.inrfs-monthly-billing-mobile-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.inrfs-monthly-billing-mobile-period {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #edf0f4;
+  color: #72829a;
+  font-size: 11px;
+}
+
+.inrfs-monthly-billing-mobile-period div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inrfs-monthly-billing-mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.inrfs-monthly-billing-mobile-grid > div {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #edf0f4;
+  border-radius: 9px;
+  background: #fafbfd;
+}
+
+.inrfs-monthly-billing-mobile-grid span {
+  display: block;
+  color: #8b99ad;
+  font-size: 10px;
+}
+
+.inrfs-monthly-billing-mobile-grid strong {
+  display: block;
+  margin-top: 4px;
+  color: #384760;
+  font-size: 13px;
+}
+
+.inrfs-monthly-billing-mobile-grid strong.is-collected {
+  color: #129457;
+}
+
+.inrfs-monthly-billing-mobile-grid strong.is-outstanding {
+  color: #db6418;
+}
+
+.inrfs-monthly-billing-mobile-grid strong.is-zero {
+  color: #8b99ad;
+}
+
+.inrfs-monthly-billing-mobile-payment-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 11px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: #fff8e9;
+  color: #9d6a08;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.inrfs-monthly-billing-mobile-manage-btn {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+  border: 1px solid #dfd3ff;
+  border-radius: 9px;
+  background: #f8f4ff;
+  color: #6733dc;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inrfs-monthly-billing-mobile-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  gap: 6px;
+  color: #8c99ad;
+}
+
+.inrfs-monthly-billing-mobile-empty strong {
+  color: #4e5d74;
+}
+
 /* =========================================================
-   BILLING NOTE
+   NOTE
 ========================================================= */
 
 .inrfs-monthly-billing-note {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-top: 15px;
-  padding: 13px 15px;
-  border: 1px solid rgba(16, 174, 239, 0.15);
-  border-radius: 9px;
-  background: rgba(16, 174, 239, 0.04);
-  color: #526175;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid #e2e7ef;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #8190a7;
 }
 
-.inrfs-monthly-billing-note > svg {
+.inrfs-monthly-billing-note svg {
   flex: 0 0 auto;
   margin-top: 1px;
-  color: #10aeef;
+  color: #7436e5;
 }
 
 .inrfs-monthly-billing-note strong {
   display: block;
-  margin-bottom: 3px;
-  color: #36445a;
-  font-size: 11px;
+  color: #52617a;
+  font-size: 12px;
 }
 
 .inrfs-monthly-billing-note span {
   display: block;
-  color: #8190a5;
-  font-size: 10px;
+  margin-top: 3px;
+  color: #8d9aae;
+  font-size: 11px;
   line-height: 1.5;
 }
 
 /* =========================================================
-   MODAL
+   MODAL OVERLAY
 ========================================================= */
 
 .inrfs-monthly-billing-modal-overlay {
   position: fixed;
-  z-index: 3000;
+  z-index: 9999;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px;
-  box-sizing: border-box;
-  background: rgba(15, 23, 42, 0.48);
-  backdrop-filter: blur(2px);
+  padding: 20px;
+  background: rgba(18, 28, 45, 0.48);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
 }
 
-.inrfs-monthly-billing-modal {
-  width: min(570px, 100%);
-  max-height: calc(100vh - 44px);
-  overflow-y: auto;
-  border: 1px solid #e2e7ee;
-  border-radius: 13px;
+/* =========================================================
+   PAYMENT MODAL
+========================================================= */
+
+.inrfs-monthly-billing-payment-modal {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dfe5ee;
+  border-radius: 17px;
   background: #ffffff;
-  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 24px 70px rgba(23, 34, 55, 0.2);
+  overflow: hidden;
 }
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
 
 .inrfs-monthly-billing-modal-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 18px;
-  padding: 20px 22px;
-  border-bottom: 1px solid #edf0f4;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e8ecf2;
 }
 
 .inrfs-monthly-billing-modal-title {
   display: flex;
   align-items: center;
   gap: 11px;
+  min-width: 0;
 }
 
 .inrfs-monthly-billing-modal-icon {
@@ -698,146 +883,339 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  background: rgba(125, 31, 232, 0.09);
-  color: #7d1fe8;
+  border-radius: 11px;
+  color: #7037e6;
+  background: #f0e8ff;
 }
 
-.inrfs-monthly-billing-modal-header h2 {
+.inrfs-monthly-billing-modal-title h2 {
   margin: 0;
-  color: #172033;
+  color: #202d43;
   font-size: 17px;
 }
 
-.inrfs-monthly-billing-modal-header p {
-  margin: 4px 0 0;
-  color: #8190a5;
-  font-size: 10px;
+.inrfs-monthly-billing-modal-title p {
+  margin: 3px 0 0;
+  color: #94a0b1;
+  font-size: 11px;
 }
 
 .inrfs-monthly-billing-modal-close {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e1e6ed;
-  border-radius: 7px;
-  background: #ffffff;
-  color: #68768a;
+  border: 0;
+  border-radius: 8px;
+  background: #f4f6f9;
+  color: #718097;
   cursor: pointer;
 }
 
-.inrfs-monthly-billing-modal-close:hover {
-  background: #f7f9fc;
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.inrfs-monthly-billing-payment-body {
+  padding: 20px;
+  overflow-y: auto;
 }
 
-.inrfs-monthly-billing-statement-body {
-  padding: 22px;
+/* =========================================================
+   FINANCER INFO
+========================================================= */
+
+.inrfs-monthly-billing-payment-financer {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px;
+  border: 1px solid #e6eaf1;
+  border-radius: 12px;
+  background: #fafbfd;
 }
 
-.inrfs-monthly-billing-statement-financer {
-  padding-bottom: 17px;
-  border-bottom: 1px solid #edf0f4;
+.inrfs-monthly-billing-payment-financer > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
 }
 
-.inrfs-monthly-billing-statement-financer span {
+.inrfs-monthly-billing-payment-financer > div:nth-child(2) span {
   display: block;
-  margin-bottom: 5px;
-  color: #8190a5;
+  color: #91a0b4;
   font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
-.inrfs-monthly-billing-statement-financer strong {
+.inrfs-monthly-billing-payment-financer > div:nth-child(2) strong {
   display: block;
-  color: #202b3d;
+  margin-top: 2px;
+  color: #2a374d;
+  font-size: 13px;
+}
+
+.inrfs-monthly-billing-payment-financer > div:nth-child(2) small {
+  display: block;
+  margin-top: 3px;
+  color: #98a4b5;
+  font-size: 10px;
+}
+
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+.inrfs-monthly-billing-payment-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.inrfs-monthly-billing-payment-summary > div {
+  padding: 12px;
+  border: 1px solid #e8ecf2;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.inrfs-monthly-billing-payment-summary span {
+  display: block;
+  color: #8b99ad;
+  font-size: 10px;
+}
+
+.inrfs-monthly-billing-payment-summary strong {
+  display: block;
+  margin-top: 4px;
+  color: #35435b;
   font-size: 15px;
 }
 
-.inrfs-monthly-billing-statement-financer small {
+.inrfs-monthly-billing-payment-summary .is-collected strong {
+  color: #139257;
+}
+
+.inrfs-monthly-billing-payment-summary .is-outstanding strong {
+  color: #d9691a;
+}
+
+/* =========================================================
+   PAYMENT SECTIONS
+========================================================= */
+
+.inrfs-monthly-billing-payment-section,
+.inrfs-monthly-billing-reschedule-section {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.inrfs-monthly-billing-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.inrfs-monthly-billing-section-heading h3 {
+  margin: 0;
+  color: #2c394f;
+  font-size: 13px;
+}
+
+.inrfs-monthly-billing-section-heading p {
+  margin: 4px 0 0;
+  color: #909daf;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.inrfs-monthly-billing-section-heading > svg {
+  flex: 0 0 auto;
+  color: #7040e4;
+}
+
+.inrfs-monthly-billing-full-payment-btn {
+  height: 33px;
+  padding: 0 10px;
+  border: 1px solid #d9caee;
+  border-radius: 8px;
+  background: #f8f3ff;
+  color: #6c35db;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.inrfs-monthly-billing-payment-field {
+  margin-top: 13px;
+}
+
+.inrfs-monthly-billing-payment-field label {
   display: block;
-  margin-top: 3px;
-  color: #9aa5b4;
+  margin-bottom: 6px;
+  color: #58677e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.inrfs-monthly-billing-currency-input,
+.inrfs-monthly-billing-date-input {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 12px;
+  border: 1px solid #dbe2ec;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #8c9aae;
+}
+
+.inrfs-monthly-billing-currency-input:focus-within,
+.inrfs-monthly-billing-date-input:focus-within {
+  border-color: #7042ed;
+  box-shadow: 0 0 0 3px rgba(112, 66, 237, 0.08);
+}
+
+.inrfs-monthly-billing-currency-input input,
+.inrfs-monthly-billing-date-input input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #35435a;
+  font-size: 13px;
+}
+
+.inrfs-monthly-billing-payment-field > small {
+  display: block;
+  margin-top: 5px;
+  color: #98a5b6;
   font-size: 10px;
 }
 
-.inrfs-monthly-billing-statement-period {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  padding: 17px 0;
-  border-bottom: 1px solid #edf0f4;
+/* =========================================================
+   LIVE RESULT
+========================================================= */
+
+.inrfs-monthly-billing-payment-result {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 15px;
+  padding: 13px;
+  border-radius: 11px;
 }
 
-.inrfs-monthly-billing-statement-period span,
-.inrfs-monthly-billing-statement-grid span {
+.inrfs-monthly-billing-payment-result-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+}
+
+.inrfs-monthly-billing-payment-result > div:last-child {
+  min-width: 0;
+}
+
+.inrfs-monthly-billing-payment-result span {
   display: block;
-  margin-bottom: 5px;
-  color: #8190a5;
-  font-size: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.inrfs-monthly-billing-statement-period strong {
-  color: #36445a;
-  font-size: 12px;
-}
-
-.inrfs-monthly-billing-statement-period
-  .inrfs-monthly-billing-status {
-  width: fit-content;
-}
-
-.inrfs-monthly-billing-statement-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 20px;
-  padding: 18px 0;
-}
-
-.inrfs-monthly-billing-statement-grid > div:last-child {
-  grid-column: 1 / -1;
-}
-
-.inrfs-monthly-billing-statement-grid strong {
-  color: #202b3d;
+.inrfs-monthly-billing-payment-result strong {
+  display: block;
+  margin-top: 2px;
   font-size: 14px;
 }
 
-.inrfs-monthly-billing-statement-total {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 14px 15px;
-  border-radius: 9px;
-  background: #f7f4ff;
+.inrfs-monthly-billing-payment-result small {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.45;
 }
 
-.inrfs-monthly-billing-statement-total span {
-  color: #536176;
-  font-size: 11px;
-  font-weight: 650;
+.inrfs-monthly-billing-payment-result.is-paid {
+  color: #148b56;
+  background: #eefaf4;
 }
 
-.inrfs-monthly-billing-statement-total strong {
-  color: #7d1fe8;
-  font-size: 17px;
+.inrfs-monthly-billing-payment-result.is-paid
+  .inrfs-monthly-billing-payment-result-icon {
+  background: #dff5e9;
 }
+
+.inrfs-monthly-billing-payment-result.is-partial {
+  color: #a36b05;
+  background: #fff8e7;
+}
+
+.inrfs-monthly-billing-payment-result.is-partial
+  .inrfs-monthly-billing-payment-result-icon {
+  background: #ffefc7;
+}
+
+.inrfs-monthly-billing-payment-result.is-pending {
+  color: #687991;
+  background: #f3f5f8;
+}
+
+.inrfs-monthly-billing-payment-result.is-pending
+  .inrfs-monthly-billing-payment-result-icon {
+  background: #e8ecf2;
+}
+
+.inrfs-monthly-billing-payment-result.is-overdue {
+  color: #cf5a40;
+  background: #fff0ec;
+}
+
+.inrfs-monthly-billing-payment-result.is-overdue
+  .inrfs-monthly-billing-payment-result-icon {
+  background: #ffe0d8;
+}
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
 
 .inrfs-monthly-billing-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid #e8ecf2;
+  background: #fbfcfe;
+}
+
+.inrfs-monthly-billing-footer-right {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  padding: 17px 22px;
-  border-top: 1px solid #edf0f4;
 }
 
 .inrfs-monthly-billing-secondary-btn,
-.inrfs-monthly-billing-download-btn {
-  min-height: 39px;
+.inrfs-monthly-billing-cancel-btn,
+.inrfs-monthly-billing-save-btn {
+  height: 38px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -845,108 +1223,86 @@
   padding: 0 13px;
   border-radius: 8px;
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .inrfs-monthly-billing-secondary-btn {
-  border: 1px solid #dfe5ec;
+  border: 1px solid #dfe4ec;
   background: #ffffff;
-  color: #536176;
+  color: #68778f;
 }
 
-.inrfs-monthly-billing-secondary-btn:hover {
-  background: #f7f9fc;
+.inrfs-monthly-billing-cancel-btn {
+  border: 1px solid #dfe4ec;
+  background: #ffffff;
+  color: #68778f;
 }
 
-.inrfs-monthly-billing-download-btn {
-  border: 1px solid #7d1fe8;
-  background: #7d1fe8;
+.inrfs-monthly-billing-save-btn {
+  border: 1px solid #6d35e4;
+  background: #6d35e4;
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(109, 53, 228, 0.18);
 }
 
-.inrfs-monthly-billing-download-btn:hover {
-  background: #6e18d0;
+.inrfs-monthly-billing-save-btn:hover {
+  background: #5e2dca;
 }
 
 /* =========================================================
-   RESPONSIVE — TABLET
+   TABLET
 ========================================================= */
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
+  .inrfs-monthly-billing-page {
+    padding: 20px;
+  }
+
   .inrfs-monthly-billing-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .inrfs-monthly-billing-table {
-    min-width: 1000px;
-  }
-}
-
-@media (max-width: 900px) {
-  .inrfs-monthly-billing-page {
-    padding: 22px;
-  }
-
-  .inrfs-monthly-billing-header {
-    align-items: flex-start;
-  }
-
-  .inrfs-monthly-billing-overview {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .inrfs-monthly-billing-overview-items {
-    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .inrfs-monthly-billing-overview-item {
-    flex: 1;
+  .inrfs-monthly-billing-filter-bar {
+    grid-template-columns: minmax(0, 1fr) 260px;
   }
 }
 
 /* =========================================================
-   RESPONSIVE — MOBILE
+   MOBILE
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .inrfs-monthly-billing-page {
-    padding: 16px;
+    padding: 14px;
   }
 
   .inrfs-monthly-billing-header {
-    flex-direction: column;
     align-items: stretch;
-    gap: 15px;
-  }
-
-  .inrfs-monthly-billing-title-icon {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-  }
-
-  .inrfs-monthly-billing-header h1 {
-    font-size: 21px;
-  }
-
-  .inrfs-monthly-billing-header p {
-    font-size: 11px;
+    flex-direction: column;
+    gap: 13px;
   }
 
   .inrfs-monthly-billing-header-month {
     width: 100%;
   }
 
+  .inrfs-monthly-billing-header-copy h1 {
+    font-size: 21px;
+  }
+
   .inrfs-monthly-billing-summary {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 9px;
   }
 
   .inrfs-monthly-billing-summary-card {
+    min-height: 100px;
     padding: 13px;
-    gap: 9px;
   }
 
   .inrfs-monthly-billing-summary-icon {
@@ -955,41 +1311,42 @@
     flex-basis: 34px;
   }
 
-  .inrfs-monthly-billing-summary-content span {
-    font-size: 8px;
-  }
-
   .inrfs-monthly-billing-summary-content strong {
-    font-size: 15px;
-  }
-
-  .inrfs-monthly-billing-summary-content small {
-    font-size: 9px;
+    font-size: 16px;
   }
 
   .inrfs-monthly-billing-overview {
-    padding: 16px;
+    padding: 14px;
+  }
+
+  .inrfs-monthly-billing-overview-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inrfs-monthly-billing-flow-hint {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #f7f8fb;
   }
 
   .inrfs-monthly-billing-overview-items {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .inrfs-monthly-billing-overview-item {
-    width: 100%;
-    box-sizing: border-box;
+    grid-template-columns: 1fr 1fr;
   }
 
   .inrfs-monthly-billing-card-header {
     align-items: flex-start;
     flex-direction: column;
-    padding: 17px;
+    gap: 9px;
+    padding: 18px 14px 14px;
   }
 
   .inrfs-monthly-billing-filter-bar {
     grid-template-columns: 1fr;
-    padding: 0 17px 16px;
+    gap: 9px;
+    padding: 0 14px 14px;
   }
 
   .inrfs-monthly-billing-table-wrap {
@@ -997,98 +1354,12 @@
   }
 
   .inrfs-monthly-billing-mobile-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0 12px 12px;
-  }
-
-  .inrfs-monthly-billing-mobile-card {
-    padding: 15px;
-    border: 1px solid #e7ebf0;
-    border-radius: 10px;
-    background: #ffffff;
-  }
-
-  .inrfs-monthly-billing-mobile-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .inrfs-monthly-billing-mobile-invoice {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 13px;
-    padding-top: 12px;
-    border-top: 1px solid #edf0f4;
-  }
-
-  .inrfs-monthly-billing-mobile-invoice span {
-    color: #8190a5;
-    font-size: 9px;
-  }
-
-  .inrfs-monthly-billing-mobile-invoice strong {
-    color: #536176;
-    font-size: 10px;
-  }
-
-  .inrfs-monthly-billing-mobile-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 14px;
-  }
-
-  .inrfs-monthly-billing-mobile-grid > div {
-    min-width: 0;
-    padding: 9px;
-    border-radius: 7px;
-    background: #f9fafc;
-  }
-
-  .inrfs-monthly-billing-mobile-grid span {
     display: block;
-    margin-bottom: 4px;
-    color: #8190a5;
-    font-size: 9px;
-  }
-
-  .inrfs-monthly-billing-mobile-grid strong {
-    display: block;
-    color: #273347;
-    font-size: 11px;
-  }
-
-  .inrfs-monthly-billing-mobile-grid strong.is-collected {
-    color: #148b4d;
-  }
-
-  .inrfs-monthly-billing-mobile-grid strong.is-outstanding {
-    color: #d45b0b;
-  }
-
-  .inrfs-monthly-billing-mobile-grid strong.is-zero {
-    color: #8190a5;
-  }
-
-  .inrfs-monthly-billing-mobile-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 13px;
-  }
-
-  .inrfs-monthly-billing-mobile-actions
-    .inrfs-monthly-billing-view-btn {
-    flex: 1;
+    border-top: 1px solid #e7ebf1;
   }
 
   .inrfs-monthly-billing-note {
-    font-size: 10px;
+    padding: 12px;
   }
 
   .inrfs-monthly-billing-modal-overlay {
@@ -1096,70 +1367,598 @@
     padding: 0;
   }
 
-  .inrfs-monthly-billing-modal {
+  .inrfs-monthly-billing-payment-modal {
     width: 100%;
-    max-height: 92vh;
-    border-radius: 15px 15px 0 0;
+    max-height: 94vh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .inrfs-monthly-billing-payment-body {
+    padding: 15px;
   }
 
   .inrfs-monthly-billing-modal-header {
-    padding: 18px;
+    padding: 15px;
   }
 
-  .inrfs-monthly-billing-statement-body {
-    padding: 18px;
+  .inrfs-monthly-billing-payment-summary {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .inrfs-monthly-billing-statement-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .inrfs-monthly-billing-statement-grid
-    > div:last-child {
-    grid-column: auto;
+  .inrfs-monthly-billing-payment-summary > div:first-child {
+    grid-column: 1 / -1;
   }
 
   .inrfs-monthly-billing-modal-footer {
-    flex-direction: column-reverse;
-    padding: 15px 18px;
-  }
-
-  .inrfs-monthly-billing-modal-footer button {
-    width: 100%;
+    padding: 12px 15px;
   }
 }
 
 /* =========================================================
-   RESPONSIVE — SMALL MOBILE
+   SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+  .inrfs-monthly-billing-page {
+    padding: 10px;
+  }
+
+  .inrfs-monthly-billing-title-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
   .inrfs-monthly-billing-summary {
     grid-template-columns: 1fr;
   }
 
-  .inrfs-monthly-billing-mobile-grid {
+  .inrfs-monthly-billing-overview-items {
     grid-template-columns: 1fr;
   }
 
-  .inrfs-monthly-billing-financer-cell {
-    min-width: 0;
+  .inrfs-monthly-billing-mobile-card {
+    margin: 10px;
+    padding: 13px;
   }
 
-  .inrfs-monthly-billing-financer-cell strong {
-    max-width: 170px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .inrfs-monthly-billing-mobile-top {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .inrfs-monthly-billing-status {
-    font-size: 8px;
-    padding: 0 7px;
+  .inrfs-monthly-billing-mobile-top
+    .inrfs-monthly-billing-status {
+    align-self: flex-start;
   }
 
-  .inrfs-monthly-billing-statement-period {
-    grid-template-columns: 1fr;
+  .inrfs-monthly-billing-payment-financer {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
+
+  .inrfs-monthly-billing-payment-financer
+    .inrfs-monthly-billing-status {
+    margin-left: 57px;
+  }
+
+  .inrfs-monthly-billing-section-heading {
+    flex-direction: column;
+  }
+
+  .inrfs-monthly-billing-full-payment-btn {
+    width: 100%;
+  }
+
+  .inrfs-monthly-billing-modal-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inrfs-monthly-billing-footer-right {
+    width: 100%;
+  }
+
+  .inrfs-monthly-billing-cancel-btn,
+  .inrfs-monthly-billing-save-btn {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .inrfs-monthly-billing-search,
+  .inrfs-monthly-billing-table tbody tr,
+  .inrfs-monthly-billing-manage-btn {
+    transition: none;
+  }
+}
+
+
+
+.inrfs-monthly-billing-filter-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px 20px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.inrfs-monthly-billing-filter-row
+  .inrfs-monthly-billing-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dce3ed;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #8392aa;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.inrfs-monthly-billing-filter-row
+  .inrfs-monthly-billing-search:focus-within {
+  border-color: #7042ed;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(112, 66, 237, 0.08);
+}
+
+.inrfs-monthly-billing-filter-row
+  .inrfs-monthly-billing-search input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #34425a;
+
+  font-size: 14px;
+}
+
+.inrfs-monthly-billing-filter-row
+  .inrfs-monthly-billing-search input::placeholder {
+  color: #9aa8ba;
+}
+
+.inrfs-monthly-billing-filter-row
+  .inrfs-monthly-billing-search button {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: #f2f4f8;
+  color: #74839a;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   STATUS AREA
+========================================================= */
+
+.inrfs-monthly-billing-status-group {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  white-space: nowrap;
+}
+
+.inrfs-monthly-billing-status-label {
+  color: #7f90a9;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS PILLS
+========================================================= */
+
+.inrfs-monthly-billing-status-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 4px;
+
+  border: 1px solid #e6e9ef;
+  border-radius: 999px;
+
+  background: #f7f8fb;
+
+  white-space: nowrap;
+}
+
+.inrfs-monthly-billing-status-pills button {
+  height: 32px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 11px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: #697991;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.inrfs-monthly-billing-status-pills
+  button:hover {
+  color: #6131d5;
+  background: #eee8fb;
+}
+
+.inrfs-monthly-billing-status-pills
+  button.is-active {
+  color: #ffffff;
+  background: #6d35e5;
+
+  box-shadow:
+    0 3px 8px
+    rgba(109, 53, 229, 0.2);
+}
+
+/* =========================================================
+   BILLING PERIOD HEADER
+========================================================= */
+
+.inrfs-monthly-billing-header-month {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.inrfs-monthly-billing-period-label {
+  display: block;
+
+  color: #8292aa;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1;
+
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+
+/* =========================================================
+   TRIGGER
+========================================================= */
+
+.inrfs-billing-period-picker {
+  position: relative;
+  z-index: 50;
+}
+
+.inrfs-billing-period-trigger {
+  width: 184px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d9e1ec;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #53647d;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.inrfs-billing-period-trigger:hover {
+  border-color: #c9b8ed;
+  background: #fcfbff;
+}
+
+.inrfs-billing-period-trigger.is-open {
+  border-color: #6d35e5;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(109, 53, 229, 0.08);
+}
+
+.inrfs-billing-period-trigger
+  > svg:first-child {
+  color: #71839e;
+  flex-shrink: 0;
+}
+
+.inrfs-billing-period-trigger span {
+  flex: 1;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.inrfs-billing-period-chevron {
+  color: #7889a0;
+
+  flex-shrink: 0;
+
+  transition:
+    transform 0.18s ease;
+}
+
+.inrfs-billing-period-chevron.is-rotated {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   DROPDOWN
+========================================================= */
+
+.inrfs-billing-period-menu {
+  position: absolute;
+
+  top: calc(100% + 7px);
+  right: 0;
+
+  width: 286px;
+
+  padding: 12px;
+
+  border: 1px solid #e1e6ee;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 16px 38px
+    rgba(24, 36, 55, 0.13);
+}
+
+
+/* =========================================================
+   YEAR
+========================================================= */
+
+.inrfs-billing-period-year-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 11px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.inrfs-billing-period-year-btn {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: #f5f6f8;
+
+  color: #66778f;
+
+  cursor: pointer;
+}
+
+.inrfs-billing-period-year-btn:hover {
+  background: #eee8fb;
+  color: #6733dc;
+}
+
+.inrfs-billing-period-year {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inrfs-billing-period-year span {
+  color: #98a4b5;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.inrfs-billing-period-year strong {
+  margin-top: 2px;
+
+  color: #25334a;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   MONTHS
+========================================================= */
+
+.inrfs-billing-period-month-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 6px;
+
+  padding: 13px 0;
+}
+
+.inrfs-billing-period-month {
+  position: relative;
+
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: #f7f8fa;
+
+  color: #63738b;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.inrfs-billing-period-month:hover {
+  background: #f2ecfc;
+  color: #6532d8;
+}
+
+.inrfs-billing-period-month.is-selected {
+  background: #6d35e5;
+  color: #ffffff;
+
+  box-shadow:
+    0 3px 8px
+    rgba(109, 53, 229, 0.18);
+}
+
+.inrfs-billing-period-month i {
+  position: absolute;
+
+  right: 5px;
+  bottom: 5px;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+
+  background: #6d35e5;
+}
+
+.inrfs-billing-period-month.is-selected i {
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   ALL PERIODS
+========================================================= */
+
+.inrfs-billing-period-footer {
+  padding-top: 9px;
+
+  border-top: 1px solid #edf0f4;
+}
+
+.inrfs-billing-period-footer button {
+  width: 100%;
+  height: 34px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #6e7e95;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.inrfs-billing-period-footer button:hover,
+.inrfs-billing-period-footer button.is-active {
+  background: #f3edfc;
+  color: #6733dc;
 }

@@ -48,7 +48,7 @@ import Settings from './financer/pages/Settings/Settings';
 // IMPORTANT:
 // AdminLayout must be imported before it is used below.
 import AdminLayout from './admin/layouts/AdminLayout';
-
+import AdminManagement from './admin/pages/AdminManagement/AdminManagement';
 import AdminDashboard from './admin/pages/Dashboard/AdminDashboard';
 import AdminFinancers from './admin/pages/Financers/Financers';
 import AdminCustomers from './admin/pages/Customers/AdminCustomers';
@@ -321,7 +321,14 @@ export default function App() {
             path="dashboard"
             element={<AdminDashboard />}
           />
+{/* =================================================
+    ADMIN MANAGEMENT
+================================================== */}
 
+<Route
+  path="admin-management"
+  element={<AdminManagement />}
+/>
           {/* =================================================
               FINANCERS
           ================================================== */}

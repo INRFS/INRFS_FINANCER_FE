@@ -14,23 +14,19 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!email || !password) {
-      setError('Please enter email and password');
-      return;
-    }
+  if (!email || !password) {
+    setError('Please enter email and password');
+    return;
+  }
 
-    setError('');
+  setError('');
 
-    navigate('/admin/verify-otp', {
-      state: {
-        email,
-        portal: 'admin',
-      },
-    });
-  };
+  // Direct admin login
+  navigate('/admin/dashboard');
+};
 
 
   return (

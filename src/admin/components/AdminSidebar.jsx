@@ -12,6 +12,7 @@ import {
   Banknote,
   MessageSquare,
   FileText,
+  UserRoundCog,
 } from 'lucide-react';
 
 import './AdminSidebar.css';
@@ -63,11 +64,11 @@ const adminNavigation = [
     icon: CalendarDays,
   },
 
-  {
-    label: 'Collections',
-    path: '/admin/collections',
-    icon: Banknote,
-  },
+  // {
+  //   label: 'Collections',
+  //   path: '/admin/collections',
+  //   icon: Banknote,
+  // },
 
   // {
   //   label: 'SMS Management',
@@ -80,6 +81,11 @@ const adminNavigation = [
     path: '/admin/reports',
     icon: FileText,
   },
+  {
+  label: 'Admin Management',
+  path: '/admin/admin-management',
+  icon: UserRoundCog,
+},
 ];
 
 /* =========================================================
