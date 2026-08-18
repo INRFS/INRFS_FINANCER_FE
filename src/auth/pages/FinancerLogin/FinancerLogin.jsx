@@ -73,40 +73,36 @@ export default function FinancerLogin() {
      LOGIN
   ===================================================== */
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
+const handleLoginSubmit = (e) => {
+  e.preventDefault();
 
-    if (!mobile.trim() || !password.trim()) {
-      setLoginError(
-        'Please enter your mobile number and password.'
-      );
-      return;
-    }
+  const HARD_CODED_MOBILE = '9876543210';
+  const HARD_CODED_PASSWORD = 'admin123';
+
+  console.log('Entered mobile:', mobile);
+  console.log('Entered password:', password);
+
+  if (
+    mobile.trim() === HARD_CODED_MOBILE &&
+    password === HARD_CODED_PASSWORD
+  ) {
+    console.log('LOGIN SUCCESS');
+
+    // Temporary authentication for frontend development
+    localStorage.setItem(
+      'inrfs_financer_authenticated',
+      'true'
+    );
 
     setLoginError('');
 
-    /*
-      Replace this with your real login API later.
-
-      Example:
-
-      const response = await loginFinancer({
-        mobile,
-        password,
-      });
-
-      if (!response.success) {
-        setLoginError(response.message);
-        return;
-      }
-
-      Only after successful authentication should the user
-      be allowed to access the dashboard.
-    */
-
     navigate('/financer/dashboard');
-  };
+  } else {
+    console.log('LOGIN FAILED');
 
+    setLoginError('Invalid mobile number or password.');
+  }
+};
 
   /* =====================================================
      REGISTER INPUT CHANGE
