@@ -1,0 +1,77 @@
+/* Global Design Tokens & Base Resets */
+:root {
+  --color-navy: #071D43;
+  --color-cyan: #10AFE9;
+  --color-purple: #7D1FE8;
+  --color-green: #7BD000;
+  --color-orange: #FF790B;
+  --color-red: #FF4A4F;
+  --color-bg: #F7F9FC;
+  --color-border: #E1E7ED;
+  --color-muted: #7890AD;
+  --color-white: #FFFFFF;
+
+  --color-text-dark: #0B192C;
+  --color-text-muted: #64748B;
+  --color-text-light: #94A3B8;
+
+  --font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(7, 29, 67, 0.05);
+  --shadow-md: 0 4px 12px rgba(7, 29, 67, 0.08);
+  --shadow-lg: 0 10px 25px rgba(7, 29, 67, 0.12);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Common Utility Animations & Tooltips */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

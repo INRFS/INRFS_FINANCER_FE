@@ -1,0 +1,31 @@
+.billing-dashboard { min-height: 100%; padding: 18px; background: #f5f7fb; color: #132a4b; }
+.billing-dashboard-header, .billing-dashboard-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.billing-dashboard-header { margin-bottom: 20px; }
+.billing-dashboard-header span { color: #7c2df3; font-size: 10px; font-weight: 750; letter-spacing: .65px; }
+.billing-dashboard-header h1 { margin: 5px 0 3px; font-size: 27px; font-weight: 700; letter-spacing: -.45px; }
+.billing-dashboard-header p, .billing-dashboard-panel-header p { margin: 0; color: #71839d; font-size: 13px; }
+.billing-dashboard button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 13px; border: 1px solid #d8e1ed; border-radius: 8px; background: #fff; color: #263f63; font-size: 12px; font-weight: 650; cursor: pointer; }
+.billing-dashboard button:hover { border-color: #7c2df3; color: #6f2bde; }
+.billing-dashboard-error { padding: 12px 14px; border-radius: 8px; background: #fff0f1; color: #a61b29; }
+.billing-dashboard-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-bottom: 18px; }
+.billing-dashboard-card { display: flex; align-items: center; gap: 12px; min-height: 94px; padding: 14px; border: 1px solid #e0e6ee; border-left: 3px solid; border-radius: 10px; background: #fff; }
+.billing-dashboard-card > svg { box-sizing: content-box; flex: 0 0 auto; width: 19px; height: 19px; padding: 9px; border-radius: 9px; background: #f4f7fb; }
+.billing-dashboard-card div { display: flex; min-width: 0; flex-direction: column; }
+.billing-dashboard-card span { color: #687b96; font-size: 9px; font-weight: 750; letter-spacing: .15px; text-transform: uppercase; }
+.billing-dashboard-card strong { margin: 4px 0 2px; overflow: hidden; color: #10294d; font-size: 20px; font-weight: 700; letter-spacing: -.25px; text-overflow: ellipsis; white-space: nowrap; }
+.billing-dashboard-card small { color: #8492a7; font-size: 10px; line-height: 1.35; }
+.billing-dashboard-card.cyan { border-left-color: #10aeef; } .billing-dashboard-card.green { border-left-color: #62c92e; } .billing-dashboard-card.pink { border-left-color: #ec168c; } .billing-dashboard-card.purple { border-left-color: #7c2df3; } .billing-dashboard-card.orange { border-left-color: #ff8a00; } .billing-dashboard-card.red { border-left-color: #e44b55; }
+.billing-dashboard-panel { overflow: hidden; border: 1px solid #dfe6ef; border-radius: 12px; background: #fff; }
+.billing-dashboard-panel-header { padding: 15px 17px; }
+.billing-dashboard-panel-header h2 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.billing-dashboard-table-wrap { overflow-x: hidden; }
+.billing-dashboard table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; }
+.billing-dashboard th, .billing-dashboard td { padding: 11px 13px; border-top: 1px solid #edf1f5; text-align: left; font-size: 11px; }
+.billing-dashboard th { background: #f9fafc; color: #64758c; font-size: 9px; font-weight: 750; letter-spacing: .2px; text-transform: uppercase; }
+.billing-dashboard td { color: #405572; }
+.billing-status { display: inline-block; padding: 4px 8px; border-radius: 12px; background: #fff4d9; color: #976600; font-weight: 700; }
+.billing-status.paid { background: #e7f8eb; color: #16844a; } .billing-status.overdue { background: #ffeaec; color: #b22634; }
+.billing-dashboard-empty { padding: 32px !important; color: #7a8ba3 !important; text-align: center !important; }
+.billing-dashboard-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+@media (max-width: 1100px) { .billing-dashboard-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .billing-dashboard-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .billing-dashboard { padding: 16px 12px; } .billing-dashboard-header, .billing-dashboard-panel-header { align-items: flex-start; flex-direction: column; } .billing-dashboard-header button, .billing-dashboard-panel-header button { width: 100%; } .billing-dashboard-cards, .billing-dashboard-actions { grid-template-columns: 1fr; } }

@@ -1,0 +1,32 @@
+.common-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.common-logo-image {
+  display: block;
+  width: 148px;
+  height: auto;
+  object-fit: contain;
+}
+
+.common-logo-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-muted);
+  letter-spacing: 0.3px;
+}
+
+.common-logo-light .common-logo-sub {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.common-logo-small .common-logo-image {
+  width: 112px;
+}
+
+.common-logo-large .common-logo-image {
+  width: 190px;
+}

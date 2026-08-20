@@ -1,0 +1,1421 @@
+/* =========================================================
+   INRFS ADMIN LOGIN
+   ========================================================= */
+
+.inrfs-admin-login-page {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+
+  box-sizing: border-box;
+
+  background: #f7f9fb;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #071a3b;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   LEFT LOGIN AREA
+   ========================================================= */
+
+.inrfs-admin-login-left {
+  width: 64%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfcfd 0%,
+      #f7f9fb 100%
+    );
+}
+
+
+.inrfs-admin-login-container {
+  width: 100%;
+  max-width: 610px;
+
+  box-sizing: border-box;
+
+  padding:
+    54px
+    58px;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.inrfs-admin-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 48px;
+}
+
+
+.inrfs-admin-logo {
+  width: 55px;
+  height: 55px;
+
+  object-fit: contain;
+
+  mix-blend-mode: multiply;
+}
+
+
+.inrfs-admin-brand-text {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+
+.inrfs-admin-brand-text h2 {
+  margin: 0;
+
+  color: #071a3b;
+
+  font-size: 24px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: -0.6px;
+}
+
+
+.inrfs-admin-brand-text span {
+  margin-top: 5px;
+
+  color: #52708f;
+
+  font-size: 14px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.inrfs-admin-heading {
+  margin-bottom: 42px;
+}
+
+
+.inrfs-admin-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  height: 25px;
+
+  padding:
+    0
+    13px;
+
+  box-sizing: border-box;
+
+  border-radius: 20px;
+
+  background: #f2e4ff;
+
+  color: #8b12dd;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+
+.inrfs-admin-heading h1 {
+  margin:
+    15px
+    0
+    0;
+
+  color: #071a3b;
+
+  font-size: 34px;
+
+  line-height: 1.2;
+
+  font-weight: 750;
+
+  letter-spacing: -1px;
+}
+
+
+.inrfs-admin-heading p {
+  margin:
+    15px
+    0
+    0;
+
+  color: #587594;
+
+  font-size: 18px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.inrfs-admin-form {
+  width: 100%;
+}
+
+
+.inrfs-admin-field {
+  width: 100%;
+
+  margin-bottom: 25px;
+}
+
+
+.inrfs-admin-field label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #0b2347;
+
+  font-size: 15px;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   EMAIL INPUT
+   ========================================================= */
+
+.inrfs-admin-field input {
+  width: 100%;
+
+  height: 53px;
+
+  box-sizing: border-box;
+
+  padding:
+    0
+    15px;
+
+  border:
+    1px solid #d9e1e8;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #172c4d;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.inrfs-admin-field input::placeholder {
+  color: #91a0b1;
+}
+
+
+.inrfs-admin-field input:hover {
+  border-color: #c6d1dc;
+}
+
+
+.inrfs-admin-field input:focus {
+  border-color: #0db5ee;
+
+  box-shadow:
+    0 0 0 3px rgba(13, 181, 238, 0.13);
+}
+
+
+/* =========================================================
+   PASSWORD LABEL
+   ========================================================= */
+
+.inrfs-admin-password-label {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 9px;
+}
+
+
+.inrfs-admin-password-label label {
+  margin: 0;
+}
+
+
+.inrfs-admin-forgot {
+  border: none;
+
+  padding: 0;
+
+  background: transparent;
+
+  color: #00aaf0;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+
+.inrfs-admin-forgot:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   PASSWORD
+   ========================================================= */
+
+.inrfs-admin-password-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+.inrfs-admin-password-wrapper input {
+  padding-right: 50px;
+}
+
+
+.inrfs-admin-password-toggle {
+  position: absolute;
+
+  top: 50%;
+  right: 14px;
+
+  transform: translateY(-50%);
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: #8ea2bb;
+
+  cursor: pointer;
+}
+
+
+.inrfs-admin-password-toggle:hover {
+  color: #597592;
+}
+
+
+/* =========================================================
+   REMEMBER ME
+   ========================================================= */
+
+.inrfs-admin-remember {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-top: -2px;
+
+  color: #5c7692;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+
+.inrfs-admin-remember input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: #8b12dd;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.inrfs-admin-error {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-top: 28px;
+
+  padding:
+    13px
+    16px;
+
+  border-radius: 9px;
+
+  background: #fff0f0;
+
+  color: #f03c3c;
+
+  font-size: 15px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.inrfs-admin-submit {
+  width: 100%;
+
+  height: 58px;
+
+  margin-top: 28px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8b0bd9 0%,
+      #9908d9 100%
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(139, 11, 217, 0.15);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+
+.inrfs-admin-submit:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.04);
+
+  box-shadow:
+    0 10px 24px rgba(139, 11, 217, 0.22);
+}
+
+
+.inrfs-admin-submit:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   DEMO
+   ========================================================= */
+
+.inrfs-admin-demo {
+  margin:
+    21px
+    0
+    0;
+
+  color: #8da1bb;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.inrfs-admin-back {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  width: fit-content;
+
+  margin:
+    38px
+    auto
+    0;
+
+  color: #8ba0ba;
+
+  text-decoration: none;
+
+  font-size: 15px;
+
+  transition: color 0.2s ease;
+}
+
+
+.inrfs-admin-back:hover {
+  color: #597592;
+}
+
+
+/* =========================================================
+   RIGHT PROMOTIONAL AREA
+   ========================================================= */
+
+.inrfs-admin-promo {
+  width: 36%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100%;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      145deg,
+      #8b0bd9 0%,
+      #663be3 42%,
+      #3186ea 75%,
+      #08aeea 100%
+    );
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   PROMO CONTENT
+   ========================================================= */
+
+.inrfs-admin-promo-content {
+  width: 100%;
+
+  max-width: 455px;
+
+  position: relative;
+
+  z-index: 5;
+
+  box-sizing: border-box;
+
+  padding:
+    55px
+    42px;
+
+  text-align: center;
+}
+
+
+.inrfs-admin-promo-content h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 32px;
+
+  line-height: 1.18;
+
+  font-weight: 750;
+
+  letter-spacing: -0.8px;
+}
+
+
+.inrfs-admin-promo-content p {
+  margin:
+    23px
+    auto
+    0;
+
+  max-width: 390px;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.inrfs-admin-stats {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  margin-top: 46px;
+}
+
+
+.inrfs-admin-stat {
+  min-height: 56px;
+
+  box-sizing: border-box;
+
+  padding:
+    0
+    19px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.16),
+      rgba(255, 255, 255, 0.10)
+    );
+
+  border:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  color: #ffffff;
+
+  text-align: left;
+
+  backdrop-filter: blur(8px);
+
+  font-size: 16px;
+
+  font-weight: 650;
+}
+
+
+.inrfs-admin-check {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+}
+
+
+.inrfs-admin-stat span {
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   DECORATIVE FLOWERS
+   ========================================================= */
+
+.inrfs-admin-flower {
+  position: absolute;
+
+  width: 290px;
+  height: 290px;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  opacity: 0.23;
+}
+
+
+.inrfs-admin-flower span {
+  position: absolute;
+
+  width: 95px;
+  height: 155px;
+
+  border-radius:
+    70%
+    70%
+    20%
+    70%;
+
+  background: rgba(255, 255, 255, 0.18);
+}
+
+
+.inrfs-admin-flower span:nth-child(1) {
+  top: 0;
+  left: 98px;
+
+  transform: rotate(-40deg);
+}
+
+
+.inrfs-admin-flower span:nth-child(2) {
+  top: 67px;
+  right: 0;
+
+  transform: rotate(45deg);
+}
+
+
+.inrfs-admin-flower span:nth-child(3) {
+  right: 50px;
+  bottom: 0;
+
+  transform: rotate(140deg);
+}
+
+
+.inrfs-admin-flower span:nth-child(4) {
+  bottom: 48px;
+  left: 0;
+
+  transform: rotate(-140deg);
+}
+
+
+.inrfs-admin-flower i {
+  position: absolute;
+
+  width: 82px;
+  height: 82px;
+
+  top: 103px;
+  left: 104px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.14);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.15);
+}
+
+
+.inrfs-admin-flower-top {
+  top: -100px;
+  right: -80px;
+
+  transform: rotate(8deg);
+}
+
+
+.inrfs-admin-flower-bottom {
+  left: -145px;
+  bottom: -150px;
+
+  transform: rotate(-15deg);
+
+  opacity: 0.11;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+  .inrfs-admin-login-left {
+    width: 64%;
+  }
+
+
+  .inrfs-admin-promo {
+    width: 36%;
+  }
+
+
+  .inrfs-admin-login-container {
+    max-width: 650px;
+
+    padding:
+      60px
+      70px;
+  }
+
+
+  .inrfs-admin-heading h1 {
+    font-size: 37px;
+  }
+
+
+  .inrfs-admin-promo-content {
+    max-width: 500px;
+
+    padding:
+      60px
+      50px;
+  }
+
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 35px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .inrfs-admin-login-left {
+    width: 60%;
+  }
+
+
+  .inrfs-admin-promo {
+    width: 40%;
+  }
+
+
+  .inrfs-admin-login-container {
+    padding:
+      45px
+      40px;
+  }
+
+
+  .inrfs-admin-heading h1 {
+    font-size: 29px;
+  }
+
+
+  .inrfs-admin-heading p {
+    font-size: 16px;
+  }
+
+
+  .inrfs-admin-promo-content {
+    padding:
+      40px
+      28px;
+  }
+
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 27px;
+  }
+
+
+  .inrfs-admin-promo-content p {
+    font-size: 15px;
+  }
+
+
+  .inrfs-admin-stat {
+    padding: 0 14px;
+
+    font-size: 14px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  .inrfs-admin-login-page {
+    min-height: 100dvh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+
+  /* Login */
+
+  .inrfs-admin-login-left {
+    width: 100%;
+
+    min-height: auto;
+
+    flex-shrink: 0;
+
+    align-items: flex-start;
+
+    background: #f7f9fb;
+  }
+
+
+  .inrfs-admin-login-container {
+    width: 100%;
+
+    max-width: 560px;
+
+    margin: 0 auto;
+
+    padding:
+      40px
+      24px
+      45px;
+  }
+
+
+  /* Brand */
+
+  .inrfs-admin-brand {
+    margin-bottom: 38px;
+  }
+
+
+  .inrfs-admin-logo {
+    width: 52px;
+    height: 52px;
+  }
+
+
+  .inrfs-admin-brand-text h2 {
+    font-size: 23px;
+  }
+
+
+  .inrfs-admin-brand-text span {
+    font-size: 13px;
+  }
+
+
+  /* Heading */
+
+  .inrfs-admin-heading {
+    margin-bottom: 34px;
+  }
+
+
+  .inrfs-admin-badge {
+    height: 24px;
+
+    padding: 0 11px;
+
+    font-size: 12px;
+  }
+
+
+  .inrfs-admin-heading h1 {
+    margin-top: 13px;
+
+    font-size: 28px;
+
+    line-height: 1.25;
+  }
+
+
+  .inrfs-admin-heading p {
+    margin-top: 11px;
+
+    font-size: 15px;
+  }
+
+
+  /* Fields */
+
+  .inrfs-admin-field {
+    margin-bottom: 21px;
+  }
+
+
+  .inrfs-admin-field label {
+    font-size: 14px;
+  }
+
+
+  .inrfs-admin-field input {
+    height: 50px;
+
+    font-size: 15px;
+  }
+
+
+  .inrfs-admin-forgot {
+    font-size: 13px;
+  }
+
+
+  /* Remember */
+
+  .inrfs-admin-remember {
+    font-size: 14px;
+  }
+
+
+  /* Button */
+
+  .inrfs-admin-submit {
+    height: 54px;
+
+    margin-top: 24px;
+
+    font-size: 16px;
+  }
+
+
+  /* Demo */
+
+  .inrfs-admin-demo {
+    font-size: 12px;
+
+    margin-top: 17px;
+  }
+
+
+  /* Back */
+
+  .inrfs-admin-back {
+    margin-top: 29px;
+
+    font-size: 13px;
+  }
+
+
+  /* =====================================================
+     PROMO MOBILE
+     ===================================================== */
+
+  .inrfs-admin-promo {
+    width: 100%;
+
+    min-height: auto;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    align-items: center;
+
+    justify-content: center;
+  }
+
+
+  .inrfs-admin-promo-content {
+    width: 100%;
+
+    max-width: 560px;
+
+    padding:
+      55px
+      24px
+      60px;
+  }
+
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 28px;
+
+    line-height: 1.25;
+  }
+
+
+  .inrfs-admin-promo-content p {
+    margin-top: 17px;
+
+    max-width: 480px;
+
+    font-size: 15px;
+
+    line-height: 1.55;
+  }
+
+
+  .inrfs-admin-stats {
+    gap: 11px;
+
+    margin-top: 30px;
+  }
+
+
+  .inrfs-admin-stat {
+    min-height: 52px;
+
+    padding: 0 15px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+  }
+
+
+  /* Smaller flower */
+
+  .inrfs-admin-flower {
+    width: 230px;
+    height: 230px;
+  }
+
+
+  .inrfs-admin-flower span {
+    width: 76px;
+    height: 125px;
+  }
+
+
+  .inrfs-admin-flower i {
+    width: 67px;
+    height: 67px;
+
+    top: 82px;
+    left: 82px;
+  }
+
+
+  .inrfs-admin-flower-top {
+    top: -95px;
+    right: -100px;
+  }
+
+
+  .inrfs-admin-flower-bottom {
+    left: -115px;
+    bottom: -125px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .inrfs-admin-login-container {
+    padding:
+      30px
+      18px
+      38px;
+  }
+
+
+  .inrfs-admin-brand {
+    margin-bottom: 32px;
+  }
+
+
+  .inrfs-admin-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+
+  .inrfs-admin-brand-text h2 {
+    font-size: 21px;
+  }
+
+
+  .inrfs-admin-brand-text span {
+    font-size: 12px;
+  }
+
+
+  .inrfs-admin-heading h1 {
+    font-size: 25px;
+  }
+
+
+  .inrfs-admin-heading p {
+    font-size: 14px;
+  }
+
+
+  .inrfs-admin-password-label {
+    align-items: flex-end;
+  }
+
+
+  .inrfs-admin-forgot {
+    font-size: 12px;
+  }
+
+
+  .inrfs-admin-submit {
+    height: 52px;
+
+    font-size: 15px;
+  }
+
+
+  .inrfs-admin-promo-content {
+    padding:
+      45px
+      18px
+      50px;
+  }
+
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 25px;
+  }
+
+
+  .inrfs-admin-promo-content p {
+    font-size: 14px;
+  }
+
+
+  .inrfs-admin-stat {
+    min-height: 49px;
+
+    font-size: 13px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 340px) {
+
+  .inrfs-admin-login-container {
+    padding:
+      26px
+      15px
+      34px;
+  }
+
+
+  .inrfs-admin-heading h1 {
+    font-size: 23px;
+  }
+
+
+  .inrfs-admin-heading p {
+    font-size: 13px;
+  }
+
+
+  .inrfs-admin-field input {
+    height: 48px;
+  }
+
+
+  .inrfs-admin-submit {
+    height: 50px;
+  }
+
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 22px;
+  }
+
+
+  .inrfs-admin-stat {
+    font-size: 12px;
+
+    padding: 0 11px;
+  }
+
+}
+
+/* Keep the wide INRFS wordmark at its natural aspect ratio. */
+.inrfs-admin-logo { width: 138px; height: auto; max-height: 54px; }
+@media (max-width: 480px) { .inrfs-admin-logo { width: 120px; height: auto; } }
+
+/* Keep the complete sign-in flow visible on common laptop-height screens. */
+@media (min-width: 761px) and (max-height: 900px) {
+  .inrfs-admin-login-container {
+    max-width: 610px;
+    padding: 28px 58px;
+  }
+
+  .inrfs-admin-brand {
+    margin-bottom: 24px;
+  }
+
+  .inrfs-admin-logo {
+    width: 150px;
+    height: auto;
+    max-height: 56px;
+  }
+
+  .inrfs-admin-heading {
+    margin-bottom: 25px;
+  }
+
+  .inrfs-admin-heading h1 {
+    margin-top: 11px;
+    font-size: 31px;
+  }
+
+  .inrfs-admin-heading p {
+    margin-top: 9px;
+    font-size: 16px;
+  }
+
+  .inrfs-admin-field {
+    margin-bottom: 17px;
+  }
+
+  .inrfs-admin-field input {
+    height: 49px;
+  }
+
+  .inrfs-admin-submit {
+    height: 52px;
+    margin-top: 18px;
+  }
+
+  .inrfs-admin-demo {
+    margin-top: 12px;
+  }
+
+  .inrfs-admin-back {
+    margin-top: 18px;
+  }
+
+  .inrfs-admin-promo-content {
+    padding: 30px 42px;
+  }
+
+  .inrfs-admin-promo-content h2 {
+    font-size: 30px;
+  }
+
+  .inrfs-admin-promo-content p {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .inrfs-admin-stats {
+    gap: 11px;
+    margin-top: 27px;
+  }
+
+  .inrfs-admin-stat {
+    min-height: 52px;
+    font-size: 15px;
+  }
+}
+
+/* Final admin identity treatment, after compact-height rules. */
+.inrfs-admin-brand {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inrfs-admin-login-container .inrfs-admin-logo {
+  width: 150px;
+  height: auto;
+  max-height: 56px;
+}
+
+.inrfs-admin-portal-label {
+  padding-left: 2px;
+  color: #7d1fe8;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .inrfs-admin-login-container .inrfs-admin-logo { width: 132px; height: auto; }
+}

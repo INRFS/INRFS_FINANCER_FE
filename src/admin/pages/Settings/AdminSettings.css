@@ -1,0 +1,579 @@
+/* =========================================================
+   SYSTEM SETTINGS PAGE
+   ========================================================= */
+
+.admin-settings {
+  width: 100%;
+  min-height: 100%;
+  padding: 30px 32px 50px;
+  box-sizing: border-box;
+
+  background: #f7f9fc;
+  color: #071d41;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-settings-header {
+  margin-bottom: 26px;
+}
+
+.admin-settings-header h1 {
+  margin: 0;
+
+  color: #071d41;
+
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.admin-settings-header p {
+  margin: 6px 0 0;
+
+  color: #5d7596;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.admin-settings-tabs {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  border-bottom: 1px solid #dce3eb;
+
+  margin-bottom: 27px;
+}
+
+.admin-settings-tab {
+  position: relative;
+
+  height: 42px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 7px 7px 0 0;
+
+  background: transparent;
+
+  color: #506987;
+
+  font-family: inherit;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.admin-settings-tab:hover {
+  color: #071d41;
+}
+
+.admin-settings-tab.active {
+  background: #10aeeb;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   SETTINGS CARD
+   ========================================================= */
+
+.admin-settings-card {
+  width: 607px;
+  max-width: 100%;
+
+  padding: 32px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+  border-radius: 14px;
+
+  box-shadow: none;
+}
+
+.admin-settings-card h3 {
+  margin: 0 0 26px;
+
+  color: #071d41;
+
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.admin-settings-group {
+  width: 100%;
+
+  margin-bottom: 18px;
+}
+
+.admin-settings-group label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #0b315e;
+
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   INPUTS / SELECT
+   ========================================================= */
+
+.admin-settings-group input,
+.admin-settings-group select {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce3eb;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #071d41;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-settings-group input:focus,
+.admin-settings-group select:focus {
+  border-color: #10aeeb;
+
+  box-shadow: 0 0 0 3px rgba(16, 174, 235, 0.10);
+}
+
+.admin-settings-group input::placeholder {
+  color: #9aabc0;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.admin-settings-group select {
+  appearance: auto;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   PURPLE SAVE BUTTON
+   ========================================================= */
+
+.admin-settings-purple-btn {
+  height: 47px;
+
+  padding: 0 22px;
+
+  margin-top: 8px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: #8500d6;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-settings-purple-btn:hover {
+  background: #7200b8;
+
+  box-shadow: 0 5px 14px rgba(133, 0, 214, 0.18);
+}
+
+.admin-settings-purple-btn:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+   ========================================================= */
+
+.admin-settings-success {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  width: 100%;
+
+  margin-top: 14px;
+  margin-bottom: 2px;
+
+  padding: 11px 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ccefdc;
+  border-radius: 8px;
+
+  background: #f0fff6;
+
+  color: #16834a;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.admin-settings-success svg {
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   MAINTENANCE CARD
+   ========================================================= */
+
+.admin-maintenance-card {
+  width: 607px;
+}
+
+.admin-maintenance-card h3.admin-maintenance-title {
+  margin-bottom: 24px;
+
+  color: #ff4242;
+}
+
+
+/* =========================================================
+   WARNING
+   ========================================================= */
+
+.admin-maintenance-warning {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  width: 100%;
+
+  padding: 18px;
+
+  margin-bottom: 22px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ffbebe;
+  border-radius: 11px;
+
+  background: #fff2f2;
+
+  color: #bd2929;
+
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.admin-maintenance-warning svg {
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
+  color: #ff4242;
+}
+
+
+/* =========================================================
+   MAINTENANCE ACTION
+   ========================================================= */
+
+.admin-maintenance-action {
+  width: 100%;
+
+  min-height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 0 18px;
+
+  margin-bottom: 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce3eb;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #071d41;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-maintenance-action:hover {
+  border-color: #bfcbd8;
+
+  background: #fbfcfd;
+}
+
+.admin-maintenance-action.active {
+  border-color: #ffbcbc;
+
+  background: #fff7f7;
+}
+
+
+/* =========================================================
+   MAINTENANCE ACTION LEFT
+   ========================================================= */
+
+.admin-maintenance-action-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+.admin-maintenance-action-left svg {
+  flex-shrink: 0;
+
+  color: #607a99;
+}
+
+
+/* =========================================================
+   MAINTENANCE STATUS
+   ========================================================= */
+
+.admin-maintenance-status {
+  padding: 4px 9px;
+
+  border-radius: 20px;
+
+  background: #f0f3f6;
+
+  color: #6f8299;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-maintenance-status.enabled {
+  background: #ffe6e6;
+
+  color: #e93636;
+}
+
+
+/* =========================================================
+   BACKUP DATABASE
+   ========================================================= */
+
+.admin-maintenance-backup {
+  height: 47px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 22px;
+
+  margin-top: 0;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: #f04444;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.admin-maintenance-backup:hover {
+  background: #db3535;
+}
+
+.admin-maintenance-backup:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================================================
+   MAINTENANCE MESSAGE
+   ========================================================= */
+
+.admin-maintenance-message {
+  margin-top: 18px;
+}
+
+/* =========================================================
+   ADMINISTRATOR MANAGEMENT
+   ========================================================= */
+
+.admin-settings-admin-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr); align-items: start; gap: 18px; }
+.admin-settings-admin-grid .admin-settings-card { width: 100%; }
+.admin-settings-section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.admin-settings-section-title > span { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 10px; background: #f1e9fd; color: #7d1fe8; }
+.admin-settings-section-title h3 { margin: 0; }
+.admin-settings-section-title p { margin: 4px 0 0; color: #72849b; font-size: 12px; }
+.admin-settings-name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.admin-settings-group small { display: block; margin-top: 6px; color: #7d8da1; font-size: 10px; line-height: 1.45; }
+.admin-settings-error { margin: 14px 0; padding: 11px 13px; border-radius: 8px; background: #fff0f1; color: #a61b29; font-size: 12px; }
+.admin-settings-purple-btn:disabled { cursor: not-allowed; opacity: .6; }
+.admin-settings-admin-list { display: grid; gap: 9px; }
+.admin-settings-admin-list article { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 11px; padding: 12px; border: 1px solid #e3e9f0; border-radius: 10px; }
+.admin-settings-admin-list article > span { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: #edf6fb; color: #087da5; font-size: 11px; font-weight: 800; }
+.admin-settings-admin-list article > div { display: flex; min-width: 0; flex-direction: column; }
+.admin-settings-admin-list strong { color: #173253; font-size: 12px; }
+.admin-settings-admin-list small { margin-top: 2px; overflow: hidden; color: #7b8da2; font-size: 9px; text-overflow: ellipsis; }
+.admin-settings-admin-list em { padding: 4px 7px; border-radius: 999px; background: #eef2f6; color: #62758b; font-size: 8px; font-style: normal; font-weight: 800; text-transform: uppercase; }
+.admin-settings-admin-list em.active { background: #e8f7eb; color: #21824a; }
+.admin-settings-muted { color: #74869c; font-size: 12px; }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .admin-settings {
+    padding: 24px;
+  }
+
+  .admin-settings-card,
+  .admin-maintenance-card {
+    width: 100%;
+  }
+
+  .admin-settings-admin-grid { grid-template-columns: 1fr; }
+}
+
+
+@media (max-width: 600px) {
+  .admin-settings {
+    padding: 20px 16px 35px;
+  }
+
+  .admin-settings-header h1 {
+    font-size: 23px;
+  }
+
+  .admin-settings-tabs {
+    overflow-x: auto;
+
+    gap: 2px;
+  }
+
+  .admin-settings-tab {
+    flex-shrink: 0;
+
+    padding: 0 15px;
+
+    font-size: 14px;
+  }
+
+  .admin-settings-card {
+    padding: 22px 18px;
+  }
+
+  .admin-settings-card h3 {
+    font-size: 17px;
+  }
+
+  .admin-maintenance-warning {
+    padding: 15px;
+  }
+
+  .admin-maintenance-action {
+    min-height: 50px;
+  }
+
+  .admin-settings-name-grid { grid-template-columns: 1fr; gap: 0; }
+}

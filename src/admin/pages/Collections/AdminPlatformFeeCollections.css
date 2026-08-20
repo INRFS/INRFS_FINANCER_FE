@@ -1,0 +1,38 @@
+.platform-collections-page { min-height: 100%; padding: 30px 34px 45px; background: #f5f7fb; color: #183252; }
+.platform-collections-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+.platform-collections-header span { color: #7c2df3; font-size: 11px; font-weight: 800; letter-spacing: .6px; }
+.platform-collections-header h1 { margin: 6px 0 5px; font-size: 29px; }
+.platform-collections-header p { margin: 0; color: #75869e; }
+.platform-collections-error { margin: 0 0 14px; padding: 11px 14px; border-radius: 8px; background: #fff0f1; color: #a61b29; }
+.platform-collections-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.platform-collections-summary article { display: flex; align-items: center; gap: 12px; min-height: 90px; padding: 16px; border: 1px solid #dfe6ef; border-radius: 11px; background: #fff; }
+.platform-collections-summary svg { box-sizing: content-box; padding: 9px; border-radius: 9px; background: #f1eaff; color: #7435f5; }
+.platform-collections-summary div { display: flex; min-width: 0; flex-direction: column; }
+.platform-collections-summary span { color: #718198; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.platform-collections-summary strong { margin-top: 6px; overflow: hidden; font-size: 21px; text-overflow: ellipsis; white-space: nowrap; }
+.platform-collections-card { overflow: hidden; border: 1px solid #dfe6ef; border-radius: 11px; background: #fff; }
+.platform-collections-toolbar { display: flex; align-items: center; gap: 12px; padding: 14px; border-bottom: 1px solid #e8edf3; }
+.platform-collections-toolbar label { display: flex; align-items: center; gap: 8px; width: min(380px, 100%); padding: 0 11px; border: 1px solid #d7e0ea; border-radius: 8px; color: #75869e; }
+.platform-collections-toolbar input { width: 100%; padding: 10px 0; border: 0; outline: 0; }
+.platform-collections-toolbar select { height: 40px; padding: 0 10px; border: 1px solid #d7e0ea; border-radius: 8px; background: #fff; color: #526983; }
+.platform-collections-table-wrap { max-width: 100%; overflow-x: auto; }
+.platform-collections-card table { width: 100%; min-width: 1180px; border-collapse: collapse; }
+.platform-collections-card th, .platform-collections-card td { padding: 13px 14px; border-bottom: 1px solid #edf1f5; text-align: left; font-size: 12px; white-space: nowrap; }
+.platform-collections-card th { background: #fafbfd; color: #687993; font-size: 10px; text-transform: uppercase; }
+.platform-collections-card td { color: #455b75; }
+.platform-collections-financer { display: inline-flex; align-items: center; gap: 7px; color: #1d385a; font-weight: 700; }
+.platform-collection-status { display: inline-flex; padding: 4px 8px; border-radius: 12px; background: #fff4d9; color: #936300; font-weight: 700; }
+.platform-collection-status.paid { background: #e7f8eb; color: #16844a; }
+.platform-collection-status.overdue { background: #ffeaec; color: #b22634; }
+.platform-collection-status.partially-paid { background: #e9f3ff; color: #2c69a6; }
+.platform-collections-card td button { padding: 7px 10px; border: 1px solid #cdbcf2; border-radius: 7px; background: #faf7ff; color: #6f2bde; font-weight: 700; cursor: pointer; }
+.platform-collections-card td button:hover { background: #f0e8ff; }
+.platform-collections-empty { padding: 38px !important; color: #7c8da3 !important; text-align: center !important; }
+.platform-collection-form { display: flex; flex-direction: column; gap: 16px; }
+.platform-collection-invoice { display: grid; grid-template-columns: 1fr auto; gap: 8px 18px; padding: 14px; border-radius: 8px; background: #f7f9fc; }
+.platform-collection-invoice span { color: #75869e; }
+.platform-collection-form > label { display: flex; flex-direction: column; gap: 7px; color: #435872; font-size: 12px; font-weight: 700; }
+.platform-collection-form input { padding: 10px 11px; border: 1px solid #d7e0ea; border-radius: 8px; font: inherit; }
+.platform-collection-form-actions { display: flex; justify-content: flex-end; gap: 9px; }
+@media (max-width: 1000px) { .platform-collections-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .platform-collections-page { padding: 21px 14px 35px; } .platform-collections-header, .platform-collections-toolbar { align-items: stretch; flex-direction: column; } .platform-collections-header > button, .platform-collections-toolbar label, .platform-collections-toolbar select { width: 100%; } .platform-collections-summary { grid-template-columns: 1fr; } }

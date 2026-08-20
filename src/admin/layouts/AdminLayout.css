@@ -1,0 +1,78 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.admin-layout-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  min-width: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.admin-layout-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Desktop tables should use the available admin canvas instead of forcing a
+   wide minimum and exposing a horizontal scrollbar. */
+@media (min-width: 993px) {
+  /* Keep both portals on the same desktop shell grid. */
+  .admin-layout .admin-sidebar {
+    width: 250px;
+  }
+
+  .admin-layout-wrapper {
+    margin-left: 250px;
+  }
+
+  .admin-layout .admin-header {
+    height: 62px;
+    min-height: 62px;
+    padding-inline: 22px;
+  }
+
+  .admin-layout .admin-sidebar-brand {
+    min-height: 92px;
+    padding: 12px 18px;
+  }
+
+  .admin-layout-content {
+    padding: 22px;
+  }
+
+  .admin-layout-content table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+  }
+
+  .admin-layout-content th,
+  .admin-layout-content td {
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-layout-content [class*="table-wrap"],
+  .admin-layout-content [class*="table-scroll"] {
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .admin-layout-wrapper {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-layout-content {
+    padding: 16px;
+  }
+}

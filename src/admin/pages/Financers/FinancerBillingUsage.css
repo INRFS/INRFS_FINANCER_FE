@@ -1,0 +1,14 @@
+.financer-billing-usage { min-height: 100%; padding: 28px 30px 40px; background: #f7f9fc; color: #122a4b; }
+.financer-billing-usage > header { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.financer-billing-usage h1 { margin: 0 0 5px; font-size: 23px; } .financer-billing-usage header p { margin: 0; color: #75869e; font-size: 13px; }
+.financer-billing-usage input { width: min(320px, 100%); padding: 10px 12px; border: 1px solid #d8e1ed; border-radius: 8px; }
+.financer-billing-error { padding: 11px 14px; border-radius: 8px; background: #fff0f1; color: #a61b29; }
+.financer-billing-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.financer-billing-summary article { display: flex; align-items: center; gap: 12px; min-height: 88px; padding: 16px; border: 1px solid #dfe6ef; border-radius: 10px; background: #fff; }
+.financer-billing-summary svg { box-sizing: content-box; padding: 9px; border-radius: 9px; background: #f2ebff; color: #7435f5; }
+.financer-billing-summary div { display: flex; min-width: 0; flex-direction: column; } .financer-billing-summary span { color: #718198; font-size: 10px; font-weight: 800; text-transform: uppercase; } .financer-billing-summary strong { margin-top: 6px; overflow: hidden; font-size: 20px; text-overflow: ellipsis; white-space: nowrap; }
+.financer-billing-table { overflow: hidden; border: 1px solid #dfe6ef; border-radius: 10px; background: #fff; } .financer-billing-table-scroll { overflow-x: auto; }
+.financer-billing-table table { width: 100%; min-width: 900px; border-collapse: collapse; } .financer-billing-table th, .financer-billing-table td { padding: 13px 14px; border-bottom: 1px solid #edf1f5; text-align: left; font-size: 12px; } .financer-billing-table th { background: #f9fafc; color: #64758c; text-transform: uppercase; } .financer-billing-table td { color: #435872; } .financer-billing-table td:first-child strong, .financer-billing-table td:first-child small { display: block; } .financer-billing-table td:first-child small { margin-top: 3px; color: #8794a8; }
+.financer-billing-empty { padding: 32px !important; color: #7a8ba3 !important; text-align: center !important; }
+@media (max-width: 950px) { .financer-billing-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .financer-billing-usage { padding: 20px 14px 30px; } .financer-billing-usage > header { align-items: flex-start; flex-direction: column; } .financer-billing-usage input { width: 100%; } .financer-billing-summary { grid-template-columns: 1fr; } }
