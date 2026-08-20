@@ -1,0 +1,52 @@
+.common-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Green - Active / Paid / Completed */
+.common-badge-active,
+.common-badge-paid,
+.common-badge-completed,
+.common-badge-verified {
+  background-color: rgba(123, 208, 0, 0.15);
+  color: #4a8200;
+}
+
+/* Blue / Cyan - Upcoming / Pending */
+.common-badge-upcoming,
+.common-badge-pending,
+.common-badge-in-progress {
+  background-color: rgba(16, 175, 233, 0.15);
+  color: #0c8bbd;
+}
+
+/* Orange - Due / Rescheduled */
+.common-badge-due,
+.common-badge-rescheduled,
+.common-badge-warning {
+  background-color: rgba(255, 121, 11, 0.15);
+  color: #d96200;
+}
+
+/* Red - Overdue / Suspended / Rejected / Closed */
+.common-badge-overdue,
+.common-badge-suspended,
+.common-badge-failed,
+.common-badge-rejected {
+  background-color: rgba(255, 74, 79, 0.15);
+  color: #d62227;
+}
+
+/* Neutral / Default */
+.common-badge-closed,
+.common-badge-inactive,
+.common-badge-system {
+  background-color: #E2E8F0;
+  color: #475569;
+}

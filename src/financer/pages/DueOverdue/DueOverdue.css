@@ -1,0 +1,1562 @@
+/* =========================================================
+   DUE & OVERDUE PAGE
+   Clean / Compact / Responsive
+   ========================================================= */
+
+.fin-due-page {
+  width: 100%;
+  max-width: 100%;
+
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  padding: 18px 22px 28px;
+
+  overflow-x: hidden;
+
+  color: #263c58;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.fin-due-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.fin-due-title {
+  margin: 0;
+
+  color: #082b52;
+
+  font-size: 25px;
+
+  font-weight: 750;
+
+  line-height: 1.15;
+}
+
+.fin-due-subtitle {
+  margin: 5px 0 0;
+
+  color: #71849d;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   ALERT
+   ========================================================= */
+
+.fin-due-alert {
+  width: 100%;
+
+  min-height: 54px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  margin-bottom: 13px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #ffc6c6;
+
+  border-radius: 10px;
+
+  background: #fff5f5;
+
+  color: #b42323;
+}
+
+.fin-due-alert-icon {
+  width: 30px;
+  height: 30px;
+
+  min-width: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #f23838;
+
+  background: #ffffff;
+}
+
+.fin-due-alert strong {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: 750;
+}
+
+.fin-due-alert span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #c54a4a;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.fin-due-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 13px;
+}
+
+.fin-due-summary-card {
+  min-width: 0;
+
+  min-height: 72px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4ebf2;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 8px
+    rgba(8, 43, 80, 0.035);
+}
+
+.fin-due-card-alert {
+  border-color: #f2dcdc;
+}
+
+.fin-due-icon-box {
+  width: 35px;
+  height: 35px;
+
+  min-width: 35px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+}
+
+.fin-due-orange {
+  color: #e77700;
+  background: #fff2df;
+}
+
+.fin-due-amber {
+  color: #c68a00;
+  background: #fff8d9;
+}
+
+.fin-due-red {
+  color: #e23434;
+  background: #fff0f0;
+}
+
+.fin-due-card-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #7a8da5;
+
+  font-size: 9.5px;
+
+  font-weight: 650;
+}
+
+.fin-due-card-val {
+  margin: 0;
+
+  color: #263b57;
+
+  font-size: 17px;
+
+  font-weight: 750;
+
+  line-height: 1.05;
+}
+
+.fin-due-card-sub {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8a9aae;
+
+  font-size: 8.5px;
+}
+
+.fin-val-red {
+  color: #df3036;
+}
+
+.fin-sub-red {
+  color: #dc6969;
+}
+
+
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
+
+.fin-due-filter-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 11px;
+
+  padding: 9px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e9f0;
+
+  border-radius: 9px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.fin-due-search {
+  position: relative;
+
+  width: 235px;
+
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce5ee;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #8192a8;
+}
+
+.fin-due-search:focus-within {
+  border-color: #08a8d9;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(8, 168, 217, 0.07);
+}
+
+.fin-due-search input {
+  width: 100%;
+
+  min-width: 0;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #314863;
+
+  font-size: 10.5px;
+}
+
+.fin-due-search input::placeholder {
+  color: #9aa9ba;
+}
+
+.fin-due-clear-search {
+  width: 20px;
+  height: 20px;
+
+  min-width: 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #8b9bad;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   DATE FILTER
+   ========================================================= */
+
+.fin-due-date-filter {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+}
+
+.fin-due-filter-label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  color: #6f829b;
+
+  font-size: 9.5px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.fin-due-filter-select,
+.fin-due-date-input {
+  height: 34px;
+
+  box-sizing: border-box;
+
+  padding: 0 9px;
+
+  border: 1px solid #dce5ee;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #536981;
+
+  font-size: 10px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.fin-due-filter-select {
+  min-width: 105px;
+}
+
+.fin-due-date-input {
+  width: 130px;
+}
+
+.fin-due-year-select {
+  min-width: 100px;
+}
+
+.fin-due-filter-select:focus,
+.fin-due-date-input:focus {
+  border-color: #08a8d9;
+}
+
+
+/* =========================================================
+   SORT
+   ========================================================= */
+
+.fin-due-sort-btn {
+  height: 34px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 0 10px;
+
+  border: 1px solid #dce5ee;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #60748d;
+
+  font-size: 10px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.fin-due-sort-btn:hover {
+  background: #f5fbfd;
+
+  border-color: #9ad9e9;
+
+  color: #079bc9;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+.fin-due-reset-btn {
+  height: 34px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 0 9px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #fff1f1;
+
+  color: #d84242;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.fin-due-reset-btn:hover {
+  background: #ffe4e4;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.fin-due-tabs-wrapper {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  min-height: 48px;
+
+  margin-bottom: 11px;
+
+  border-bottom: 1px solid #dfe6ed;
+}
+
+.fin-due-tabs {
+  display: flex;
+
+  align-items: stretch;
+
+  height: 48px;
+}
+
+.fin-due-tabs button {
+  position: relative;
+
+  height: 48px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0 18px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #ee3a3a;
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.fin-due-tabs button:first-child {
+  color: #647890;
+}
+
+.fin-due-tabs button.active {
+  color: #ffffff !important;
+
+  background: #08a9dc;
+
+  border-radius: 7px 7px 0 0;
+}
+
+.fin-due-tabs button span {
+  min-width: 20px;
+
+  height: 19px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 5px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  font-size: 9px;
+}
+
+.fin-due-tabs button:not(.active) span {
+  background: #f3f5f8;
+
+  color: #71839a;
+}
+
+.fin-due-tabs .fin-due-overdue-tab:not(.active) {
+  color: #ef3b3b;
+}
+
+.fin-due-tabs .fin-due-overdue-tab:not(.active) span {
+  background: #fff0f0;
+
+  color: #e44343;
+}
+
+.fin-due-active-filter {
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  background: #f5f8fb;
+
+  color: #7c8da3;
+
+  font-size: 9px;
+
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.fin-due-table-card {
+  width: 100%;
+
+  min-width: 0;
+
+  background: #ffffff;
+
+  border: 1px solid #e0e7ee;
+
+  border-radius: 11px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 2px 9px
+    rgba(8, 43, 80, 0.025);
+}
+
+
+/* =========================================================
+   TABLE HEADING
+   ========================================================= */
+
+.fin-due-table-heading {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 10px 13px;
+
+  border-bottom: 1px solid #edf1f5;
+}
+
+.fin-due-table-heading h3 {
+  margin: 0;
+
+  color: #173a60;
+
+  font-size: 13px;
+
+  font-weight: 750;
+}
+
+.fin-due-table-heading p {
+  margin: 2px 0 0;
+
+  color: #91a0b1;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.fin-due-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+}
+
+.fin-due-table {
+  width: 100%;
+
+  min-width: 800px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  color: #50647d;
+
+  font-size: 11px;
+}
+
+
+/* COLUMN WIDTHS */
+
+.fin-due-table th:nth-child(1) {
+  width: 19%;
+}
+
+.fin-due-table th:nth-child(2) {
+  width: 12%;
+}
+
+.fin-due-table th:nth-child(3) {
+  width: 11%;
+}
+
+.fin-due-table th:nth-child(4) {
+  width: 14%;
+}
+
+.fin-due-table th:nth-child(5) {
+  width: 15%;
+}
+
+.fin-due-table th:nth-child(6) {
+  width: 11%;
+}
+
+.fin-due-table th:nth-child(7) {
+  width: 18%;
+}
+
+
+/* HEADER */
+
+.fin-due-table thead {
+  background: #f8fafc;
+}
+
+.fin-due-table th {
+  height: 43px;
+
+  padding: 0 10px;
+
+  color: #73869f;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.25px;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e2e8ef;
+}
+
+
+/* BODY */
+
+.fin-due-table tbody tr {
+  height: 61px;
+
+  transition:
+    background 0.15s ease;
+}
+
+.fin-due-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.fin-due-table td {
+  padding: 7px 10px;
+
+  border-bottom: 1px solid #edf1f5;
+
+  vertical-align: middle;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.fin-due-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.fin-due-row-overdue {
+  background: #fffdfd;
+}
+
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.fin-due-customer {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-width: 0;
+}
+
+.fin-due-avatar {
+  width: 29px;
+  height: 29px;
+
+  min-width: 29px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eaf6fb;
+
+  color: #069fd0;
+
+  font-size: 11px;
+
+  font-weight: 750;
+}
+
+.fin-due-customer strong {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  color: #263b57;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LOAN ID
+   ========================================================= */
+
+.fin-due-loan-id {
+  color: #54708e;
+
+  font-size: 10.5px;
+
+  font-weight: 550;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.fin-due-amount {
+  color: #172f4c;
+
+  font-size: 12px;
+
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   TODAY
+   ========================================================= */
+
+.fin-due-today {
+  color: #ed3838;
+
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   DAYS OVERDUE
+   ========================================================= */
+
+.fin-due-days-pill {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 5px 8px;
+
+  border-radius: 20px;
+
+  background: #fff0f0;
+
+  color: #df3b3b;
+
+  font-size: 9px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.fin-due-action-head {
+  text-align: right !important;
+}
+
+.fin-due-action-cell {
+  text-align: right !important;
+}
+
+.fin-due-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 5px;
+}
+
+
+/*
+  Make existing Button compact inside this table.
+*/
+
+.fin-due-actions button {
+  min-height: 32px !important;
+
+  padding: 0 10px !important;
+
+  font-size: 9.5px !important;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.fin-due-empty {
+  min-height: 250px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 20px;
+
+  text-align: center;
+}
+
+.fin-due-empty-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  border-radius: 50%;
+
+  background: #edf7fb;
+
+  color: #08a5d4;
+}
+
+.fin-due-empty h3 {
+  margin: 0;
+
+  color: #2b405c;
+
+  font-size: 14px;
+}
+
+.fin-due-empty p {
+  max-width: 360px;
+
+  margin: 5px 0 12px;
+
+  color: #8999ab;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+.fin-due-empty button {
+  height: 32px;
+
+  padding: 0 12px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #eaf8fc;
+
+  color: #079ac8;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1440px) {
+
+  .fin-due-page {
+    padding-left: 26px;
+    padding-right: 26px;
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .fin-due-page {
+    padding: 15px 16px 24px;
+  }
+
+  .fin-due-summary-card {
+    padding: 9px;
+  }
+
+  .fin-due-card-label {
+    font-size: 8.5px;
+  }
+
+  .fin-due-card-val {
+    font-size: 15px;
+  }
+
+  .fin-due-filter-card {
+    gap: 6px;
+  }
+
+  .fin-due-search {
+    width: 200px;
+  }
+
+  .fin-due-table {
+    font-size: 10px;
+  }
+
+  .fin-due-table th {
+    font-size: 8px;
+  }
+
+  .fin-due-table td {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .fin-due-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .fin-due-filter-card {
+    align-items: stretch;
+  }
+
+  .fin-due-search {
+    width: 100%;
+  }
+
+  .fin-due-date-filter {
+    flex: 1;
+
+    flex-wrap: wrap;
+  }
+
+  .fin-due-sort-btn,
+  .fin-due-reset-btn {
+    flex: 0 0 auto;
+  }
+
+  .fin-due-tabs-wrapper {
+    align-items: flex-end;
+  }
+
+  .fin-due-active-filter {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-due-page {
+    padding: 12px 9px 20px;
+  }
+
+
+  /* HEADER */
+
+  .fin-due-title {
+    font-size: 21px;
+  }
+
+  .fin-due-subtitle {
+    font-size: 10.5px;
+
+    line-height: 1.4;
+  }
+
+
+  /* ALERT */
+
+  .fin-due-alert {
+    min-height: 48px;
+
+    padding: 8px 10px;
+
+    gap: 8px;
+  }
+
+  .fin-due-alert-icon {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+  }
+
+  .fin-due-alert strong {
+    font-size: 10px;
+  }
+
+  .fin-due-alert span {
+    font-size: 8px;
+  }
+
+
+  /* SUMMARY */
+
+  .fin-due-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+  }
+
+  .fin-due-summary-card {
+    min-height: 62px;
+
+    padding: 7px;
+
+    gap: 7px;
+  }
+
+  .fin-due-icon-box {
+    width: 29px;
+    height: 29px;
+    min-width: 29px;
+  }
+
+  .fin-due-card-label {
+    font-size: 7.5px;
+  }
+
+  .fin-due-card-val {
+    font-size: 14px;
+  }
+
+  .fin-due-card-sub {
+    font-size: 7.5px;
+  }
+
+
+  /* FILTER */
+
+  .fin-due-filter-card {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 6px;
+
+    padding: 7px;
+  }
+
+  .fin-due-search {
+    width: 100%;
+
+    grid-column: 1 / -1;
+  }
+
+  .fin-due-date-filter {
+    display: grid;
+
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 5px;
+  }
+
+  .fin-due-filter-label {
+    grid-column: 1 / -1;
+  }
+
+  .fin-due-filter-select,
+  .fin-due-date-input {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+  .fin-due-sort-btn,
+  .fin-due-reset-btn {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+
+  /* TABS */
+
+  .fin-due-tabs-wrapper {
+    min-height: 43px;
+
+    margin-bottom: 8px;
+  }
+
+  .fin-due-tabs {
+    height: 43px;
+  }
+
+  .fin-due-tabs button {
+    height: 43px;
+
+    padding: 0 12px;
+
+    font-size: 10px;
+  }
+
+
+  /* TABLE */
+
+  .fin-due-table-card {
+    border-radius: 9px;
+  }
+
+  .fin-due-table-heading {
+    padding: 9px 10px;
+  }
+
+  .fin-due-table-heading h3 {
+    font-size: 11px;
+  }
+
+  .fin-due-table-heading p {
+    font-size: 8px;
+  }
+
+
+  /*
+    Turn table into mobile cards.
+    This avoids horizontal scrolling.
+  */
+
+  .fin-due-table-wrapper {
+    overflow: visible;
+  }
+
+  .fin-due-table {
+    width: 100%;
+
+    min-width: 0;
+
+    display: block;
+  }
+
+  .fin-due-table thead {
+    display: none;
+  }
+
+  .fin-due-table tbody {
+    display: block;
+
+    width: 100%;
+  }
+
+  .fin-due-table tr {
+    width: 100%;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 0 12px;
+
+    padding: 12px 11px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #ffffff;
+  }
+
+  .fin-due-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .fin-due-table td {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding: 5px 0;
+
+    border: none;
+
+    overflow: visible;
+
+    white-space: normal;
+
+    text-overflow: unset;
+  }
+
+  .fin-due-table td::before {
+    content: attr(data-label);
+
+    flex-shrink: 0;
+
+    color: #8999aa;
+
+    font-size: 7.5px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.2px;
+  }
+
+
+  /* Customer spans full width */
+
+  .fin-due-table td:first-child {
+    grid-column: 1 / -1;
+
+    padding-bottom: 7px;
+
+    margin-bottom: 2px;
+
+    border-bottom: 1px dashed #e7edf3;
+  }
+
+  .fin-due-table td:first-child::before {
+    display: none;
+  }
+
+
+  /* Actions spans full width */
+
+  .fin-due-table td:last-child {
+    grid-column: 1 / -1;
+
+    justify-content: flex-end;
+
+    margin-top: 5px;
+
+    padding-top: 8px;
+
+    border-top: 1px solid #edf1f5;
+  }
+
+  .fin-due-table td:last-child::before {
+    display: none;
+  }
+
+
+  .fin-due-customer {
+    width: 100%;
+
+    justify-content: flex-start;
+  }
+
+  .fin-due-avatar {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .fin-due-customer strong {
+    font-size: 10px;
+  }
+
+  .fin-due-loan-id {
+    font-size: 9px;
+  }
+
+  .fin-due-amount {
+    font-size: 10px;
+  }
+
+  .fin-due-days-pill {
+    font-size: 8px;
+
+    padding: 4px 6px;
+  }
+
+  .fin-due-actions {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+
+  .fin-due-actions button {
+    min-height: 31px !important;
+
+    font-size: 9px !important;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-due-page {
+    padding: 9px 6px 16px;
+  }
+
+  .fin-due-title {
+    font-size: 19px;
+  }
+
+  .fin-due-subtitle {
+    font-size: 9.5px;
+  }
+
+  .fin-due-summary-grid {
+    gap: 5px;
+  }
+
+  .fin-due-summary-card {
+    min-height: 58px;
+
+    padding: 6px;
+
+    gap: 5px;
+  }
+
+  .fin-due-icon-box {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .fin-due-card-label {
+    font-size: 7px;
+  }
+
+  .fin-due-card-val {
+    font-size: 12.5px;
+  }
+
+  .fin-due-card-sub {
+    font-size: 6.8px;
+  }
+
+  .fin-due-tabs button {
+    padding: 0 9px;
+
+    font-size: 9px;
+  }
+
+  .fin-due-table tr {
+    padding: 10px 9px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SHORT LAPTOP SCREENS
+   ========================================================= */
+
+@media (max-height: 700px) and (min-width: 701px) {
+
+  .fin-due-page {
+    padding-top: 12px;
+    padding-bottom: 18px;
+  }
+
+  .fin-due-header {
+    margin-bottom: 9px;
+  }
+
+  .fin-due-title {
+    font-size: 22px;
+  }
+
+  .fin-due-subtitle {
+    font-size: 11px;
+  }
+
+  .fin-due-alert {
+    min-height: 46px;
+
+    margin-bottom: 9px;
+  }
+
+  .fin-due-summary-card {
+    min-height: 62px;
+  }
+
+  .fin-due-table tbody tr {
+    height: 54px;
+  }
+
+}
