@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://inrfs-financer-fe.vercel.app/sitemap.xml
