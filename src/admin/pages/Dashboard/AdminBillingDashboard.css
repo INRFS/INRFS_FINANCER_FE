@@ -29,3 +29,125 @@
 .billing-dashboard-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
 @media (max-width: 1100px) { .billing-dashboard-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .billing-dashboard-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 700px) { .billing-dashboard { padding: 16px 12px; } .billing-dashboard-header, .billing-dashboard-panel-header { align-items: flex-start; flex-direction: column; } .billing-dashboard-header button, .billing-dashboard-panel-header button { width: 100%; } .billing-dashboard-cards, .billing-dashboard-actions { grid-template-columns: 1fr; } }
+
+
+/* =========================================================
+   BILLING TABLE - FORCE NO OVERLAP
+   ========================================================= */
+
+.billing-dashboard .billing-dashboard-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  box-sizing: border-box !important;
+}
+
+
+/* Force table wider than small screens */
+
+.billing-dashboard .billing-dashboard-table-wrap table {
+  width: 950px !important;
+  min-width: 950px !important;
+  max-width: none !important;
+
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+
+/* Force every cell to stay in its own column */
+
+.billing-dashboard .billing-dashboard-table-wrap th,
+.billing-dashboard .billing-dashboard-table-wrap td {
+  box-sizing: border-box !important;
+
+  white-space: nowrap !important;
+
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+
+  padding: 11px 13px !important;
+
+  vertical-align: middle !important;
+}
+
+
+/* FINANCER */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(1),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(1) {
+  width: 190px !important;
+}
+
+
+/* INTEREST COLLECTED */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(2),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(2) {
+  width: 150px !important;
+}
+
+
+/* FEE RATE */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(3),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(3) {
+  width: 110px !important;
+}
+
+
+/* FEE GENERATED */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(4),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(4) {
+  width: 140px !important;
+}
+
+
+/* COLLECTED */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(5),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(5) {
+  width: 120px !important;
+}
+
+
+/* OUTSTANDING */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(6),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(6) {
+  width: 130px !important;
+}
+
+
+/* STATUS */
+
+.billing-dashboard .billing-dashboard-table-wrap th:nth-child(7),
+.billing-dashboard .billing-dashboard-table-wrap td:nth-child(7) {
+  width: 130px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .billing-dashboard .billing-dashboard-table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  .billing-dashboard .billing-dashboard-table-wrap table {
+    width: 950px !important;
+    min-width: 950px !important;
+  }
+
+  .billing-dashboard .billing-dashboard-table-wrap th,
+  .billing-dashboard .billing-dashboard-table-wrap td {
+    white-space: nowrap !important;
+  }
+}

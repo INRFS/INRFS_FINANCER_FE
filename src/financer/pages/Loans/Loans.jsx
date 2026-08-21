@@ -978,10 +978,11 @@ export default function Loans() {
                 FORM
                ================================================= */}
 
-            <form
-              onSubmit={handleCreateSubmit}
-              className="fin-create-loan-form"
-            >
+<form
+  id="create-loan-form"
+  onSubmit={handleCreateSubmit}
+  className="fin-create-loan-form"
+>
 
 
               {/* =================================================
@@ -1408,34 +1409,36 @@ export default function Loans() {
 
 
               {/* =================================================
-                  ACTIONS
+                  END OF SCROLLABLE FORM
                  ================================================= */}
 
-              <div className="fin-create-loan-actions">
-
-                <button
-                  type="button"
-                  className="fin-create-loan-cancel"
-                  onClick={closeCreateModal}
-                >
-                  Cancel
-                </button>
-
-
-                <button
-                  type="submit"
-                  className="fin-create-loan-submit"
-                >
-
-                  <Check size={17} />
-
-                  Create Loan
-
-                </button>
-
-              </div>
-
             </form>
+
+
+            {/* =================================================
+                FIXED FOOTER
+               ================================================= */}
+
+            <div className="fin-create-loan-actions">
+
+              <button
+                type="button"
+                className="fin-create-loan-cancel"
+                onClick={closeCreateModal}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                form="create-loan-form"
+                className="fin-create-loan-submit"
+              >
+                <Check size={17} />
+                Create Loan
+              </button>
+
+            </div>
 
           </div>
 
