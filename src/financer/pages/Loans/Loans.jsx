@@ -44,6 +44,65 @@ const paymentMethods = [
   'Other',
 ];
 
+const addLoanDuration = (startDate, value, unit) => {
+  if (!startDate || Number(value) <= 0) return '';
+  const [year, month, day] = startDate.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  if (unit === 'Days') date.setDate(date.getDate() + Number(value));
+  else if (unit === 'Weeks') date.setDate(date.getDate() + Number(value) * 7);
+  else {
+    const targetDay = date.getDate();
+    date.setDate(1); date.setMonth(date.getMonth() + Number(value));
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    date.setDate(Math.min(targetDay, lastDay));
+  }
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+};
+
+const dateDays = (from, to) => from && to ? Math.round((new Date(`${to}T00:00:00`) - new Date(`${from}T00:00:00`)) / 86400000) : 0;
+const firstInterestDue = (form, maturity) => {
+  const candidate = form.interestFrequency === 'Daily' ? addLoanDuration(form.dateGiven, 1, 'Days')
+    : form.interestFrequency === 'Weekly' ? addLoanDuration(form.dateGiven, 1, 'Weeks')
+      : form.interestFrequency === 'Monthly' ? addLoanDuration(form.dateGiven, 1, 'Months') : maturity;
+  return candidate && maturity && candidate < maturity ? candidate : maturity;
+};
+const collectionInterestLabel = (frequency) => ({ Daily: 'Estimated Interest per Day', Weekly: 'Estimated Interest per Week', Monthly: 'Estimated First Monthly Interest', AtMaturity: 'Estimated Interest at Maturity' }[frequency] || 'Estimated Collection Interest');
+const monthlyInterestForDays = (principal, monthlyRate, days) => Number(principal || 0) * Number(monthlyRate || 0) / 100 * 12 * days / 365;
+const legacyNewLoanForm = false;
+
+function DurationLoanModal({ customers, form, setForm, error, onClose, onSubmit }) {
+  const update = (field, value) => setForm((current) => ({ ...current, [field]: value }));
+  const maturity = addLoanDuration(form.dateGiven, form.durationValue, form.durationUnit);
+  const dueDate = firstInterestDue(form, maturity);
+  const periodInterest = monthlyInterestForDays(form.amount, form.interestRate, dateDays(form.dateGiven, dueDate));
+  const totalInterest = monthlyInterestForDays(form.amount, form.interestRate, dateDays(form.dateGiven, maturity));
+
+  return (
+    <div className="fin-create-loan-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div className="fin-create-loan-modal">
+        <div className="fin-create-loan-header"><div><h2>Create New Loan</h2><p>Add a new loan account</p></div><button type="button" className="fin-create-loan-close" onClick={onClose} aria-label="Close"><X size={20} /></button></div>
+        <form onSubmit={onSubmit} className="fin-create-loan-form">
+          <div className="fin-create-loan-field"><label>Select Customer<span>*</span></label><select value={form.customer} onChange={(event) => update('customer', event.target.value)} required><option value="">Select customer</option>{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.fullName} ({customer.customerNumber})</option>)}</select></div>
+          <div className="fin-create-loan-two-column">
+            <div className="fin-create-loan-field"><label>Principal Amount (₹)<span>*</span></label><input type="number" min="1" value={form.amount} onChange={(event) => update('amount', event.target.value)} placeholder="10000" required /></div>
+            <div className="fin-create-loan-field"><label>Monthly Interest Rate (%)<span>*</span></label><input type="number" min="0" step="0.01" value={form.interestRate} onChange={(event) => update('interestRate', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Loan Period Unit<span>*</span></label><select value={form.durationUnit} onChange={(event) => update('durationUnit', event.target.value)}><option>Days</option><option>Weeks</option><option>Months</option></select></div>
+            <div className="fin-create-loan-field"><label>Number of {form.durationUnit}<span>*</span></label><input type="number" min="1" value={form.durationValue} onChange={(event) => update('durationValue', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Interest Collection<span>*</span></label><select value={form.interestFrequency} onChange={(event) => update('interestFrequency', event.target.value)}><option>Daily</option><option>Weekly</option><option>Monthly</option><option value="AtMaturity">At Maturity</option></select></div>
+            <div className="fin-create-loan-field"><label>Start Date<span>*</span></label><input type="date" value={form.dateGiven} onChange={(event) => update('dateGiven', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Maturity Date</label><input type="date" value={maturity} readOnly /></div>
+            <div className="fin-create-loan-field"><label>First Interest Due</label><input type="date" value={dueDate} readOnly /></div>
+            <div className="fin-create-loan-field"><label>{collectionInterestLabel(form.interestFrequency)}</label><input value={formatCurrency(periodInterest)} readOnly /></div>
+            <div className="fin-create-loan-field"><label>Estimated Total Interest</label><input value={formatCurrency(totalInterest)} readOnly /></div>
+          </div>
+          {error && <div role="alert">{error}</div>}
+          <div className="fin-create-loan-actions"><button type="button" className="fin-create-loan-cancel" onClick={onClose}>Cancel</button><button type="submit" className="fin-create-loan-submit"><Plus size={17} />Create Loan</button></div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 
 /* =========================================================
    LOANS PAGE
@@ -117,16 +176,12 @@ export default function Loans() {
 
   const [newLoanForm, setNewLoanForm] = useState({
     customer: '',
-    productId: '',
     amount: '10000',
-    tenureMonths: '12',
-    purpose: 'Business working capital',
-    monthlyIncome: '',
-    monthlyObligations: '0',
+    durationUnit: 'Days',
+    durationValue: '13',
     dateGiven: getTodayDate(),
-    paymentMethod: 'PhonePe',
-    interestFrequency: 'Monthly',
-    interestRate: '10',
+    interestFrequency: 'Daily',
+    interestRate: '18',
   });
 
 
@@ -302,10 +357,11 @@ export default function Loans() {
     setNewLoanForm({
       customer: '',
       amount: '10000',
+      durationUnit: 'Days',
+      durationValue: '13',
       dateGiven: getTodayDate(),
-      paymentMethod: 'PhonePe',
-      interestFrequency: 'Monthly',
-      interestRate: '10',
+      interestFrequency: 'Daily',
+      interestRate: '18',
     });
   };
 
@@ -375,8 +431,10 @@ export default function Loans() {
       return;
     }
 
+    if (Number(newLoanForm.durationValue) <= 0) return setPageError('Enter a valid number of periods.');
 
-    const product = products.find((item) => item.id === newLoanForm.productId) || products[0];
+
+    const product = products.find((item) => item.isActive !== false) || products[0];
     if (!product) return setPageError('No active loan product is configured. Ask an administrator to create one first.');
     setPageError('');
     try {
@@ -386,9 +444,11 @@ export default function Loans() {
         principal,
         annualInterestRate: Number(newLoanForm.interestRate),
         interestRate: Number(newLoanForm.interestRate),
-        interestRateBasis: 'PerAnnum',
+        interestRateBasis: 'PerMonth',
         interestCollectionFrequency: newLoanForm.interestFrequency,
-        tenureMonths: Number(newLoanForm.tenureMonths),
+        tenureMonths: Math.max(product.minimumTenureMonths || 1, 1),
+        durationValue: Number(newLoanForm.durationValue),
+        durationUnit: newLoanForm.durationUnit,
         startDate: newLoanForm.dateGiven,
       });
       closeCreateModal();
@@ -924,6 +984,10 @@ export default function Loans() {
          ================================================= */}
 
       {isCreateModalOpen && (
+        <DurationLoanModal customers={customers} form={newLoanForm} setForm={setNewLoanForm} error={pageError} onClose={closeCreateModal} onSubmit={handleCreateSubmit} />
+      )}
+
+      {legacyNewLoanForm && isCreateModalOpen && (
 
         <div
           className="fin-create-loan-overlay"

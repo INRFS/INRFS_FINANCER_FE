@@ -94,6 +94,7 @@ function normalizePayment(raw) {
       ? Number(raw.amountPaid ?? raw.amount_paid ?? raw.amount ?? 0)
       : Number(raw.balance ?? raw.totalDue ?? raw.amount ?? 0),
     outstanding: Number(raw.balance ?? raw.outstanding ?? 0),
+    loanOutstanding: Number(raw.loanOutstanding ?? raw.loan_outstanding ?? raw.balance ?? raw.outstanding ?? 0),
     dueDate,
     paymentDate,
     method: raw.method ?? raw.mode ?? raw.paymentMethod
@@ -182,6 +183,10 @@ const [viewPayment, setViewPayment] = useState(null);
         customer: payment.customer || customersById.get(payment.customerId)?.fullName || customersById.get(payment.customerId)?.name,
         customerNumber: payment.customerNumber || customersById.get(payment.customerId)?.customerNumber,
         loanNumber: payment.loanNumber || loansById.get(payment.loanId)?.loanNumber,
+        loanOutstanding: (() => {
+          const loan = loansById.get(payment.loanId);
+          return Number(loan?.principalOutstanding || 0) + Number(loan?.interestOutstanding || 0) + Number(loan?.feesOutstanding || 0);
+        })(),
       })));
     } catch (error) {
       setPageError(error.message);
@@ -270,12 +275,13 @@ const [viewPayment, setViewPayment] = useState(null);
     try {
       await platformApi.payments.record({
         loanId: scheduled.loanId,
-        paymentScheduleId: scheduled.id,
+        paymentScheduleId: details.paymentType === 'FullSettlement' ? null : scheduled.id,
         amount: Number(details.amount),
         receivedAt: paymentReceivedAt(details.paymentDate),
         mode: details.method,
         externalReference: details.reference || null,
         notes: details.notes || null,
+        paymentType: details.paymentType,
       });
       await loadPayments();
     } catch (error) {
@@ -863,21 +869,47 @@ const METHODS = ["Cash", "Upi", "BankTransfer", "Cheque", "Card", "Other"];
 function RecordPaymentModal({ payment, onClose, onConfirm }) {
   const [step, setStep] = useState(1); // 1 = due, 2 = record, 3 = success
   const [method, setMethod] = useState(METHODS[0]);
-  const [amount, setAmount] = useState(String(payment.amount));
+  const [amount, setAmount] = useState(String(Math.max(0, payment.interestDue - Math.min(payment.interestDue, payment.amountPaid))));
   const [paymentDate, setPaymentDate] = useState(() => dateKeyInTimeZone());
   const [reference, setReference] = useState('');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const submitLock = useRef(false);
   const [submitError, setSubmitError] = useState('');
+  const [paymentType, setPaymentType] = useState('InterestOnly');
+  const [settlementQuote, setSettlementQuote] = useState(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+  const interestMaximum = Math.max(0, payment.interestDue - Math.min(payment.interestDue, payment.amountPaid));
+  const maximum = paymentType === 'FullSettlement' ? Number(settlementQuote?.settlementAmount || 0)
+    : paymentType === 'InterestOnly' ? interestMaximum : Math.max(payment.amount, payment.loanOutstanding);
+
+  useEffect(() => {
+    if (paymentType !== 'FullSettlement') return;
+    let active = true;
+    setQuoteLoading(true);
+    setSubmitError('');
+    platformApi.payments.settlementQuote(payment.loanId, paymentDate)
+      .then((quote) => { if (active) { setSettlementQuote(quote); setAmount(String(quote.settlementAmount)); } })
+      .catch((error) => { if (active) { setSettlementQuote(null); setAmount(''); setSubmitError(error.message); } })
+      .finally(() => { if (active) setQuoteLoading(false); });
+    return () => { active = false; };
+  }, [payment.loanId, paymentDate, paymentType]);
+
+  const selectPaymentType = (type) => {
+    setPaymentType(type);
+    setSettlementQuote(null);
+    if (type === 'InterestOnly') setAmount(String(interestMaximum));
+    if (type === 'Regular') setAmount(String(Math.max(payment.amount, payment.loanOutstanding)));
+    if (type === 'FullSettlement') setAmount('');
+  };
 
   const handleConfirm = async () => {
-    if (submitLock.current || Number(amount) <= 0 || Number(amount) > payment.amount) return;
+    if (submitLock.current || Number(amount) <= 0 || Number(amount) > maximum || quoteLoading) return;
     submitLock.current = true;
     setSubmitting(true);
     setSubmitError('');
     try {
-      await onConfirm(payment.id, { amount, paymentDate, method, reference, notes });
+      await onConfirm(payment.id, { amount, paymentDate, method, reference, notes, paymentType });
       setStep(3);
       window.setTimeout(onClose, 900);
     } catch (error) {
@@ -888,7 +920,7 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
     }
   };
 
-  const remainingAfterPayment = Math.max(0, payment.amount - (Number(amount) || 0));
+  const remainingAfterPayment = Math.max(0, maximum - (Number(amount) || 0));
 
   return (
     <div className="pmt-modal-overlay" onClick={onClose}>
@@ -929,7 +961,24 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
         {step === 2 && (
           <div className="pmt-modal-body">
             <h3>Record payment</h3>
-            <label className="pmt-field"><span>Amount received</span><input type="number" min="0.01" step="0.01" max={payment.amount} value={amount} onChange={(event) => setAmount(event.target.value)} /></label>
+            <div className="pmt-payment-types" role="group" aria-label="Payment type">
+              <button type="button" className={paymentType === 'InterestOnly' ? 'is-active' : ''} onClick={() => selectPaymentType('InterestOnly')}>Interest Payment</button>
+              <button type="button" className={paymentType === 'Regular' ? 'is-active' : ''} onClick={() => selectPaymentType('Regular')}>Regular Payment</button>
+              <button type="button" className={paymentType === 'FullSettlement' ? 'is-active' : ''} onClick={() => selectPaymentType('FullSettlement')}>Full Settlement</button>
+            </div>
+            {paymentType === 'InterestOnly' && <p className="pmt-modal-line">Pay partial or full interest. Principal will not be reduced.</p>}
+            {paymentType === 'Regular' && <p className="pmt-modal-line">Payment is applied to fees and interest first, then principal.</p>}
+            {paymentType === 'FullSettlement' && settlementQuote && (
+              <div className="pmt-settlement-quote">
+                <div><span>Principal outstanding</span><strong>{formatCurrency(settlementQuote.principalOutstanding)}</strong></div>
+                <div><span>Accrued interest</span><strong>{formatCurrency(settlementQuote.accruedInterest)}</strong></div>
+                <div><span>Fees</span><strong>{formatCurrency(settlementQuote.feesOutstanding)}</strong></div>
+                <div><span>Future interest waived</span><strong>-{formatCurrency(settlementQuote.futureInterestWaived)}</strong></div>
+                <div className="pmt-settlement-total"><span>Settlement amount</span><strong>{formatCurrency(settlementQuote.settlementAmount)}</strong></div>
+              </div>
+            )}
+            <label className="pmt-field"><span>Amount received</span><input type="number" min="0.01" step="0.01" max={maximum} value={amount} readOnly={paymentType === 'FullSettlement'} onChange={(event) => setAmount(event.target.value)} /></label>
+            <div className="pmt-partial-summary" role="status"><strong>{paymentType === 'FullSettlement' ? 'Settlement' : 'Payment'}</strong><span>{paymentType === 'FullSettlement' && !settlementQuote ? (quoteLoading ? 'Calculating…' : 'Quote unavailable') : `Maximum allowed: ${formatCurrency(maximum)}`}</span></div>
             {remainingAfterPayment > 0 && (
               <div className="pmt-partial-summary" role="status">
                 <strong>Partial payment</strong>
@@ -953,8 +1002,8 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
             <label className="pmt-field"><span>Reference number (optional)</span><input value={reference} onChange={(event) => setReference(event.target.value)} /></label>
             <label className="pmt-field"><span>Note (optional)</span><textarea rows={2} value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
             {submitError && <p className="pmt-submit-error" role="alert">{submitError}</p>}
-            <button className="pmt-modal-cta" disabled={submitting || Number(amount) <= 0 || Number(amount) > payment.amount} onClick={handleConfirm}>
-              {submitting ? 'Recording…' : `Record ${formatCurrency(amount)}`}
+            <button className="pmt-modal-cta" disabled={submitting || quoteLoading || Number(amount) <= 0 || Number(amount) > maximum} onClick={handleConfirm}>
+              {submitting ? 'Recording…' : paymentType === 'FullSettlement' ? `Settle for ${formatCurrency(amount)}` : `Record ${formatCurrency(amount)}`}
             </button>
           </div>
         )}

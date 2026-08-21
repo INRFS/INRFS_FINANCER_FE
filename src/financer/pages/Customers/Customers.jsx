@@ -64,8 +64,15 @@ const estimatedCollectionInterest = (form) => {
   const maturity = addLoanDuration(form.startDate, form.durationValue, form.durationUnit);
   const dueDate = firstInterestDue(form, maturity);
   const interestDays = dateDays(form.startDate, dueDate);
-  return toNumber(form.principal) * toNumber(form.rate) / 100 * interestDays / 365;
+  return toNumber(form.principal) * toNumber(form.rate) / 100 * 12 * interestDays / 365;
 };
+
+const estimatedTotalInterest = (form) => (
+  toNumber(form.principal)
+  * toNumber(form.rate) / 100
+  * 12
+  * dateDays(form.startDate, addLoanDuration(form.startDate, form.durationValue, form.durationUnit)) / 365
+);
 
 const formatDate = (value) => {
   if (!value || value === '-') return '-';
@@ -450,8 +457,8 @@ export default function Customers() {
       const product = loanProducts.find((item) => item.isActive !== false) || loanProducts[0];
       if (!product) throw new Error('No active loan product is configured.');
       if (principal < Number(product.minimumPrincipal) || principal > Number(product.maximumPrincipal)) throw new Error(`Principal must be between ${formatCurrency(product.minimumPrincipal)} and ${formatCurrency(product.maximumPrincipal)}.`);
-      const annualInterestRate = toNumber(loanForm.rate);
-      await platformApi.loans.create({ customerId: selectedCustomer.id, loanProductId: product.id, principal, annualInterestRate, tenureMonths: Math.max(product.minimumTenureMonths || 1, 1), startDate: loanForm.startDate, durationValue: toNumber(loanForm.durationValue), durationUnit: loanForm.durationUnit, interestRate: annualInterestRate, interestRateBasis: 'PerAnnum', interestCollectionFrequency: loanForm.collectionFrequency });
+      const monthlyInterestRate = toNumber(loanForm.rate);
+      await platformApi.loans.create({ customerId: selectedCustomer.id, loanProductId: product.id, principal, annualInterestRate: monthlyInterestRate, tenureMonths: Math.max(product.minimumTenureMonths || 1, 1), startDate: loanForm.startDate, durationValue: toNumber(loanForm.durationValue), durationUnit: loanForm.durationUnit, interestRate: monthlyInterestRate, interestRateBasis: 'PerMonth', interestCollectionFrequency: loanForm.collectionFrequency });
       setIsAddLoanOpen(false); setLoanForm({ ...emptyLoanForm }); setActiveTab('loans'); await loadCustomers();
     } catch (error) { setLoanError(error.message); }
     finally { setSaving(false); }
@@ -812,7 +819,7 @@ export default function Customers() {
                 />
               </FormField>
 
-              <FormField label="Annual Interest Rate (%)" required>
+              <FormField label="Monthly Interest Rate (%)" required>
                 <input
                   type="number"
                   min="0"
@@ -875,7 +882,7 @@ export default function Customers() {
               </FormField>
 
               <FormField label="Estimated Total Interest">
-                <input type="text" value={formatCurrency(toNumber(loanForm.principal) * toNumber(loanForm.rate) / 100 * dateDays(loanForm.startDate, addLoanDuration(loanForm.startDate, loanForm.durationValue, loanForm.durationUnit)) / 365)} readOnly />
+                <input type="text" value={formatCurrency(estimatedTotalInterest(loanForm))} readOnly />
               </FormField>
             </div>
 
@@ -1927,6 +1934,48 @@ function DocumentsTab({ documents, loading, error }) {
     </div>
   );
 }
+
+function CustomerLoanModal({ customer, products, form, updateForm, error, saving, onClose, onSubmit }) {
+  const frequencies = [['Daily', Clock3, 1, 'Day'], ['Weekly', CalendarDays, 7, 'Week'], ['Monthly', List, monthlyPeriodDays(form.startDate), 'Month']];
+
+  return (
+    <div className="fin-create-loan-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div className="fin-create-loan-modal">
+        <div className="fin-create-loan-header">
+          <div><h2>Create New Loan</h2><p>Add a new loan account for {customer.name}</p></div>
+          <button type="button" className="fin-create-loan-close" onClick={onClose} aria-label="Close"><X size={20} /></button>
+        </div>
+
+        <form onSubmit={onSubmit} className="fin-create-loan-form">
+          <div className="fin-create-loan-field"><label>Selected Customer<span>*</span></label><input value={`${customer.name} (${customer.id})`} readOnly /></div>
+
+          <div className="fin-create-loan-two-column">
+            <div className="fin-create-loan-field"><label>Loan Product<span>*</span></label><select value={form.productId} onChange={(event) => updateForm('productId', event.target.value)} required><option value="">Select product</option>{products.filter((product) => product.isActive !== false).map((product) => <option key={product.id} value={product.id}>{product.name} · {product.annualInterestRate}%</option>)}</select></div>
+            <div className="fin-create-loan-field"><label>Tenure (months)<span>*</span></label><input type="number" min="1" value={form.tenureMonths} onChange={(event) => updateForm('tenureMonths', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Purpose<span>*</span></label><input value={form.purpose} onChange={(event) => updateForm('purpose', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Monthly Income<span>*</span></label><input type="number" min="0" value={form.monthlyIncome} onChange={(event) => updateForm('monthlyIncome', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Monthly Obligations</label><input type="number" min="0" value={form.monthlyObligations} onChange={(event) => updateForm('monthlyObligations', event.target.value)} /></div>
+            <div className="fin-create-loan-field"><label>Amount Given (₹)<span>*</span></label><div className="fin-input-with-icon"><span>₹</span><input type="number" min="1" value={form.principal} onChange={(event) => updateForm('principal', event.target.value)} required /></div></div>
+            <div className="fin-create-loan-field"><label>Date Given<span>*</span></label><input type="date" value={form.startDate} onChange={(event) => updateForm('startDate', event.target.value)} required /></div>
+          </div>
+
+          <div className="fin-create-loan-field"><label>Payment Method<span>*</span></label><div className="fin-payment-method-grid">{paymentMethods.map((method) => <button key={method} type="button" className={`fin-payment-method-btn ${form.paymentMethod === method ? 'active' : ''}`} onClick={() => updateForm('paymentMethod', method)}>{method}</button>)}</div></div>
+
+          <div className="fin-create-loan-field"><label>Interest Frequency<span>*</span></label><div className="fin-interest-frequency-grid">{frequencies.map(([frequency, Icon]) => <button key={frequency} type="button" className={`fin-interest-frequency-card ${form.collectionFrequency === frequency ? 'active' : ''}`} onClick={() => updateForm('collectionFrequency', frequency)}><Icon size={18} /><span>{frequency}</span></button>)}</div></div>
+
+          <div className="fin-create-loan-field"><label>Interest Rate (%)</label><div className="fin-interest-rate-input"><input type="number" min="0" step="0.1" value={form.rate} onChange={(event) => updateForm('rate', event.target.value)} /><span>%</span></div></div>
+
+          <div className="fin-interest-preview-grid">{frequencies.map(([frequency, , days, suffix]) => { const periodRate = rateForDays(form.rate, days); return <div key={frequency} className={`fin-interest-preview-card ${form.collectionFrequency === frequency ? 'selected' : ''}`}><span>{frequency} @ {periodRate % 1 === 0 ? periodRate : periodRate.toFixed(2)}%</span><strong>{formatInterestAmount(interestForDays(form.principal, form.rate, days))}<small>/{suffix}</small></strong></div>; })}</div>
+
+          {error && <div className="fin-customer-modal-error" role="alert">{error}</div>}
+          <div className="fin-create-loan-actions"><button type="button" className="fin-create-loan-cancel" onClick={onClose} disabled={saving}>Cancel</button><button type="submit" className="fin-create-loan-submit" disabled={saving}><Check size={17} />{saving ? 'Creating...' : 'Create Loan'}</button></div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+void CustomerLoanModal;
 
 function FormModal({ title, subtitle, onClose, children, wide = false }) {
   return (

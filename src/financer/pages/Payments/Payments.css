@@ -583,6 +583,56 @@
   color: var(--pmt-navy);
 }
 
+.pmt-payment-types {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pmt-payment-types button {
+  min-height: 50px;
+  padding: 8px;
+  border: 1px solid #d9e2ee;
+  border-radius: 10px;
+  background: #fff;
+  color: #566780;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pmt-payment-types button.is-active {
+  border-color: #2563d9;
+  background: #eaf2ff;
+  color: #2459c4;
+}
+
+.pmt-settlement-quote {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  margin-bottom: 14px;
+  border: 1px solid #dce5f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.pmt-settlement-quote > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #64748b;
+}
+
+.pmt-settlement-quote strong { color: #243b5a; }
+
+.pmt-settlement-quote .pmt-settlement-total {
+  padding-top: 8px;
+  border-top: 1px solid #dce5f0;
+  color: #17365f;
+  font-weight: 800;
+}
+
 .pmt-modal-line {
   font-size: 13px;
   color: var(--pmt-navy-soft);
