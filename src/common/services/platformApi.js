@@ -73,6 +73,7 @@ export const platformApi = {
     list: (params) => list('/payments', params),
     all: (params) => all('/payments', params),
     get: (id) => api.get(`/payments/${id}`),
+    settlementQuote: (loanId, date) => list(`/payments/settlement-quote/${loanId}`, { date }),
     record: (data) => api.post('/payments', data),
     reverse: (id, data) => api.post(`/payments/${id}/reverse`, data),
     schedules: (params) => list('/payment-schedules', params),
