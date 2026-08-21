@@ -13,7 +13,238 @@
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-border);
 }
+/* =========================================================
+   FINAL MOBILE RESPONSIVE FIX - NOTIFICATIONS
+   ========================================================= */
 
+.fin-notifications-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-notifications-header {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    gap: 16px;
+
+    padding: 18px 16px;
+
+    overflow: hidden;
+  }
+
+  .fin-notifications-title {
+    font-size: 22px;
+    line-height: 1.15;
+
+    max-width: 100%;
+  }
+
+  .fin-notifications-subtitle {
+    font-size: 13px;
+    line-height: 1.5;
+
+    max-width: 100%;
+  }
+
+
+  /* Mark All As Read button */
+  .fin-notifications-header button {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    justify-content: center;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  /* =======================================================
+     TABS
+     ======================================================= */
+
+  .fin-notifications-tabs {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    display: flex;
+
+    gap: 8px;
+
+    padding-bottom: 12px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+  }
+
+  .fin-notifications-tabs::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .fin-notifications-tabs::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .fin-notifications-tabs::-webkit-scrollbar-thumb {
+    background: #b8c6d6;
+    border-radius: 10px;
+  }
+
+  .fin-notifications-tab {
+    flex: 0 0 auto;
+
+    white-space: nowrap;
+
+    padding: 9px 18px;
+
+    font-size: 13px;
+  }
+
+
+  /* =======================================================
+     NOTIFICATION LIST
+     ======================================================= */
+
+  .fin-notifications-list {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+
+  /* =======================================================
+     NOTIFICATION CARD
+     ======================================================= */
+
+  .fin-notifications-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    gap: 12px;
+
+    overflow: hidden;
+  }
+
+  .fin-notifications-content {
+    min-width: 0;
+  }
+
+  .fin-notifications-top-row {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .fin-notifications-card-title {
+    min-width: 0;
+
+    font-size: 14px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fin-notifications-time {
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  .fin-notifications-message {
+    font-size: 12px;
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-notifications-page {
+    gap: 16px;
+  }
+
+  .fin-notifications-header {
+    padding: 16px 14px;
+    gap: 14px;
+  }
+
+  .fin-notifications-title {
+    font-size: 20px;
+  }
+
+  .fin-notifications-subtitle {
+    font-size: 12px;
+  }
+
+  .fin-notifications-tab {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .fin-notifications-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .fin-notifications-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .fin-notifications-card-title {
+    font-size: 13px;
+  }
+
+  .fin-notifications-time {
+    font-size: 10px;
+  }
+
+  .fin-notifications-message {
+    font-size: 11.5px;
+  }
+
+}
 .fin-notifications-title {
   font-size: 22px;
   font-weight: 800;
