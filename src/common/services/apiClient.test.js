@@ -29,6 +29,6 @@ describe('secure API session handling', () => {
 
     await expect(refreshSession()).resolves.toBe('rotated');
     expect(sessionStore.getAccessToken()).toBe('rotated');
-    expect(fetch).toHaveBeenCalledWith('/api/v1/auth/refresh', expect.objectContaining({ credentials: 'include', method: 'POST' }));
+    expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/\/api\/v1\/auth\/refresh$/), expect.objectContaining({ credentials: 'include', method: 'POST' }));
   });
 });

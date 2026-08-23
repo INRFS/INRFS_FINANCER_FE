@@ -30,6 +30,17 @@ async function readCredentials(destination) {
   return entries.findLast((entry) => entry.destination === destination && entry.type === 'WelcomeCredentials').payload;
 }
 
+async function readPasswordReset(destination) {
+  await expect.poll(async () => {
+    try {
+      const entries = (await readFile(deliveryFile, 'utf8')).trim().split(/\r?\n/).filter(Boolean).map(JSON.parse);
+      return entries.findLast((entry) => entry.destination === destination && entry.type === 'PasswordReset')?.payload?.token || '';
+    } catch { return ''; }
+  }, { timeout: 15_000 }).not.toBe('');
+  const entries = (await readFile(deliveryFile, 'utf8')).trim().split(/\r?\n/).filter(Boolean).map(JSON.parse);
+  return entries.findLast((entry) => entry.destination === destination && entry.type === 'PasswordReset').payload.token;
+}
+
 async function enterOtp(page, code) {
   for (const [index, digit] of [...code].entries()) {
     await page.getByLabel(`OTP digit ${index + 1}`).fill(digit);
@@ -39,10 +50,10 @@ async function enterOtp(page, code) {
 
 test('landing page navigation and protected routes are accessible and guarded', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /Manage loans, repayments, ledgers, and reports/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Login', exact: true })).toHaveAttribute('href', '/financer/login');
+  await expect(page.getByRole('heading', { name: /Run your entire lending operation without spreadsheets/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Sign In', exact: true })).toHaveAttribute('href', '/financer/login');
   await expect(page.getByRole('link', { name: 'Create Account', exact: true }).first()).toHaveAttribute('href', '/financer/login?mode=register');
-  await expect(page.getByRole('link', { name: 'Admin login' })).toHaveAttribute('href', '/admin/login');
+  await expect(page.getByRole('link', { name: 'Admin Sign In' })).toHaveAttribute('href', '/admin/login');
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(true);
 
   await page.getByRole('button', { name: 'How do I create a financer account?' }).click();
@@ -52,12 +63,12 @@ test('landing page navigation and protected routes are accessible and guarded', 
   await page.getByRole('button', { name: 'Open navigation' }).click();
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
   await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Capabilities', exact: true }).click();
-  await expect(page).toHaveURL(/#services$/);
+  await expect(page).toHaveURL(/#capabilities$/);
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(true);
 
   await page.setViewportSize({ width: 768, height: 1024 });
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /Everything needed for day-to-day lending operations/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Everything your team needs to keep lending operations moving/ })).toBeVisible();
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(true);
 
   for (const width of [320, 375, 768, 1024, 1440]) {
@@ -100,7 +111,7 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
   await page.getByRole('button', { name: 'Send OTP to Verify' }).click();
   await expect(page).toHaveURL(/\/financer\/verify-otp$/);
 
-  await enterOtp(page, await readOtp(mobile));
+  await enterOtp(page, await readOtp(email));
   await expect(page).toHaveURL(/\/financer\/login$/);
   await expect(page.getByText(/User ID and password have been sent/)).toBeVisible();
   const credentials = await readCredentials(email);
@@ -164,6 +175,26 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
   await expect(page.getByRole('alert')).toHaveCount(0);
   await expect(page.getByLabel('Follow-up message')).toHaveValue('');
   await expect(page.getByText('Additional information from the financer.')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Logout' }).click();
+  await expect(page).toHaveURL(/\/financer\/login$/);
+  await page.getByRole('button', { name: 'Forgot password?' }).click();
+  await page.getByLabel('Email Address').fill(email);
+  await page.getByRole('button', { name: 'Send reset instructions' }).click();
+  await expect(page.getByRole('status')).toContainText('reset instructions have been sent');
+  const resetToken = await readPasswordReset(email);
+  const newPassword = 'UpdatedFinancerE2E123!';
+  await page.goto(`/reset-password?token=${encodeURIComponent(resetToken)}`);
+  await page.getByLabel('New password').fill(newPassword);
+  await page.getByLabel('Confirm password').fill(newPassword);
+  await page.getByRole('button', { name: 'Reset password' }).click();
+  await expect(page).toHaveURL(/\/financer\/login$/);
+  await expect(page.getByRole('status')).toContainText('Password reset successfully');
+  registeredFinancerCredentials.password = newPassword;
+  await page.getByLabel('Mobile Number').fill(registeredFinancerCredentials.userId);
+  await page.getByLabel('Password').fill(newPassword);
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page).toHaveURL(/\/financer\/welcome$/);
 });
 
 test('admin completes password and OTP login, then reaches platform workflows', async ({ page }) => {
@@ -195,7 +226,7 @@ test('admin completes password and OTP login, then reaches platform workflows', 
   for (const [path, heading] of [
     ['/admin/financers', /Financer Institutions/],
     ['/admin/monthly-billing', /Monthly Billing/],
-    ['/admin/collections', /Platform Fee Collections/],
+    ['/admin/collections', /Due & Overdue Work Queue/],
     ['/admin/reports', /Platform Reports/],
     ['/admin/support', /Platform Support Desk/],
     ['/admin/operations', /Platform Operations/],
@@ -211,17 +242,17 @@ test('admin completes password and OTP login, then reaches platform workflows', 
   const generatedInvoiceResponse = page.waitForResponse((response) =>
     response.url().includes('/service-charges/invoices/generate') && response.request().method() === 'POST'
   );
-  await page.getByRole('button', { name: 'Generate Current Month' }).click();
+  await page.getByRole('button', { name: 'Refresh Current Cycle' }).click();
   const invoiceResponse = await generatedInvoiceResponse;
   expect(invoiceResponse.status()).toBe(200);
   const invoicePayload = await invoiceResponse.json();
   const generatedInvoice = invoicePayload.data ?? invoicePayload;
   expect(generatedInvoice.invoiceNumber).toMatch(/^INV-/);
-  await expect(page.getByText(generatedInvoice.invoiceNumber).first()).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
-  await page.getByRole('button', { name: 'View', exact: true }).first().click();
+  await page.getByRole('button', { name: 'View statement' }).first().click();
+  await expect(page.getByText(generatedInvoice.invoiceNumber).first()).toBeVisible();
   const invoiceDownload = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Download Demo PDF' }).click();
+  await page.getByRole('button', { name: 'Download Invoice' }).click();
   expect((await invoiceDownload).suggestedFilename()).toMatch(/-invoice-DEMO\.pdf$/);
   await page.getByRole('button', { name: 'Close', exact: true }).click();
 

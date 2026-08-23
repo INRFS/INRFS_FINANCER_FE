@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Phone, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowLeft } from 'lucide-react';
 import './OTPVerification.css';
 
 import logo from '../../../assets/logo.png';
@@ -23,9 +23,7 @@ export default function OTPVerification({ portal: propPortal }) {
 
   const inputRefs = useRef([]);
 
-  const contactInfo =
-    location.state?.mobile ||
-    location.state?.email || '';
+  const contactInfo = location.state?.email || '';
 
 
   useEffect(() => {
@@ -205,7 +203,7 @@ export default function OTPVerification({ portal: propPortal }) {
 
         {/* Phone icon */}
         <div className="fin-auth-otp-phone-icon">
-          <Phone size={31} strokeWidth={2} />
+          <Mail size={31} strokeWidth={2} />
         </div>
 
 
@@ -213,11 +211,11 @@ export default function OTPVerification({ portal: propPortal }) {
         <div className="fin-auth-otp-heading">
 
           <h1>
-            Verify your mobile number
+            Verify your email address
           </h1>
 
           <p>
-            Enter the 6-digit OTP sent to your mobile number.
+            Enter the 6-digit OTP sent to your registered email address.
           </p>
 
           <strong>

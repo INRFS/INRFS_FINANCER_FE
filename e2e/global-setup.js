@@ -80,7 +80,7 @@ export default async function globalSetup() {
   const vite = spawn(process.execPath, [join(webRoot, 'node_modules', 'vite', 'bin', 'vite.js'), '--host', '127.0.0.1', '--port', '5199', '--strictPort'], {
     cwd: webRoot,
     stdio: 'ignore',
-    env: { ...process.env, VITE_DEV_API_TARGET: 'http://127.0.0.1:5198' },
+    env: { ...process.env, VITE_API_BASE_URL: '/api/v1', VITE_DEV_API_TARGET: 'http://127.0.0.1:5198' },
   });
 
   try {

@@ -16,3 +16,4 @@
 .landing-brand>span{display:block;width:auto;height:auto;overflow:visible;border:0;border-radius:0;color:#5e7389;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 @media(max-width:600px){.landing-brand{min-width:116px}.landing-brand img{width:100px}.landing-brand>span{width:auto;height:auto;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.landing-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.landing-page section[id]{scroll-margin-top:76px}

@@ -20,7 +20,7 @@ export default function FinancerLogin() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
 
-  const [forgotMobile, setForgotMobile] = useState('');
+  const [forgotEmail, setForgotEmail] = useState('');
   const [forgotStatus, setForgotStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -72,7 +72,7 @@ export default function FinancerLogin() {
     setError('');
     try {
       const challenge = await api.post('/auth/register/financer', formData, { auth: false });
-      navigate('/financer/verify-otp', { state: { ...challenge, mobile: formData.mobile, portal: 'financer', registration: true } });
+      navigate('/financer/verify-otp', { state: { ...challenge, email: formData.email.trim().toLowerCase(), portal: 'financer', registration: true } });
     } catch (requestError) {
       setError(requestError.message || 'Unable to create the account.');
     } finally {
@@ -89,7 +89,7 @@ export default function FinancerLogin() {
     setSubmitting(true);
     setForgotStatus('');
     try {
-      await api.post('/auth/password/forgot', { email: forgotMobile }, { auth: false });
+      await api.post('/auth/password/forgot', { email: forgotEmail.trim().toLowerCase() }, { auth: false });
       setForgotStatus('If the account exists, password reset instructions have been sent.');
     } catch (requestError) {
       setForgotStatus(requestError.message || 'Unable to request a password reset.');
@@ -183,7 +183,7 @@ export default function FinancerLogin() {
                   type="button"
                   className="fin-forgot-password"
                   onClick={() => {
-                    setForgotMobile(mobile);
+                    setForgotEmail('');
                     setForgotStatus('');
                     setIsForgotPassword(true);
                     setIsRegistering(false);
@@ -206,7 +206,7 @@ export default function FinancerLogin() {
             </button>
 
             {error && <div className="fin-login-error" role="alert">{error}</div>}
-            {location.state?.registrationSuccess && <div className="fin-login-success" role="status">{location.state.registrationSuccess}</div>}
+            {(location.state?.registrationSuccess || location.state?.notice) && <div className="fin-login-success" role="status">{location.state.registrationSuccess || location.state.notice}</div>}
 
           </form>
 
@@ -239,11 +239,11 @@ export default function FinancerLogin() {
           </Link>
 
           <Modal isOpen={isForgotPassword} onClose={() => { if (!submitting) setIsForgotPassword(false); }} title="Reset your password" maxWidth="480px">
-            <p className="fin-forgot-modal-intro">Enter your registered mobile number. We’ll send reset instructions if an account matches.</p>
+            <p className="fin-forgot-modal-intro">Enter your registered email address. We’ll send a secure reset link if an account matches.</p>
             <form className="fin-login-form fin-forgot-modal-form" onSubmit={handleForgotPasswordSubmit}>
               <div className="fin-login-field">
-                <label htmlFor="forgot-mobile-dialog">Mobile Number</label>
-                <input id="forgot-mobile-dialog" type="tel" value={forgotMobile} onChange={(e) => { setForgotMobile(e.target.value); setForgotStatus(''); }} placeholder="+91 98765 43210" autoComplete="tel" required />
+                <label htmlFor="forgot-email-dialog">Email Address</label>
+                <input id="forgot-email-dialog" type="email" value={forgotEmail} onChange={(e) => { setForgotEmail(e.target.value); setForgotStatus(''); }} placeholder="you@example.com" autoComplete="email" required />
               </div>
               {forgotStatus && <div className="fin-login-reset-status" role="status">{forgotStatus}</div>}
               <div className="fin-forgot-modal-actions">
@@ -286,7 +286,7 @@ export default function FinancerLogin() {
             <h1>Forgot password?</h1>
 
             <p>
-              Enter your registered mobile number to reset your password.
+              Enter your registered email address to reset your password.
             </p>
 
           </div>
@@ -299,17 +299,17 @@ export default function FinancerLogin() {
 
             <div className="fin-login-field">
 
-              <label htmlFor="forgot-mobile">
-                Mobile Number
+              <label htmlFor="forgot-email">
+                Email Address
               </label>
 
               <input
-                id="forgot-mobile"
-                type="tel"
-                value={forgotMobile}
-                onChange={(e) => setForgotMobile(e.target.value)}
-                placeholder="+91 98765 43210"
-                autoComplete="tel"
+                id="forgot-email"
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
                 required
               />
 
