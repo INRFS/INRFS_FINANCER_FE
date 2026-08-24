@@ -12,11 +12,11 @@ describe("Payments", () => {
           loanNumber: "LN-001",
           customerId: "customer-1",
           customer: "Kim",
-          dueDate: "2026-08-18",
+          dueDate: "2026-08-30",
           interestDue: 9.86,
           totalDue: 9.86,
           balance: 9.86,
-          status: "Due",
+          status: "Upcoming",
         }]}
       />
     );

@@ -5,7 +5,8 @@ import {
   TrendingUp,
   CreditCard,
   Calendar,
-  Plus
+  Plus,
+  IndianRupee
 } from 'lucide-react';
 import {
   BarChart,
@@ -24,17 +25,44 @@ import StatusBadge from '../../../common/components/StatusBadge';
 import Button from '../../../common/components/Button';
 import Modal from '../../../common/components/Modal';
 import { formatCurrency, formatLoanNumber } from '../../../common/utils/formatters';
-import { platformApi } from '../../../common/services/platformApi';
+import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { useAuth } from '../../../auth/authState';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const [dashboard, setDashboard] = useState({ totalCustomers: 0, activeLoans: 0, totalPrincipal: 0, principalOutstanding: 0, loanStatusData: [], monthlyCollections: [], upcomingPayments: [] });
+  const [dashboard, setDashboard] = useState({ totalCustomers: 0, activeLoans: 0, totalPrincipal: 0, principalOutstanding: 0, totalInterestCollected: 0, loanStatusData: [], monthlyCollections: [], upcomingPayments: [] });
   const [pageError, setPageError] = useState('');
   const payments = dashboard.upcomingPayments || [];
   const [recordModalItem, setRecordModalItem] = useState(null);
-  const loadDashboard = React.useCallback(() => platformApi.dashboard.financer().then(setDashboard).catch((error) => setPageError(error.message)), []);
+  const loadDashboard = React.useCallback(async () => {
+    try {
+      const [dashData, paymentsPayload] = await Promise.all([
+        platformApi.dashboard.financer(),
+        platformApi.payments.all().catch(() => null),
+      ]);
+
+      const paymentItems = pageItems(paymentsPayload);
+      const actualInterestCollected = paymentItems
+        .filter((p) => {
+          const s = String(p.status || '').toLowerCase();
+          return s === 'completed' || s === 'paid' || !s;
+        })
+        .reduce((sum, p) => sum + Number(p.interestAmount || 0), 0);
+
+      const totalInterestCollected =
+        dashData.totalInterestCollected ??
+        dashData.total_interest_collected ??
+        (paymentItems.length > 0 ? actualInterestCollected : 0);
+
+      setDashboard({
+        ...dashData,
+        totalInterestCollected,
+      });
+    } catch (error) {
+      setPageError(error.message);
+    }
+  }, []);
   useEffect(() => { loadDashboard(); }, [loadDashboard]);
   const loanStatusData = (dashboard.loanStatusData || []).map((item, index) => ({ name: item.status, value: item.count, color: ['#74D900', '#10AFE9', '#FFB020', '#F04444'][index % 4] }));
   const monthlyCollections = (dashboard.monthlyCollections || []).map((item) => ({ ...item, collected: item.amount }));
@@ -68,7 +96,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 8 Statistics Cards Grid */}
+      {/* 5 Statistics Cards Grid */}
       <div className="fin-dashboard-stat-grid">
         <div className="fin-dashboard-stat-card">
           <div className="fin-dashboard-stat-icon-bg fin-stat-blue">
@@ -76,7 +104,7 @@ export default function Dashboard() {
           </div>
           <div className="fin-dashboard-stat-content">
             <span className="fin-dashboard-stat-label">TOTAL CUSTOMERS</span>
-            <h2 className="fin-dashboard-stat-value">{dashboard.totalCustomers}</h2>
+            <h2 className="fin-dashboard-stat-value">{dashboard.totalCustomers ?? dashboard.total_customers ?? 0}</h2>
           </div>
         </div>
 
@@ -86,7 +114,7 @@ export default function Dashboard() {
           </div>
           <div className="fin-dashboard-stat-content">
             <span className="fin-dashboard-stat-label">ACTIVE LOANS</span>
-            <h2 className="fin-dashboard-stat-value">{dashboard.activeLoans}</h2>
+            <h2 className="fin-dashboard-stat-value">{dashboard.activeLoans ?? dashboard.active_loans ?? 0}</h2>
           </div>
         </div>
 
@@ -96,7 +124,7 @@ export default function Dashboard() {
           </div>
           <div className="fin-dashboard-stat-content">
             <span className="fin-dashboard-stat-label">TOTAL GIVEN</span>
-            <h2 className="fin-dashboard-stat-value">{formatCurrency(dashboard.totalPrincipal)}</h2>
+            <h2 className="fin-dashboard-stat-value">{formatCurrency(dashboard.totalPrincipal ?? dashboard.total_principal ?? dashboard.total_given ?? 0)}</h2>
             <span className="fin-dashboard-stat-subtext">Principal disbursed</span>
           </div>
         </div>
@@ -107,8 +135,29 @@ export default function Dashboard() {
           </div>
           <div className="fin-dashboard-stat-content">
             <span className="fin-dashboard-stat-label">PRINCIPAL OUTSTANDING</span>
-            <h2 className="fin-dashboard-stat-value">{formatCurrency(dashboard.principalOutstanding)}</h2>
+            <h2 className="fin-dashboard-stat-value">{formatCurrency(dashboard.principalOutstanding ?? dashboard.principal_outstanding ?? 0)}</h2>
             <span className="fin-dashboard-stat-subtext">To be recovered</span>
+          </div>
+        </div>
+
+        <div className="fin-dashboard-stat-card">
+          <div className="fin-dashboard-stat-icon-bg fin-stat-green">
+            <IndianRupee size={22} />
+          </div>
+          <div className="fin-dashboard-stat-content">
+            <span className="fin-dashboard-stat-label">TOTAL INTEREST COLLECTED</span>
+            <h2 className="fin-dashboard-stat-value">
+              {formatCurrency(
+                dashboard.totalInterestCollected ??
+                dashboard.total_interest_collected ??
+                dashboard.interestCollected ??
+                dashboard.interest_collected ??
+                dashboard.totalInterest ??
+                dashboard.total_interest ??
+                0
+              )}
+            </h2>
+            <span className="fin-dashboard-stat-subtext">Interest received</span>
           </div>
         </div>
 

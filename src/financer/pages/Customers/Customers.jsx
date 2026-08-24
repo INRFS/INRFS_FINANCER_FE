@@ -22,7 +22,7 @@ import {
 import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi, customerToApi, loanFromApi } from '../../../common/utils/domainAdapters';
-import { validateCustomerForm, validateFile } from '../../../common/utils/formValidation';
+import { validateCustomerForm } from '../../../common/utils/formValidation';
 
 import './Customers.css';
 import { useLocation } from 'react-router-dom';

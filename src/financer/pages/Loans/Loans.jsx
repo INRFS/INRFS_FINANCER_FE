@@ -197,13 +197,8 @@ export default function Loans() {
         search.toLowerCase();
 
       const matchesSearch =
-        loan.id
-          .toLowerCase()
-          .includes(searchValue) ||
-
-        loan.customer
-          .toLowerCase()
-          .includes(searchValue);
+        String(loan.loanNumber || loan.displayId || loan.id || '').toLowerCase().includes(searchValue) ||
+        String(loan.customer || '').toLowerCase().includes(searchValue);
 
       const matchesStatus =
         statusFilter === 'All' ||
