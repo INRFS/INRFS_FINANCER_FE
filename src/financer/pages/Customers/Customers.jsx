@@ -22,7 +22,7 @@ import {
 import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi, customerToApi, loanFromApi } from '../../../common/utils/domainAdapters';
-import { validateCustomerForm } from '../../../common/utils/formValidation';
+import { validateCustomerForm, validateFile } from '../../../common/utils/formValidation';
 
 import './Customers.css';
 import { useLocation } from 'react-router-dom';
@@ -416,7 +416,8 @@ export default function Customers() {
 
     if (!selectedCustomer) return;
 
-    const validationError = validateCustomerForm(customerForm, { validateIdentity: false });
+    // Validate all steps; re-validate identity fields that have been filled in
+    const validationError = validateCustomerForm(customerForm, { validateIdentity: true });
     if (validationError) {
       setPageError(validationError);
       return;
@@ -508,9 +509,20 @@ export default function Customers() {
 
     const amount = toNumber(paymentForm.amount);
 
-    if (amount <= 0) return;
+    if (!paymentForm.loanId) {
+      setPageError('Please select a loan for this payment.');
+      return;
+    }
 
-    if (!paymentForm.loanId) return setPageError('Select a loan for this payment.');
+    if (!paymentForm.date) {
+      setPageError('Please enter the payment date.');
+      return;
+    }
+
+    if (amount <= 0) {
+      setPageError('Payment amount must be greater than zero.');
+      return;
+    }
     const modeMap = { PhonePe: 'Upi', 'Google Pay': 'Upi', UPI: 'Upi', 'Bank Transfer': 'BankTransfer' };
     setSaving(true);
     try {
@@ -836,7 +848,8 @@ export default function Customers() {
               <FormField label="Monthly Interest Rate (%)" required>
                 <input
                   type="number"
-                  min="0"
+                  min="0.01"
+                  max="100"
                   step="0.01"
                   value={loanForm.rate}
                   onChange={(event) =>
@@ -1631,42 +1644,56 @@ function CustomerWizard({
                   />
                 </FormField>
 
-                <FormField label="City" required>
-                  <input
-                    value={form.city}
-                    onChange={(event) =>
-                      updateForm('city', event.target.value)
-                    }
-                    placeholder="Mumbai"
-                    required
-                  />
-                </FormField>
+<FormField label="City" required>
+  <input
+    value={form.city}
+    onChange={(event) =>
+      updateForm(
+        'city',
+        sanitizeCustomerField('city', event.target.value),
+      )
+    }
+    placeholder="Mumbai"
+    maxLength={100}
+    pattern="[A-Za-z\s.'-]+"
+    title="City can contain only letters, spaces, apostrophe, dot and hyphen"
+    required
+  />
+</FormField>
 
-                <FormField label="State" required>
-                  <input
-                    value={form.state}
-                    onChange={(event) =>
-                      updateForm('state', event.target.value)
-                    }
-                    placeholder="Maharashtra"
-                    required
-                  />
-                </FormField>
+<FormField label="State" required>
+  <input
+    value={form.state}
+    onChange={(event) =>
+      updateForm(
+        'state',
+        sanitizeCustomerField('state', event.target.value),
+      )
+    }
+    placeholder="Maharashtra"
+    maxLength={100}
+    pattern="[A-Za-z\s.'-]+"
+    title="State can contain only letters, spaces, apostrophe, dot and hyphen"
+    required
+  />
+</FormField>
 
-                <FormField label="PIN Code" required>
-                  <input
-                    value={form.pinCode}
-                    onChange={(event) =>
-                      updateForm('pinCode', event.target.value)
-                    }
-                    placeholder="400001"
-                    inputMode="numeric"
-                    pattern="[1-9][0-9]{5}"
-                    maxLength="6"
-                    title="Enter a valid 6-digit Indian PIN code"
-                    required
-                  />
-                </FormField>
+<FormField label="PIN Code" required>
+  <input
+    value={form.pinCode}
+    onChange={(event) =>
+      updateForm(
+        'pinCode',
+        sanitizeCustomerField('pinCode', event.target.value),
+      )
+    }
+    inputMode="numeric"
+    pattern="[1-9][0-9]{5}"
+    maxLength={6}
+    title="Enter a valid 6-digit Indian PIN code"
+    required
+  />
+</FormField>
               </div>
 
               <WizardNavigation onBack={onBack} />
@@ -1679,31 +1706,44 @@ function CustomerWizard({
           {currentStep === 3 && (
             <form onSubmit={onNext}>
               <div className="fin-customer-single-form">
-                <FormField label="Aadhaar Number">
-                  <input
-                    value={form.aadhaar}
-                    onChange={(event) =>
-                      updateForm('aadhaar', event.target.value)
-                    }
-                    placeholder="1234 5678 9012"
-                    inputMode="numeric"
-                    pattern="[2-9][0-9 ]{11,14}"
-                    title="Enter a valid 12-digit Aadhaar number"
-                  />
-                </FormField>
+<FormField label="Aadhaar Number">
+  <input
+    value={form.aadhaar}
+    onChange={(event) =>
+      updateForm(
+        'aadhaar',
+        sanitizeCustomerField(
+          'aadhaar',
+          event.target.value,
+        ),
+      )
+    }
+    placeholder="1234 5678 9012"
+    inputMode="numeric"
+    maxLength={12}
+    pattern="[2-9][0-9]{11}"
+    title="Enter a valid 12-digit Aadhaar number starting with 2-9"
+  />
+</FormField>
 
-                <FormField label="PAN Number">
-                  <input
-                    value={form.pan}
-                    onChange={(event) =>
-                      updateForm('pan', event.target.value.toUpperCase())
-                    }
-                    placeholder="ABCDE1234F"
-                    pattern="[A-Z]{5}[0-9]{4}[A-Z]"
-                    maxLength="10"
-                    title="Use PAN format ABCDE1234F"
-                  />
-                </FormField>
+<FormField label="PAN Number">
+  <input
+    value={form.pan}
+    onChange={(event) =>
+      updateForm(
+        'pan',
+        sanitizeCustomerField(
+          'pan',
+          event.target.value,
+        ),
+      )
+    }
+    placeholder="ABCDE1234F"
+    pattern="[A-Z]{5}[0-9]{4}[A-Z]"
+    maxLength={10}
+    title="Use PAN format ABCDE1234F"
+  />
+</FormField>
               </div>
 
               <WizardNavigation onBack={onBack} />
@@ -1782,55 +1822,126 @@ function CustomerWizard({
 /* =========================================================
    REUSABLE UI
    ========================================================= */
+const sanitizeCustomerField = (field, value) => {
+  switch (field) {
+    case 'name':
+      // Name: letters, spaces, apostrophe, dot and hyphen only
+      return value.replace(/[^a-zA-Z\s.'-]/g, '');
 
+    case 'mobile':
+      // Mobile: numbers only, maximum 10 digits
+      return value.replace(/\D/g, '').slice(0, 10);
+
+    case 'email':
+      // Email: don't remove valid email characters.
+      return value;
+
+    case 'city':
+    case 'state':
+      // City / State: letters, spaces, apostrophe, dot and hyphen
+      return value.replace(/[^a-zA-Z\s.'-]/g, '');
+
+    case 'pinCode':
+      // PIN: numbers only, maximum 6 digits
+      return value.replace(/\D/g, '').slice(0, 6);
+
+    case 'aadhaar':
+      // Aadhaar: numbers only, maximum 12 digits
+      return value.replace(/\D/g, '').slice(0, 12);
+
+    case 'pan':
+      // PAN: uppercase letters and numbers only, maximum 10 characters
+      return value
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, '')
+        .slice(0, 10);
+
+    default:
+      return value;
+  }
+};
 function CustomerFields({ form, updateForm, compact = false }) {
+  const handleChange = (field, value) => {
+    updateForm(field, sanitizeCustomerField(field, value));
+  };
+
   return (
     <div className="fin-customer-form-grid">
+      {/* Full Name */}
       <FormField label="Full Name" required full={compact ? false : true}>
         <input
           value={form.name}
-          onChange={(event) => updateForm('name', event.target.value)}
+          onChange={(event) =>
+            handleChange('name', event.target.value)
+          }
           placeholder="Ramesh Kumar"
+          maxLength={100}
+          pattern="[A-Za-z\s.'-]+"
+          title="Name can contain only letters, spaces, apostrophe, dot and hyphen"
           required
         />
       </FormField>
 
+      {/* Mobile */}
       <FormField label="Mobile Number" required>
         <input
           type="tel"
           value={form.mobile}
-          onChange={(event) => updateForm('mobile', event.target.value)}
+          onChange={(event) =>
+            handleChange('mobile', event.target.value)
+          }
           placeholder="+91 98001 11111"
           inputMode="numeric"
-          pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+          pattern="[6-9][0-9]{9}"
+          maxLength={10}
           title="Enter a valid 10-digit Indian mobile number"
           required
         />
       </FormField>
 
+      {/* Email */}
       <FormField label="Email Address">
         <input
           type="email"
           value={form.email}
-          onChange={(event) => updateForm('email', event.target.value)}
+          onChange={(event) =>
+            handleChange('email', event.target.value)
+          }
           placeholder="ramesh@gmail.com"
+          autoComplete="email"
+          maxLength={254}
+          title="Enter a valid email address"
         />
       </FormField>
 
-      <FormField label="Date of Birth">
+      {/* Date of Birth */}
+      <FormField label="Date of Birth" required>
         <input
           type="date"
           value={form.dob}
-          onChange={(event) => updateForm('dob', event.target.value)}
-          max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().slice(0, 10)}
+          onChange={(event) =>
+            updateForm('dob', event.target.value)
+          }
+          max={
+            new Date(
+              new Date().setFullYear(
+                new Date().getFullYear() - 18,
+              ),
+            )
+              .toISOString()
+              .slice(0, 10)
+          }
           required
         />
       </FormField>
 
+      {/* Gender */}
       <FormField label="Gender">
         <select
           value={form.gender}
-          onChange={(event) => updateForm('gender', event.target.value)}
+          onChange={(event) =>
+            updateForm('gender', event.target.value)
+          }
         >
           <option value="">Select</option>
           <option value="Male">Male</option>
@@ -1841,68 +1952,117 @@ function CustomerFields({ form, updateForm, compact = false }) {
 
       {compact && (
         <>
+          {/* House / Flat Number */}
           <FormField label="House / Flat Number">
             <input
               value={form.houseNumber}
               onChange={(event) =>
-                updateForm('houseNumber', event.target.value)
+                updateForm(
+                  'houseNumber',
+                  event.target.value,
+                )
               }
+              maxLength={100}
             />
           </FormField>
 
+          {/* Street */}
           <FormField label="Street">
             <input
               value={form.street}
-              onChange={(event) => updateForm('street', event.target.value)}
+              onChange={(event) =>
+                updateForm('street', event.target.value)
+              }
+              maxLength={150}
             />
           </FormField>
 
+          {/* Area */}
           <FormField label="Area">
             <input
               value={form.area}
-              onChange={(event) => updateForm('area', event.target.value)}
+              onChange={(event) =>
+                updateForm('area', event.target.value)
+              }
+              maxLength={150}
             />
           </FormField>
 
+          {/* City */}
           <FormField label="City">
             <input
               value={form.city}
-              onChange={(event) => updateForm('city', event.target.value)}
+              onChange={(event) =>
+                handleChange('city', event.target.value)
+              }
+              maxLength={100}
+              pattern="[A-Za-z\s.'-]+"
+              title="City can contain only letters, spaces, apostrophe, dot and hyphen"
             />
           </FormField>
 
+          {/* State */}
           <FormField label="State">
             <input
               value={form.state}
-              onChange={(event) => updateForm('state', event.target.value)}
+              onChange={(event) =>
+                handleChange('state', event.target.value)
+              }
+              maxLength={100}
+              pattern="[A-Za-z\s.'-]+"
+              title="State can contain only letters, spaces, apostrophe, dot and hyphen"
             />
           </FormField>
 
+          {/* PIN Code */}
           <FormField label="PIN Code">
             <input
               value={form.pinCode}
-              onChange={(event) => updateForm('pinCode', event.target.value)}
+              onChange={(event) =>
+                handleChange(
+                  'pinCode',
+                  event.target.value,
+                )
+              }
               inputMode="numeric"
               pattern="[1-9][0-9]{5}"
-              maxLength="6"
+              maxLength={6}
               title="Enter a valid 6-digit Indian PIN code"
-              required
             />
           </FormField>
 
+          {/* Aadhaar */}
           <FormField label="Aadhaar">
             <input
               value={form.aadhaar}
-              onChange={(event) => updateForm('aadhaar', event.target.value)}
+              onChange={(event) =>
+                handleChange(
+                  'aadhaar',
+                  event.target.value,
+                )
+              }
+              placeholder="Enter 12-digit Aadhaar number"
+              inputMode="numeric"
+              maxLength={12}
+              pattern="[2-9][0-9]{11}"
+              title="Enter a valid 12-digit Aadhaar number starting with 2-9"
             />
           </FormField>
 
+          {/* PAN */}
           <FormField label="PAN">
             <input
               value={form.pan}
               onChange={(event) =>
-                updateForm('pan', event.target.value.toUpperCase())
+                handleChange(
+                  'pan',
+                  event.target.value,
+                )
               }
+              placeholder="ABCDE1234F"
+              pattern="[A-Z]{5}[0-9]{4}[A-Z]"
+              maxLength={10}
+              title="Use PAN format ABCDE1234F"
             />
           </FormField>
         </>
@@ -2071,12 +2231,71 @@ function WizardNavigation({ onBack }) {
 }
 
 function DocumentUpload({ label, file, onChange }) {
+  const handleChange = (event) => {
+    const selected = event.target.files?.[0] || null;
+
+    if (!selected) {
+      onChange(event);
+      return;
+    }
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'application/pdf',
+    ];
+
+    const allowedExtensions = [
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.pdf',
+    ];
+
+    const extension = `.${selected.name
+      .split('.')
+      .pop()
+      ?.toLowerCase()}`;
+
+    // File type validation
+    if (
+      !allowedTypes.includes(selected.type) &&
+      !allowedExtensions.includes(extension)
+    ) {
+      alert(
+        'Invalid file type. Please upload JPG, JPEG, PNG or PDF files only.',
+      );
+      event.target.value = '';
+      return;
+    }
+
+    // Maximum 5 MB
+    if (selected.size > 5 * 1024 * 1024) {
+      alert(
+        `"${selected.name}" exceeds the 5 MB file size limit. Please choose a smaller file.`,
+      );
+      event.target.value = '';
+      return;
+    }
+
+    // Empty file
+    if (selected.size === 0) {
+      alert(
+        'The selected file appears to be empty. Please choose a valid document.',
+      );
+      event.target.value = '';
+      return;
+    }
+
+    onChange(event);
+  };
+
   return (
     <label className="fin-customer-document-upload">
       <input
         type="file"
         accept=".jpg,.jpeg,.png,.pdf"
-        onChange={onChange}
+        onChange={handleChange}
       />
 
       <div className="document-upload-left">
@@ -2084,7 +2303,9 @@ function DocumentUpload({ label, file, onChange }) {
         <span>{file ? file.name : label}</span>
       </div>
 
-      <strong>{file ? 'Selected' : 'Browse'}</strong>
+      <strong>
+        {file ? 'Selected' : 'Browse'}
+      </strong>
     </label>
   );
 }

@@ -34,7 +34,7 @@ describe("Payments", () => {
     expect(screen.getByRole("button", { name: "Record ₹5" })).toBeInTheDocument();
   });
 
-  it("hides zero-value schedules and closed-loan future dues while retaining paid history", () => {
+  it("hides zero-value schedules and closed-loan future dues while retaining paid history in Paid tab", () => {
     const { container } = render(
       <Payments
         initialData={[
@@ -48,7 +48,42 @@ describe("Payments", () => {
     const result = within(container);
     expect(result.queryByText("LN-001")).not.toBeInTheDocument();
     expect(result.queryByText("LN-002")).not.toBeInTheDocument();
+    // In "All" tab, Paid record is excluded
+    expect(result.queryByText("LN-003")).not.toBeInTheDocument();
+    expect(result.getByText("0 records")).toBeInTheDocument();
+
+    // Switch to "Paid" tab -> Paid record appears
+    fireEvent.click(result.getByRole("button", { name: /^Paid\s+\d+$/ }));
     expect(result.getByText("LN-003")).toBeInTheDocument();
+    expect(result.getByText("1 records")).toBeInTheDocument();
+  });
+
+  it("filters out paid records in All tab search and shows them in Paid tab search", () => {
+    const { container } = render(
+      <Payments
+        initialData={[
+          { id: "active-1", loanId: "loan-1", loanNumber: "LN-001", customer: "Bala", customerNumber: "CUS-001", dueDate: "2026-08-25", totalDue: 500, balance: 500, status: "Due" },
+          { id: "paid-1", loanId: "loan-2", loanNumber: "LN-002", customer: "Bala", customerNumber: "CUS-002", dueDate: "2026-08-24", totalDue: 1000, amountPaid: 1000, status: "Paid" },
+        ]}
+      />
+    );
+
+    const result = within(container);
+    // In "All" tab: only active-1 (LN-001) should appear
+    expect(result.getByText("LN-001")).toBeInTheDocument();
+    expect(result.queryByText("LN-002")).not.toBeInTheDocument();
+    expect(result.getByText("1 records")).toBeInTheDocument();
+
+    // Search "Bala" in "All" tab: still only active-1
+    const searchInput = result.getByPlaceholderText(/Search loan ID or customer/i);
+    fireEvent.change(searchInput, { target: { value: "Bala" } });
+    expect(result.getByText("LN-001")).toBeInTheDocument();
+    expect(result.queryByText("LN-002")).not.toBeInTheDocument();
+
+    // Switch to "Paid" tab with search "Bala": only paid-1 (LN-002) appears
+    fireEvent.click(result.getByRole("button", { name: /^Paid\s+\d+$/ }));
+    expect(result.queryByText("LN-001")).not.toBeInTheDocument();
+    expect(result.getByText("LN-002")).toBeInTheDocument();
     expect(result.getByText("1 records")).toBeInTheDocument();
   });
 });

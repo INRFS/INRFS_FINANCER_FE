@@ -85,7 +85,7 @@ function DurationLoanModal({ customers, form, setForm, error, onClose, onSubmit 
           <div className="fin-create-loan-field"><label>Select Customer<span>*</span></label><select value={form.customer} onChange={(event) => update('customer', event.target.value)} required><option value="">Select customer</option>{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.fullName} ({customer.customerNumber})</option>)}</select></div>
           <div className="fin-create-loan-two-column">
             <div className="fin-create-loan-field"><label>Principal Amount (₹)<span>*</span></label><input type="number" min="1" value={form.amount} onChange={(event) => update('amount', event.target.value)} placeholder="10000" required /></div>
-            <div className="fin-create-loan-field"><label>Monthly Interest Rate (%)<span>*</span></label><input type="number" min="0" step="0.01" value={form.interestRate} onChange={(event) => update('interestRate', event.target.value)} required /></div>
+            <div className="fin-create-loan-field"><label>Monthly Interest Rate (%)<span>*</span></label><input type="number" min="0.01" max="100" step="0.01" value={form.interestRate} onChange={(event) => update('interestRate', event.target.value)} required /></div>
             <div className="fin-create-loan-field"><label>Loan Period Unit<span>*</span></label><select value={form.durationUnit} onChange={(event) => update('durationUnit', event.target.value)}><option>Days</option><option>Weeks</option><option>Months</option></select></div>
             <div className="fin-create-loan-field"><label>Number of {form.durationUnit}<span>*</span></label><input type="number" min="1" value={form.durationValue} onChange={(event) => update('durationValue', event.target.value)} required /></div>
             <div className="fin-create-loan-field"><label>Interest Collection<span>*</span></label><select value={form.interestFrequency} onChange={(event) => update('interestFrequency', event.target.value)}><option>Daily</option><option>Weekly</option><option>Monthly</option><option value="AtMaturity">At Maturity</option></select></div>
@@ -394,69 +394,89 @@ export default function Loans() {
      CREATE LOAN
      ======================================================= */
 
-  const handleCreateSubmit = async (e) => {
+const handleCreateSubmit = async (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  const principal = Number(newLoanForm.amount);
+  const rate = Number(newLoanForm.interestRate);
+  const duration = Number(newLoanForm.durationValue);
 
-    const principal =
-      Number(newLoanForm.amount);
+  // Customer validation
+  if (!newLoanForm.customer) {
+    setPageError('Please select a customer.');
+    return;
+  }
 
+  // Amount validation
+  if (!principal || principal <= 0) {
+    setPageError('Please enter a valid loan amount greater than zero.');
+    return;
+  }
 
-    if (!newLoanForm.customer) {
+  // Interest rate validation
+  if (!rate || rate <= 0) {
+    setPageError('Please enter a valid interest rate greater than zero.');
+    return;
+  }
 
-      alert(
-        'Please select a customer.'
+  if (rate > 100) {
+    setPageError('Interest rate cannot exceed 100% per month.');
+    return;
+  }
+
+  // Duration validation
+  if (!duration || duration <= 0) {
+    setPageError('Enter a valid loan duration of at least 1.');
+    return;
+  }
+
+  // Date validation
+  if (!newLoanForm.dateGiven) {
+    setPageError('Please select the loan start date.');
+    return;
+  }
+
+  // Frequency validation
+  const validFrequencies = ['Daily', 'Weekly', 'Monthly', 'AtMaturity'];
+
+  if (!validFrequencies.includes(newLoanForm.interestFrequency)) {
+    setPageError('Please select a valid interest collection frequency.');
+    return;
+  }
+
+  setPageError('');
+
+  try {
+    const product =
+      products.find((item) => item.isActive !== false) || products[0];
+
+    if (!product) {
+      setPageError(
+        'No active loan product is configured. Ask an administrator to create one first.'
       );
-
       return;
     }
 
+    await platformApi.loans.create({
+      customerId: newLoanForm.customer,
+      loanProductId: product.id,
+      principal,
+      annualInterestRate: rate,
+      interestRate: rate,
+      interestRateBasis: 'PerMonth',
+      interestCollectionFrequency: newLoanForm.interestFrequency,
+      tenureMonths: Math.max(product.minimumTenureMonths || 1, 1),
+      durationValue: duration,
+      durationUnit: newLoanForm.durationUnit,
+      startDate: newLoanForm.dateGiven,
+    });
 
-    if (!principal || principal <= 0) {
-
-      alert(
-        'Please enter a valid loan amount.'
-      );
-
-      return;
-    }
-
-
-    if (!newLoanForm.dateGiven) {
-
-      alert(
-        'Please select the date given.'
-      );
-
-      return;
-    }
-
-    if (Number(newLoanForm.durationValue) <= 0) return setPageError('Enter a valid number of periods.');
-
-
-    const product = products.find((item) => item.isActive !== false) || products[0];
-    if (!product) return setPageError('No active loan product is configured. Ask an administrator to create one first.');
-    setPageError('');
-    try {
-      await platformApi.loans.create({
-        customerId: newLoanForm.customer,
-        loanProductId: product.id,
-        principal,
-        annualInterestRate: Number(newLoanForm.interestRate),
-        interestRate: Number(newLoanForm.interestRate),
-        interestRateBasis: 'PerMonth',
-        interestCollectionFrequency: newLoanForm.interestFrequency,
-        tenureMonths: Math.max(product.minimumTenureMonths || 1, 1),
-        durationValue: Number(newLoanForm.durationValue),
-        durationUnit: newLoanForm.durationUnit,
-        startDate: newLoanForm.dateGiven,
-      });
-      closeCreateModal();
-      await loadData();
-    } catch (error) {
-      setPageError(error.message);
-    }
-  };
+    closeCreateModal();
+    await loadData();
+  } catch (error) {
+    setPageError(error.message);
+  }
+};
 
   /* =======================================================
      PAGE

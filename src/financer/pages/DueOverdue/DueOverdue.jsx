@@ -213,7 +213,14 @@ const isOverdue = (item) => {
 
 
 const isDue = (item) => {
-  return !isOverdue(item);
+  const status = String(item.status || '').toLowerCase();
+
+  return (
+    !isOverdue(item) &&
+    !status.includes('paid') &&
+    !status.includes('success') &&
+    !status.includes('completed')
+  );
 };
 
 
@@ -227,7 +234,9 @@ export default function DueOverdue() {
   const [pageError, setPageError] = useState('');
   useEffect(() => {
     platformApi.collections.list({ pageSize: 200 })
-      .then((payload) => setItems(pageItems(payload).map((item) => ({ ...item, loanId: item.loanNumber, dueAmount: item.due, daysOverdue: item.daysPastDue, status: item.daysPastDue > 0 ? 'Overdue' : 'Due' }))))
+      .then((payload) => setItems(pageItems(payload).map((item) => ({ ...item, loanId: item.loanNumber, dueAmount: item.due, daysOverdue: item.daysPastDue, status: item.daysPastDue > 0
+  ? 'Overdue'
+  : item.status || 'Due' }))))
       .catch((error) => setPageError(error.message));
   }, []);
 
