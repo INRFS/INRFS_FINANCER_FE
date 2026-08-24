@@ -159,6 +159,18 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
     await expect(page.getByRole('alert')).toHaveCount(0);
   }
 
+  await page.setViewportSize({ width: 1100, height: 400 });
+  await page.goto('/financer/loans');
+  await page.getByRole('button', { name: 'New Loan Account' }).click();
+  const createLoanForm = page.locator('.fin-create-loan-form');
+  await expect(createLoanForm).toBeVisible();
+  await expect(createLoanForm.evaluate((form) => form.scrollHeight > form.clientHeight)).resolves.toBe(true);
+  await createLoanForm.hover();
+  await page.mouse.wheel(0, 500);
+  await expect.poll(() => createLoanForm.evaluate((form) => form.scrollTop)).toBeGreaterThan(0);
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.setViewportSize({ width: 1280, height: 720 });
+
   await page.goto('/financer/support');
   await page.getByRole('button', { name: 'Create Support Ticket' }).click();
   await page.getByLabel('Ticket Subject').fill('E2E support workflow');

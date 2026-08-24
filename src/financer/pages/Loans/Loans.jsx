@@ -17,7 +17,7 @@ import SearchInput from '../../../common/components/SearchInput';
 import StatusBadge from '../../../common/components/StatusBadge';
 import Button from '../../../common/components/Button';
 import Modal from '../../../common/components/Modal';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { loanFromApi } from '../../../common/utils/domainAdapters';
 import { formatInterestAmount, interestForDays, monthlyPeriodDays, rateForDays } from './loanInterest';
@@ -744,7 +744,7 @@ export default function Loans() {
                   <td>
 
                     <strong className="fin-loans-id-cell">
-                      {loan.id}
+                      {formatLoanNumber(loan)}
                     </strong>
 
                   </td>
@@ -857,7 +857,7 @@ export default function Loans() {
           onClose={() =>
             setSelectedLoan(null)
           }
-          title={`Loan Details — ${selectedLoan.id}`}
+          title={`Loan Details — ${formatLoanNumber(selectedLoan)}`}
         >
 
           <div className="fin-loans-details-view">

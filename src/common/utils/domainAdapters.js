@@ -79,6 +79,7 @@ export const loanFromApi = (item, customer) => ({
   id: item.id,
   displayId: item.loanNumber,
   customer: customer?.fullName || customer?.name || item.customerName || item.customerId,
+  customerNumber: customer?.customerNumber || item.customerNumber,
   principal: Number(item.principal || 0),
   rate: Number(item.interestRate ?? item.annualInterestRate ?? 0),
   interestRate: `${Number(item.interestRate ?? item.annualInterestRate ?? 0)}% ${String(item.interestRateBasis || 'PerAnnum').replace('Per', 'Per ')}`,

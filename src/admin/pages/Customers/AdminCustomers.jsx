@@ -13,7 +13,7 @@ import {
 
 import SearchInput from '../../../common/components/SearchInput';
 import StatusBadge from '../../../common/components/StatusBadge';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi } from '../../../common/utils/domainAdapters';
 
@@ -324,7 +324,7 @@ export default function AdminCustomers() {
                     <tr key={customer.id}>
                       <td>
                         <strong className="inrfs-customers-id">
-                          {customer.id}
+                          {formatCustomerNumber(customer)}
                         </strong>
                       </td>
 
@@ -420,7 +420,7 @@ export default function AdminCustomers() {
 
                       <div>
                         <strong>{customer.name}</strong>
-                        <span>{customer.id}</span>
+                        <span>{formatCustomerNumber(customer)}</span>
                       </div>
                     </div>
 
@@ -531,7 +531,7 @@ export default function AdminCustomers() {
                   </h2>
 
                   <span>
-                    Customer ID: {selectedCustomer.id}
+                    Customer ID: {formatCustomerNumber(selectedCustomer)}
                   </span>
                 </div>
               </div>

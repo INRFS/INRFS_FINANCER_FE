@@ -23,7 +23,7 @@ import {
 import StatusBadge from '../../../common/components/StatusBadge';
 import Button from '../../../common/components/Button';
 import Modal from '../../../common/components/Modal';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi } from '../../../common/services/platformApi';
 import { useAuth } from '../../../auth/authState';
 import './Dashboard.css';
@@ -225,17 +225,19 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {payments.map((row) => (
+              {payments.map((row) => {
+                const status = row.status || (row.dueDate <= new Date().toISOString().slice(0, 10) ? 'Due' : 'Upcoming');
+                return (
                 <tr key={row.id}>
                   <td className="fin-tbl-customer-name">{row.customer}</td>
-                  <td className="fin-tbl-loan-id">{row.loanId}</td>
+                  <td className="fin-tbl-loan-id" title={row.loanId}>{formatLoanNumber(row)}</td>
                   <td className="fin-tbl-amount">{formatCurrency(row.amount)}</td>
                   <td>{row.dueDate}</td>
                   <td>
-                    <StatusBadge status={row.status} />
+                    <StatusBadge status={status} />
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    {row.status !== 'Paid' ? (
+                    {status !== 'Paid' ? (
                       <Button
                         variant="cyan"
                         size="small"
@@ -249,7 +251,8 @@ export default function Dashboard() {
                     )}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -264,7 +267,7 @@ export default function Dashboard() {
         >
           <form onSubmit={handleConfirmPayment} className="fin-dashboard-modal-form">
             <div className="fin-dashboard-modal-info">
-              <div><span>Loan ID:</span> <strong>{recordModalItem.loanId}</strong></div>
+              <div><span>Loan ID:</span> <strong>{formatLoanNumber(recordModalItem)}</strong></div>
               <div><span>Due Amount:</span> <strong>{formatCurrency(recordModalItem.amount)}</strong></div>
             </div>
 

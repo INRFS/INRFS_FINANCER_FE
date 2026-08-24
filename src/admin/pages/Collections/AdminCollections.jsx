@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 import { platformApi, pageItems } from '../../../common/services/platformApi';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber } from '../../../common/utils/formatters';
 
 import './AdminCollections.css';
 
@@ -552,7 +552,7 @@ function CollectionDetails({
               </span>
 
               <strong>
-                {collection.customerId}
+                {formatCustomerNumber(collection)}
               </strong>
             </div>
 
@@ -1691,7 +1691,7 @@ const AdminCollections = () => {
 
                             <span>
                               {
-                                collection.customerId
+                                formatCustomerNumber(collection)
                               }
                             </span>
                           </div>
@@ -1870,7 +1870,7 @@ const AdminCollections = () => {
 
                         <span>
                           {
-                            collection.customerId
+                            formatCustomerNumber(collection)
                           }
                         </span>
                       </div>

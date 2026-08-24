@@ -19,9 +19,10 @@ import {
   Download,
 } from 'lucide-react';
 
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi, customerToApi, loanFromApi } from '../../../common/utils/domainAdapters';
+import { validateCustomerForm } from '../../../common/utils/formValidation';
 
 import './Customers.css';
 import { useLocation } from 'react-router-dom';
@@ -332,6 +333,7 @@ export default function Customers() {
   };
 
   const updateCustomerForm = (field, value) => {
+    setPageError('');
     setCustomerForm((prev) => ({
       ...prev,
       [field]: value,
@@ -344,6 +346,12 @@ export default function Customers() {
 
   const handleCustomerWizardNext = async (event) => {
     event?.preventDefault();
+
+    const validationError = validateCustomerForm(customerForm, currentStep < 4 ? { step: currentStep } : undefined);
+    if (validationError) {
+      setPageError(validationError);
+      return;
+    }
 
     if (currentStep < 4) {
       setCurrentStep((prev) => prev + 1);
@@ -407,6 +415,12 @@ export default function Customers() {
     event?.preventDefault();
 
     if (!selectedCustomer) return;
+
+    const validationError = validateCustomerForm(customerForm, { validateIdentity: false });
+    if (validationError) {
+      setPageError(validationError);
+      return;
+    }
 
     setSaving(true);
     try {
@@ -674,7 +688,7 @@ export default function Customers() {
 
                       <div>
                         <strong>{customer.name}</strong>
-                        <span>{customer.id}</span>
+                        <span title={customer.id}>{formatCustomerNumber(customer)}</span>
                       </div>
                     </div>
                   </td>
@@ -770,7 +784,7 @@ export default function Customers() {
       {isEditCustomerOpen && selectedCustomer && (
         <FormModal
           title="Edit Customer"
-          subtitle={`${selectedCustomer.id} · Update only this customer's information`}
+          subtitle={`${formatCustomerNumber(selectedCustomer)} · Update only this customer's information`}
           onClose={() => setIsEditCustomerOpen(false)}
         >
           <form onSubmit={saveCustomerEdit}>
@@ -801,7 +815,7 @@ export default function Customers() {
       {isAddLoanOpen && selectedCustomer && (
         <FormModal
           title="Add Loan"
-          subtitle={`${selectedCustomer.name} · ${selectedCustomer.id}`}
+          subtitle={`${selectedCustomer.name} · ${formatCustomerNumber(selectedCustomer)}`}
           onClose={() => setIsAddLoanOpen(false)}
         >
           <form onSubmit={saveLoan}>
@@ -920,7 +934,7 @@ export default function Customers() {
       {isPaymentOpen && selectedCustomer && (
         <FormModal
           title="Record Payment"
-          subtitle={`${selectedCustomer.name} · ${selectedCustomer.id}`}
+          subtitle={`${selectedCustomer.name} · ${formatCustomerNumber(selectedCustomer)}`}
           onClose={() => setIsPaymentOpen(false)}
           wide
         >
@@ -929,7 +943,7 @@ export default function Customers() {
               <FormField label="Loan" required>
                 <select value={paymentForm.loanId} onChange={(event) => updatePaymentForm('loanId', event.target.value)} required>
                   <option value="">Select loan</option>
-                  {selectedCustomer.loans.filter((loan) => loan.status !== 'Closed').map((loan) => <option key={loan.id} value={loan.id}>{loan.displayId || loan.loanNumber || loan.id}</option>)}
+                  {selectedCustomer.loans.filter((loan) => loan.status !== 'Closed').map((loan) => <option key={loan.id} value={loan.id}>{formatLoanNumber(loan)}</option>)}
                 </select>
               </FormField>
               <FormField label="Payment Date" required>
@@ -1160,7 +1174,7 @@ function CustomerDetailsModal({
               <h2>{customer.name}</h2>
 
               <div className="fin-customer-profile-meta">
-                <span>{customer.id}</span>
+                <span title={customer.id}>{formatCustomerNumber(customer)}</span>
                 <span>·</span>
                 <span>{customer.mobile}</span>
                 <span>·</span>
@@ -1333,7 +1347,7 @@ function LoansTab({ loans }) {
       {loans.map((loan) => (
         <div className="fin-customer-loan-card" key={loan.id}>
           <div className="fin-customer-loan-top">
-            <strong>{loan.displayId || loan.loanNumber || loan.id}</strong>
+            <strong>{formatLoanNumber(loan)}</strong>
             <CustomerStatus status={loan.status} />
           </div>
 
@@ -1352,7 +1366,7 @@ function LoansTab({ loans }) {
 }
 
 function ScheduleTab({ loans }) {
-  const rows = loans.flatMap((loan) => (loan.schedules || []).map((schedule) => ({ ...schedule, loanNumber: loan.displayId || loan.id })));
+  const rows = loans.flatMap((loan) => (loan.schedules || []).map((schedule) => ({ ...schedule, loanNumber: formatLoanNumber(loan) })));
   if (!rows.length) return <EmptyState text="No scheduled dues. Generated interest and principal dues will appear here." />;
   return <div className="fin-customer-table-list">{rows.map((row) => (
     <div className="fin-customer-table-row" key={row.id}>
@@ -1646,6 +1660,10 @@ function CustomerWizard({
                       updateForm('pinCode', event.target.value)
                     }
                     placeholder="400001"
+                    inputMode="numeric"
+                    pattern="[1-9][0-9]{5}"
+                    maxLength="6"
+                    title="Enter a valid 6-digit Indian PIN code"
                     required
                   />
                 </FormField>
@@ -1668,6 +1686,9 @@ function CustomerWizard({
                       updateForm('aadhaar', event.target.value)
                     }
                     placeholder="1234 5678 9012"
+                    inputMode="numeric"
+                    pattern="[2-9][0-9 ]{11,14}"
+                    title="Enter a valid 12-digit Aadhaar number"
                   />
                 </FormField>
 
@@ -1678,6 +1699,9 @@ function CustomerWizard({
                       updateForm('pan', event.target.value.toUpperCase())
                     }
                     placeholder="ABCDE1234F"
+                    pattern="[A-Z]{5}[0-9]{4}[A-Z]"
+                    maxLength="10"
+                    title="Use PAN format ABCDE1234F"
                   />
                 </FormField>
               </div>
@@ -1773,9 +1797,13 @@ function CustomerFields({ form, updateForm, compact = false }) {
 
       <FormField label="Mobile Number" required>
         <input
+          type="tel"
           value={form.mobile}
           onChange={(event) => updateForm('mobile', event.target.value)}
           placeholder="+91 98001 11111"
+          inputMode="numeric"
+          pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+          title="Enter a valid 10-digit Indian mobile number"
           required
         />
       </FormField>
@@ -1854,6 +1882,11 @@ function CustomerFields({ form, updateForm, compact = false }) {
             <input
               value={form.pinCode}
               onChange={(event) => updateForm('pinCode', event.target.value)}
+              inputMode="numeric"
+              pattern="[1-9][0-9]{5}"
+              maxLength="6"
+              title="Enter a valid 6-digit Indian PIN code"
+              required
             />
           </FormField>
 
@@ -1947,7 +1980,7 @@ function CustomerLoanModal({ customer, products, form, updateForm, error, saving
         </div>
 
         <form onSubmit={onSubmit} className="fin-create-loan-form">
-          <div className="fin-create-loan-field"><label>Selected Customer<span>*</span></label><input value={`${customer.name} (${customer.id})`} readOnly /></div>
+          <div className="fin-create-loan-field"><label>Selected Customer<span>*</span></label><input value={`${customer.name} (${formatCustomerNumber(customer)})`} readOnly /></div>
 
           <div className="fin-create-loan-two-column">
             <div className="fin-create-loan-field"><label>Loan Product<span>*</span></label><select value={form.productId} onChange={(event) => updateForm('productId', event.target.value)} required><option value="">Select product</option>{products.filter((product) => product.isActive !== false).map((product) => <option key={product.id} value={product.id}>{product.name} · {product.annualInterestRate}%</option>)}</select></div>

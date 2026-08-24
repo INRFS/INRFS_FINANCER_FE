@@ -5,6 +5,7 @@ import FinancerHeader from '../components/FinancerHeader';
 import Modal from '../../common/components/Modal';
 import Button from '../../common/components/Button';
 import { pageItems, platformApi } from '../../common/services/platformApi';
+import { formatLoanNumber } from '../../common/utils/formatters';
 import './FinancerLayout.css';
 
 export default function FinancerLayout() {
@@ -83,7 +84,7 @@ export default function FinancerLayout() {
             <label>Select Loan</label>
             <select value={paymentForm.loanId} onChange={(e) => setPaymentForm({ ...paymentForm, loanId: e.target.value })} required>
               <option value="">-- Choose Loan --</option>
-              {availableLoans.map((loan) => <option key={loan.id} value={loan.id}>{loan.loanNumber || loan.id}</option>)}
+              {availableLoans.map((loan) => <option key={loan.id} value={loan.id}>{formatLoanNumber(loan)}</option>)}
             </select>
           </div>
 

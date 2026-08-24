@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SearchInput from '../../../common/components/SearchInput';
 import StatusBadge from '../../../common/components/StatusBadge';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatFinancerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import './AdminPayments.css';
 
@@ -10,7 +10,17 @@ export default function AdminPayments() {
   const [payments, setPayments] = useState([]);
   const [error, setError] = useState('');
   useEffect(() => {
-    platformApi.payments.all().then((payload) => setPayments(pageItems(payload))).catch((reason) => setError(reason.message));
+    Promise.all([platformApi.payments.all(), platformApi.loans.all(), platformApi.admin.allFinancers()])
+      .then(([paymentPayload, loanPayload, financerPayload]) => {
+        const loansById = new Map(pageItems(loanPayload).map((loan) => [loan.id, loan]));
+        const financersById = new Map(pageItems(financerPayload).map((financer) => [financer.id, financer]));
+        setPayments(pageItems(paymentPayload).map((payment) => ({
+          ...payment,
+          loanNumber: payment.loanNumber || loansById.get(payment.loanId)?.loanNumber,
+          financerNumber: payment.financerNumber || financersById.get(payment.financerId)?.financerNumber,
+        })));
+      })
+      .catch((reason) => setError(reason.message));
   }, []);
   const filtered = payments.filter((item) => !search.trim() || [item.paymentNumber, item.loanId, item.externalReference].some((value) => String(value || '').toLowerCase().includes(search.trim().toLowerCase())));
 
@@ -47,9 +57,9 @@ export default function AdminPayments() {
               {filtered.map((p) => (
                 <tr key={p.id}>
                   <td><strong className="admin-payments-id">{p.paymentNumber}</strong></td>
-                  <td><span className="admin-payments-financer">{p.financerId || '—'}</span></td>
+                  <td><span className="admin-payments-financer">{formatFinancerNumber(p)}</span></td>
                   <td>{p.customerName || '—'}</td>
-                  <td>{p.loanId}</td>
+                  <td title={p.loanId}>{formatLoanNumber(p)}</td>
                   <td><strong className="admin-payments-amt">{formatCurrency(p.amount)}</strong></td>
                   <td>{new Date(p.receivedAt).toLocaleString()}</td>
                   <td>{p.mode}</td>

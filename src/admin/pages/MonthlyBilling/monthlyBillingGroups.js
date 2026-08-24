@@ -32,12 +32,14 @@ const deriveStatus = (collected, outstanding, dueDate, today) => {
   return 'Pending';
 };
 
-export const normalizeBillingInvoice = (item, financerName) => {
+export const normalizeBillingInvoice = (item, financerDetails) => {
   const serviceChargeAmount = amount(item.chargeAmount);
   const collectedAmount = amount(item.collectedAmount);
+  const financer = typeof financerDetails === 'object' && financerDetails !== null ? financerDetails : {};
   return {
     ...item,
-    financerName: financerName || item.financerId,
+    financerName: financer.displayName || financerDetails || 'Unknown financer',
+    financerNumber: item.financerNumber || financer.financerNumber || '—',
     billingMonth: String(item.periodEnd || '').slice(0, 7),
     applicableInterest: amount(item.interestActivity),
     serviceChargePercentage: amount(item.chargePercentage),
@@ -58,8 +60,9 @@ export const groupMonthlyBilling = (invoices, today = new Date().toISOString().s
       groupKey: key,
       financerId: invoice.financerId,
       financerName: invoice.financerName,
+      financerNumber: invoice.financerNumber,
       billingMonth: invoice.billingMonth,
-      invoiceNumber: `STATEMENT-${invoice.billingMonth}-${String(invoice.financerId).slice(0, 8).toUpperCase()}`,
+      invoiceNumber: `STATEMENT-${invoice.billingMonth}-${String(invoice.financerNumber || 'UNKNOWN').replace(/[^a-z0-9]/gi, '').toUpperCase()}`,
       periodStart: invoice.periodStart,
       periodEnd: invoice.periodEnd,
       dueDate: invoice.dueDate,

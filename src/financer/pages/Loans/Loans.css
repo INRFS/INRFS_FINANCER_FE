@@ -226,7 +226,7 @@
   width: 100%;
   max-width: 100%;
 
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .fin-loans-table {
@@ -246,15 +246,15 @@
 /* COLUMN WIDTHS */
 
 .fin-loans-table th:nth-child(1) {
-  width: 9%;
+  width: 13%;
 }
 
 .fin-loans-table th:nth-child(2) {
-  width: 14%;
+  width: 13%;
 }
 
 .fin-loans-table th:nth-child(3) {
-  width: 15%;
+  width: 12%;
 }
 
 .fin-loans-table th:nth-child(4) {
@@ -341,6 +341,10 @@
 /* LOAN ID */
 
 .fin-loans-id-cell {
+  display: inline-block;
+
+  max-width: 100%;
+
   color: #078fc0;
 
   font-size: 11px;
@@ -2693,4 +2697,24 @@
   .fin-loans-amt {
     font-size: 8.5px;
   }
+}
+
+/* Keep the create-loan header visible while allowing the form body to scroll. */
+.fin-create-loan-modal > .fin-create-loan-form {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fin-create-loan-modal > .fin-create-loan-form > .fin-create-loan-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: 12px;
+  padding: 10px 0 2px;
+  background: #fff;
 }

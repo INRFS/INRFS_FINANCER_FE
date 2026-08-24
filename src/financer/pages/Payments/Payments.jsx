@@ -95,6 +95,7 @@ function normalizePayment(raw) {
       : Number(raw.balance ?? raw.totalDue ?? raw.amount ?? 0),
     outstanding: Number(raw.balance ?? raw.outstanding ?? 0),
     loanOutstanding: Number(raw.loanOutstanding ?? raw.loan_outstanding ?? raw.balance ?? raw.outstanding ?? 0),
+    loanStatus: raw.loanStatus ?? raw.loan_status ?? null,
     dueDate,
     paymentDate,
     method: raw.method ?? raw.mode ?? raw.paymentMethod
@@ -103,6 +104,13 @@ function normalizePayment(raw) {
     paymentHistory: raw.paymentHistory ?? raw.payments ?? [],
     rescheduleHistory: raw.rescheduleHistory ?? [],
   };
+}
+
+function shouldDisplayPayment(payment) {
+  const hasFinancialActivity = payment.amount > 0 || payment.amountPaid > 0 || payment.totalDue > 0;
+  if (!hasFinancialActivity) return false;
+  const loanIsClosed = ['closed', 'settled', 'cancelled'].includes(String(payment.loanStatus || '').toLowerCase());
+  return !loanIsClosed || payment.status === STATUS.SUCCESS;
 }
 
 /* ============================================================
@@ -154,7 +162,7 @@ const STATUS_FILTERS = [
    ============================================================ */
 
 export default function Payments({ initialData }) {
-  const [payments, setPayments] = useState(() => initialData ? initialData.map(normalizePayment) : []);
+  const [payments, setPayments] = useState(() => initialData ? initialData.map(normalizePayment).filter(shouldDisplayPayment) : []);
   const [loading, setLoading] = useState(!initialData);
   const [pageError, setPageError] = useState('');
   const [search, setSearch] = useState("");
@@ -178,16 +186,19 @@ const [viewPayment, setViewPayment] = useState(null);
         pageItems(customerPayload).map((customer) => [customer.id, customer])
       );
       const loansById = new Map(pageItems(loanPayload).map((loan) => [loan.id, loan]));
-      setPayments(pageItems(payload).map((payment) => normalizePayment({
-        ...payment,
-        customer: payment.customer || customersById.get(payment.customerId)?.fullName || customersById.get(payment.customerId)?.name,
-        customerNumber: payment.customerNumber || customersById.get(payment.customerId)?.customerNumber,
-        loanNumber: payment.loanNumber || loansById.get(payment.loanId)?.loanNumber,
-        loanOutstanding: (() => {
+      setPayments(pageItems(payload)
+        .map((payment) => {
           const loan = loansById.get(payment.loanId);
-          return Number(loan?.principalOutstanding || 0) + Number(loan?.interestOutstanding || 0) + Number(loan?.feesOutstanding || 0);
-        })(),
-      })));
+          return normalizePayment({
+            ...payment,
+            customer: payment.customer || customersById.get(payment.customerId)?.fullName || customersById.get(payment.customerId)?.name,
+            customerNumber: payment.customerNumber || customersById.get(payment.customerId)?.customerNumber,
+            loanNumber: payment.loanNumber || loan?.loanNumber,
+            loanStatus: loan?.status,
+            loanOutstanding: Number(loan?.principalOutstanding || 0) + Number(loan?.interestOutstanding || 0) + Number(loan?.feesOutstanding || 0),
+          });
+        })
+        .filter(shouldDisplayPayment));
     } catch (error) {
       setPageError(error.message);
     } finally {

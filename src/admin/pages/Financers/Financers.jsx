@@ -21,7 +21,7 @@ import SearchInput from '../../../common/components/SearchInput';
 import StatusBadge from '../../../common/components/StatusBadge';
 import Button from '../../../common/components/Button';
 import Modal from '../../../common/components/Modal';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 
 import './Financers.css';
@@ -1360,7 +1360,7 @@ export function FinancerDetails({
                         </td>
 
                         <td>
-                          {customer.id}
+                          {formatCustomerNumber(customer)}
                         </td>
 
                         <td>
@@ -1454,7 +1454,7 @@ export function FinancerDetails({
 
                         <td>
                           <strong>
-                            {loan.id}
+                            {formatLoanNumber(loan)}
                           </strong>
                         </td>
 

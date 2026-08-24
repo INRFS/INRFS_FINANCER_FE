@@ -7,7 +7,7 @@ import '../FinancerLogin/FinancerLogin.css';
 export default function ResetPassword() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const [token, setToken] = useState(params.get('token') || '');
+  const token = params.get('token') || '';
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,13 +33,13 @@ export default function ResetPassword() {
     <div className="fin-login-page">
       <div className="fin-login-card">
         <div className="fin-login-brand"><img src={logo} alt="INRFS" className="fin-login-logo" /></div>
-        <div className="fin-login-heading"><h1>Create a new password</h1><p>Use the reset token from your password-reset message.</p></div>
+        <div className="fin-login-heading"><h1>Create a new password</h1><p>Choose a secure password for your account.</p></div>
         <form className="fin-login-form" onSubmit={submit}>
-          <div className="fin-login-field"><label htmlFor="reset-token">Reset token</label><input id="reset-token" value={token} onChange={(event) => setToken(event.target.value)} autoComplete="one-time-code" required /></div>
+          {!token && <p role="alert" className="auth-error">This password-reset link is invalid. Request a new link from the sign-in page.</p>}
           <div className="fin-login-field"><label htmlFor="new-password">New password</label><input id="new-password" type="password" minLength={10} value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="new-password" required /></div>
           <div className="fin-login-field"><label htmlFor="confirm-password">Confirm password</label><input id="confirm-password" type="password" minLength={10} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" required /></div>
           {error && <p role="alert" className="auth-error">{error}</p>}
-          <button className="fin-login-submit" type="submit" disabled={submitting}>{submitting ? 'Resetting…' : 'Reset password'}</button>
+          <button className="fin-login-submit" type="submit" disabled={submitting || !token}>{submitting ? 'Resetting…' : 'Reset password'}</button>
         </form>
         <Link to="/financer/login">Back to sign in</Link>
       </div>

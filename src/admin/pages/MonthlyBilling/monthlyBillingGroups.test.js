@@ -6,7 +6,7 @@ const invoice = (overrides = {}) => normalizeBillingInvoice({
   periodStart: '2026-08-01', periodEnd: '2026-08-31', dueDate: '2026-09-10',
   interestActivity: 1000, chargePercentage: 1, chargeAmount: 10, collectedAmount: 0,
   status: 'Due', ...overrides,
-}, 'Demo Finance');
+}, { displayName: 'Demo Finance', financerNumber: 'FIN-260823-DEMO1234' });
 
 describe('groupMonthlyBilling', () => {
   it('consolidates invoice and supplementary line items by financer and month', () => {
@@ -16,6 +16,8 @@ describe('groupMonthlyBilling', () => {
     ], '2026-08-19');
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({ applicableInterest: 1500, serviceChargeAmount: 15, collectedAmount: 2, outstandingAmount: 13, settlementStatus: 'Partially Paid' });
+    expect(result[0]).toMatchObject({ financerName: 'Demo Finance', financerNumber: 'FIN-260823-DEMO1234' });
+    expect(result[0].invoiceNumber).not.toContain('FINANCER1');
     expect(result[0].items).toHaveLength(2);
   });
 

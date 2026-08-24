@@ -41,3 +41,30 @@ export const formatPhone = (phone) => {
   }
   return phone;
 };
+
+export const formatLoanNumber = (loanOrId) => {
+  const record = typeof loanOrId === 'object' && loanOrId !== null ? loanOrId : {};
+  const readable = record.loanNumber || record.loan_number || record.displayId;
+  if (readable) return String(readable);
+  const rawId = typeof loanOrId === 'string' ? loanOrId : record.loanId || record.id;
+  if (!rawId) return '—';
+  return `LN-${String(rawId).replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+};
+
+export const formatCustomerNumber = (customerOrId) => {
+  const record = typeof customerOrId === 'object' && customerOrId !== null ? customerOrId : {};
+  const readable = record.customerNumber || record.customer_number || record.customerDisplayId;
+  if (readable) return String(readable);
+  const rawId = typeof customerOrId === 'string' ? customerOrId : record.customerId || record.id;
+  if (!rawId) return '—';
+  return `CUS-${String(rawId).replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+};
+
+export const formatFinancerNumber = (financerOrId) => {
+  const record = typeof financerOrId === 'object' && financerOrId !== null ? financerOrId : {};
+  const readable = record.financerNumber || record.financer_number || record.financerDisplayId;
+  if (readable) return String(readable);
+  const rawId = typeof financerOrId === 'string' ? financerOrId : record.financerId || record.id;
+  if (!rawId) return '—';
+  return `FIN-${String(rawId).replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+};

@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 import StatusBadge from '../../../common/components/StatusBadge';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi, loanFromApi } from '../../../common/utils/domainAdapters';
 import { applyCustomerLoanMetrics } from './customerLoanMetrics';
@@ -961,7 +961,7 @@ function CustomerTable({
               </td>
 
               <td>
-                {customer.id || '—'}
+                {formatCustomerNumber(customer)}
               </td>
 
               <td>
@@ -1037,7 +1037,7 @@ function LoanTable({
 
               <td>
                 <strong className="detail-loan-id">
-                  {loan.id || '—'}
+                  {formatLoanNumber(loan)}
                 </strong>
               </td>
 

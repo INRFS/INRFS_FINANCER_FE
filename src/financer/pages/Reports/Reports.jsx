@@ -2,11 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BarChart3, Download, RefreshCw, Search } from 'lucide-react';
 import Button from '../../../common/components/Button';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
+import { buildReportRows, reportRowKey } from './reportRows';
 import './Reports.css';
 
 const REPORT_TYPES = ['customers', 'loans', 'payments', 'interest-schedule', 'overdue'];
 const reportLabel = (value) => value.replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
-const columnLabel = (value) => value.replace(/([A-Z])/g, ' $1').replace(/^./, (letter) => letter.toUpperCase());
+const columnLabel = (value) => ({
+  customerNumber: 'Customer ID', loanNumber: 'Loan ID', financerNumber: 'Financer ID',
+  paymentNumber: 'Payment ID', transactionNumber: 'Transaction ID',
+}[value] || value.replace(/([A-Z])/g, ' $1').replace(/^./, (letter) => letter.toUpperCase()));
 const displayValue = (value) => {
   if (value === null || value === undefined || value === '') return '—';
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
@@ -20,19 +24,34 @@ export default function Reports() {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [payload, setPayload] = useState({ items: [] });
+  const [references, setReferences] = useState({ customers: [], loans: [], financer: {} });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
-    try { setPayload(await platformApi.reports.get(type, { search, from, to, pageSize: 100 })); }
+    try {
+      const [report, customerPayload, loanPayload, profile] = await Promise.all([
+        platformApi.reports.get(type, { search, from, to, pageSize: 100 }),
+        platformApi.customers.all(),
+        platformApi.loans.all(),
+        platformApi.profile.get(),
+      ]);
+      setPayload(report);
+      setReferences({
+        customers: pageItems(customerPayload),
+        loans: pageItems(loanPayload),
+        financer: profile?.financer || {},
+      });
+    }
     catch (reason) { setError(reason.message); }
     finally { setLoading(false); }
   }, [from, search, to, type]);
 
   useEffect(() => { load(); }, [load]);
-  const rows = pageItems(payload);
+  const sourceRows = pageItems(payload);
+  const rows = useMemo(() => buildReportRows(sourceRows, references), [references, sourceRows]);
   const columns = useMemo(() => [...new Set(rows.flatMap((row) => Object.keys(row)))].filter((key) => !['createdBy', 'updatedBy'].includes(key)), [rows]);
 
   const exportCsv = () => {
@@ -67,7 +86,7 @@ export default function Reports() {
 
       <section className="fin-report-data-card">
         <div className="fin-report-data-header"><div><h3>{reportLabel(type)} Report</h3><span>Live records matching the selected filters</span></div><span className="fin-report-record-count">{rows.length} {rows.length === 1 ? 'record' : 'records'}</span></div>
-        <div className="fin-report-table-wrapper"><table><thead><tr>{columns.map((column) => <th key={column}>{columnLabel(column)}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={row.id || index}>{columns.map((column) => <td key={column} title={displayValue(row[column])}>{displayValue(row[column])}</td>)}</tr>)}</tbody></table></div>
+        <div className="fin-report-table-wrapper"><table><thead><tr>{columns.map((column) => <th key={column}>{columnLabel(column)}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={reportRowKey(sourceRows[index], index)}>{columns.map((column) => <td key={column} title={displayValue(row[column])}>{displayValue(row[column])}</td>)}</tr>)}</tbody></table></div>
         {!loading && !rows.length && <div className="fin-report-empty"><div className="fin-report-empty-icon"><BarChart3 size={20} /></div><h3>No records found</h3><p>Try changing the report type or filters.</p></div>}
         <footer className="fin-report-data-footer"><span>Showing <strong>{rows.length}</strong> records</span><span>Report: {reportLabel(type)}</span></footer>
       </section>

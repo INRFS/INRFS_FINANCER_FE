@@ -6,6 +6,7 @@ import logo from '../../../assets/logo.png';
 import { api } from '../../../common/services/apiClient';
 import { useAuth } from '../../authState';
 import Modal from '../../../common/components/Modal';
+import { isValidEmail, isValidIndianMobile } from '../../../common/utils/formValidation';
 
 export default function FinancerLogin() {
   const navigate = useNavigate();
@@ -40,6 +41,10 @@ export default function FinancerLogin() {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidIndianMobile(mobile)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
@@ -68,10 +73,19 @@ export default function FinancerLogin() {
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidIndianMobile(formData.mobile)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+    if (!isValidEmail(formData.email)) {
+      setError('Enter a valid email address.');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
-      const challenge = await api.post('/auth/register/financer', formData, { auth: false });
+      const payload = Object.fromEntries(Object.entries(formData).map(([key, value]) => [key, value.trim()]));
+      const challenge = await api.post('/auth/register/financer', payload, { auth: false });
       navigate('/financer/verify-otp', { state: { ...challenge, email: formData.email.trim().toLowerCase(), portal: 'financer', registration: true } });
     } catch (requestError) {
       setError(requestError.message || 'Unable to create the account.');
@@ -154,6 +168,9 @@ export default function FinancerLogin() {
                 onChange={(e) => setMobile(e.target.value)}
                 placeholder="+91 98765 43210"
                 autoComplete="tel"
+                inputMode="numeric"
+                pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+                title="Enter a valid 10-digit Indian mobile number"
                 required
               />
 
@@ -438,6 +455,9 @@ export default function FinancerLogin() {
               onChange={handleRegisterChange}
               placeholder="+91 98765 43210"
               autoComplete="tel"
+              inputMode="numeric"
+              pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+              title="Enter a valid 10-digit Indian mobile number"
               required
             />
 

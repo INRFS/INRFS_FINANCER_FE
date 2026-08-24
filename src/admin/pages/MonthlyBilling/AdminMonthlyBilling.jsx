@@ -270,7 +270,7 @@ function BillingStatementModal({
             </strong>
 
             <small>
-              {billing.financerId}
+              {billing.financerNumber}
             </small>
 
           </div>
@@ -454,7 +454,7 @@ export default function AdminMonthlyBilling() {
   const loadBilling = async () => {
     const [payload, financerPayload] = await Promise.all([platformApi.admin.allBilling(), platformApi.admin.allFinancers()]);
     const byId = new Map(pageItems(financerPayload).map((item) => [item.id, item]));
-    const invoices = pageItems(payload).map((item) => normalizeBillingInvoice(item, byId.get(item.financerId)?.displayName));
+    const invoices = pageItems(payload).map((item) => normalizeBillingInvoice(item, byId.get(item.financerId)));
     setBillingData(groupMonthlyBilling(invoices));
   };
 
@@ -1089,7 +1089,7 @@ export default function AdminMonthlyBilling() {
 
                               <span>
                                 {
-                                  billing.financerId
+                                  billing.financerNumber
                                 }
                               </span>
 
@@ -1324,7 +1324,7 @@ export default function AdminMonthlyBilling() {
 
                           <span>
                             {
-                              billing.financerId
+                              billing.financerNumber
                             }
                           </span>
                         </div>

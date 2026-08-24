@@ -11,7 +11,7 @@ import {
 
 import SearchInput from '../../../common/components/SearchInput';
 import StatusBadge from '../../../common/components/StatusBadge';
-import { formatCurrency } from '../../../common/utils/formatters';
+import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { loanFromApi } from '../../../common/utils/domainAdapters';
 
@@ -498,9 +498,7 @@ export default function AdminLoans() {
                     <tr key={loan.id || loan.loanId}>
                       <td>
                         <strong className="inrfs-loans-id">
-                          {loan.id ||
-                            loan.loanId ||
-                            '—'}
+                          {formatLoanNumber(loan)}
                         </strong>
                       </td>
 
@@ -521,7 +519,7 @@ export default function AdminLoans() {
 
                             {loan.customerId && (
                               <span>
-                                {loan.customerId}
+                                {formatCustomerNumber(loan)}
                               </span>
                             )}
                           </div>
@@ -630,9 +628,7 @@ export default function AdminLoans() {
 
                       <div>
                         <strong>
-                          {loan.id ||
-                            loan.loanId ||
-                            'Loan'}
+                          {formatLoanNumber(loan)}
                         </strong>
 
                         <span>
@@ -772,9 +768,7 @@ export default function AdminLoans() {
 
                 <div>
                   <h2 id="inrfs-loans-modal-title">
-                    {selectedLoan.id ||
-                      selectedLoan.loanId ||
-                      'Loan Details'}
+                    {formatLoanNumber(selectedLoan)}
                   </h2>
 
                   <span>
@@ -811,9 +805,7 @@ export default function AdminLoans() {
                   <span>Loan ID</span>
 
                   <strong>
-                    {selectedLoan.id ||
-                      selectedLoan.loanId ||
-                      '—'}
+                    {formatLoanNumber(selectedLoan)}
                   </strong>
                 </div>
 
@@ -829,7 +821,7 @@ export default function AdminLoans() {
                   <span>Customer ID</span>
 
                   <strong>
-                    {selectedLoan.customerId || '—'}
+                    {formatCustomerNumber(selectedLoan)}
                   </strong>
                 </div>
 
