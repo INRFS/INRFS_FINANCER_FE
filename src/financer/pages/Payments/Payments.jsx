@@ -148,9 +148,9 @@ function isSameMonth(isoDate, ref) {
 }
 
 const STATUS_FILTERS = [
-  { key: "all", label: "All" },
-  { key: STATUS.DUE_TODAY, label: "Due Today" },
+  // { key: "all", label: "All" },
   { key: STATUS.PENDING, label: "Upcoming" },
+  { key: STATUS.DUE_TODAY, label: "Due Today" },
   { key: STATUS.OVERDUE, label: "Overdue" },
   { key: STATUS.RESCHEDULED, label: "Rescheduled" },
   { key: STATUS.PARTIAL, label: "Partially Paid" },
@@ -167,7 +167,7 @@ export default function Payments({ initialData }) {
   const [pageError, setPageError] = useState('');
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+ const [statusFilter, setStatusFilter] = useState(STATUS.PENDING);
 const [viewPayment, setViewPayment] = useState(null);
   const [recordModal, setRecordModal] = useState(null); // payment object
   const [rescheduleModal, setRescheduleModal] = useState(null); // payment object

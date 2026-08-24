@@ -6,7 +6,11 @@ import logo from '../../../assets/logo.png';
 import { api } from '../../../common/services/apiClient';
 import { useAuth } from '../../authState';
 import Modal from '../../../common/components/Modal';
-import { isValidEmail, isValidIndianMobile } from '../../../common/utils/formValidation';
+import {
+  isValidEmail,
+  isValidIndianMobile,
+  validateName,
+} from '../../../common/utils/formValidation';
 
 export default function FinancerLogin() {
   const navigate = useNavigate();
@@ -16,6 +20,7 @@ export default function FinancerLogin() {
   const [isRegistering, setIsRegistering] = useState(
     () => new URLSearchParams(location.search).get('mode') === 'register',
   );
+
   const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   const [mobile, setMobile] = useState('');
@@ -37,56 +42,161 @@ export default function FinancerLogin() {
 
   /* =====================================================
      LOGIN
-     ===================================================== */
+  ===================================================== */
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+
     if (!isValidIndianMobile(mobile)) {
       setError('Enter a valid 10-digit Indian mobile number.');
       return;
     }
+
     setSubmitting(true);
     setError('');
+
     try {
-      const tokens = await api.post('/auth/login/financer', { email: mobile, password, portal: 'financer' }, { auth: false });
+      const tokens = await api.post(
+        '/auth/login/financer',
+        {
+          email: mobile,
+          password,
+          portal: 'financer',
+        },
+        { auth: false },
+      );
+
       completeLogin(tokens);
       navigate('/financer/welcome', { replace: true });
     } catch (requestError) {
-      setError(requestError.message || 'Unable to sign in. Please try again.');
+      setError(
+        requestError.message || 'Unable to sign in. Please try again.',
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   /* =====================================================
-     REGISTER
-     ===================================================== */
+     REGISTER INPUT VALIDATION
+  ===================================================== */
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
 
+    let updatedValue = value;
+
+    switch (name) {
+      case 'fullName':
+        // Full name: letters, spaces, apostrophe, dot and hyphen only
+        updatedValue = value.replace(/[^a-zA-Z\s.'-]/g, '');
+        break;
+
+      case 'mobile':
+        // Mobile: numbers only, maximum 10 digits
+        updatedValue = value.replace(/\D/g, '').slice(0, 10);
+        break;
+
+      case 'email':
+        // Email is validated by type="email" and isValidEmail()
+        updatedValue = value;
+        break;
+
+      case 'city':
+      case 'state':
+        // City/State: letters, spaces, apostrophe, dot and hyphen only
+        updatedValue = value.replace(/[^a-zA-Z\s.'-]/g, '');
+        break;
+
+      case 'businessName':
+        // Business names can contain numbers and symbols.
+        // Do not restrict the user's input here.
+        updatedValue = value;
+        break;
+
+      default:
+        updatedValue = value;
+        break;
+    }
+
     setFormData((previous) => ({
       ...previous,
-      [name]: value,
+      [name]: updatedValue,
     }));
   };
 
+  /* =====================================================
+     REGISTER
+  ===================================================== */
+
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+
+    // Full name — must be a plausible person name
+    const nameError = validateName(formData.fullName, 'Full name');
+
+    if (nameError) {
+      setError(nameError);
+      return;
+    }
+
+    // Business name — required, not whitespace-only
+    if (!formData.businessName.trim()) {
+      setError('Business / Finance Name is required.');
+      return;
+    }
+
+    // Mobile — valid Indian mobile number
     if (!isValidIndianMobile(formData.mobile)) {
-      setError('Enter a valid 10-digit Indian mobile number.');
+      setError(
+        'Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.',
+      );
       return;
     }
+
+    // Email — valid email address
     if (!isValidEmail(formData.email)) {
-      setError('Enter a valid email address.');
+      setError('Enter a valid email address (e.g. name@example.com).');
       return;
     }
+
+    // City — required
+    if (!formData.city.trim()) {
+      setError('City is required.');
+      return;
+    }
+
+    // State — required
+    if (!formData.state.trim()) {
+      setError('State is required.');
+      return;
+    }
+
     setSubmitting(true);
     setError('');
+
     try {
-      const payload = Object.fromEntries(Object.entries(formData).map(([key, value]) => [key, value.trim()]));
-      const challenge = await api.post('/auth/register/financer', payload, { auth: false });
-      navigate('/financer/verify-otp', { state: { ...challenge, email: formData.email.trim().toLowerCase(), portal: 'financer', registration: true } });
+      const payload = Object.fromEntries(
+        Object.entries(formData).map(([key, value]) => [
+          key,
+          value.trim(),
+        ]),
+      );
+
+      const challenge = await api.post(
+        '/auth/register/financer',
+        payload,
+        { auth: false },
+      );
+
+      navigate('/financer/verify-otp', {
+        state: {
+          ...challenge,
+          email: formData.email.trim().toLowerCase(),
+          portal: 'financer',
+          registration: true,
+        },
+      });
     } catch (requestError) {
       setError(requestError.message || 'Unable to create the account.');
     } finally {
@@ -96,17 +206,38 @@ export default function FinancerLogin() {
 
   /* =====================================================
      FORGOT PASSWORD
-     ===================================================== */
+  ===================================================== */
 
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate email before sending request
+    if (!isValidEmail(forgotEmail)) {
+      setForgotStatus(
+        'Enter a valid email address (e.g. name@example.com).',
+      );
+      return;
+    }
+
     setSubmitting(true);
     setForgotStatus('');
+
     try {
-      await api.post('/auth/password/forgot', { email: forgotEmail.trim().toLowerCase() }, { auth: false });
-      setForgotStatus('If the account exists, password reset instructions have been sent.');
+      await api.post(
+        '/auth/password/forgot',
+        {
+          email: forgotEmail.trim().toLowerCase(),
+        },
+        { auth: false },
+      );
+
+      setForgotStatus(
+        'If the account exists, password reset instructions have been sent.',
+      );
     } catch (requestError) {
-      setForgotStatus(requestError.message || 'Unable to request a password reset.');
+      setForgotStatus(
+        requestError.message || 'Unable to request a password reset.',
+      );
     } finally {
       setSubmitting(false);
     }
@@ -114,17 +245,15 @@ export default function FinancerLogin() {
 
   /* =====================================================
      LOGIN VIEW
-     ===================================================== */
+  ===================================================== */
 
   if (!isRegistering) {
     return (
       <div className="fin-login-page">
-
         <div className="fin-login-card">
 
           {/* Brand */}
           <div className="fin-login-brand">
-
             <img
               src={logo}
               alt="INRFS"
@@ -134,18 +263,15 @@ export default function FinancerLogin() {
             <span className="fin-login-portal-label">
               Financer Portal
             </span>
-
           </div>
 
           {/* Heading */}
           <div className="fin-login-heading">
-
             <h1>Welcome back</h1>
 
             <p>
               Manage your customers and loans with ease.
             </p>
-
           </div>
 
           {/* Login Form */}
@@ -156,7 +282,6 @@ export default function FinancerLogin() {
 
             {/* Mobile */}
             <div className="fin-login-field">
-
               <label htmlFor="login-mobile">
                 Mobile Number
               </label>
@@ -165,20 +290,23 @@ export default function FinancerLogin() {
                 id="login-mobile"
                 type="tel"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                onChange={(e) =>
+                  setMobile(
+                    e.target.value.replace(/\D/g, '').slice(0, 10),
+                  )
+                }
                 placeholder="+91 98765 43210"
                 autoComplete="tel"
                 inputMode="numeric"
-                pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+                pattern="[6-9][0-9]{9}"
                 title="Enter a valid 10-digit Indian mobile number"
+                maxLength={10}
                 required
               />
-
             </div>
 
             {/* Password */}
             <div className="fin-login-field">
-
               <label htmlFor="login-password">
                 Password
               </label>
@@ -195,7 +323,6 @@ export default function FinancerLogin() {
 
               {/* Forgot Password */}
               <div className="fin-forgot-password-row">
-
                 <button
                   type="button"
                   className="fin-forgot-password"
@@ -208,9 +335,7 @@ export default function FinancerLogin() {
                 >
                   Forgot password?
                 </button>
-
               </div>
-
             </div>
 
             {/* Login Button */}
@@ -222,14 +347,29 @@ export default function FinancerLogin() {
               {submitting ? 'Signing in…' : 'Login'}
             </button>
 
-            {error && <div className="fin-login-error" role="alert">{error}</div>}
-            {(location.state?.registrationSuccess || location.state?.notice) && <div className="fin-login-success" role="status">{location.state.registrationSuccess || location.state.notice}</div>}
+            {error && (
+              <div
+                className="fin-login-error"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
 
+            {(location.state?.registrationSuccess ||
+              location.state?.notice) && (
+              <div
+                className="fin-login-success"
+                role="status"
+              >
+                {location.state.registrationSuccess ||
+                  location.state.notice}
+              </div>
+            )}
           </form>
 
           {/* Register */}
           <div className="fin-login-register">
-
             <span>New to INRFS?</span>
 
             <button
@@ -241,7 +381,6 @@ export default function FinancerLogin() {
             >
               Create account
             </button>
-
           </div>
 
           {/* Divider */}
@@ -255,57 +394,105 @@ export default function FinancerLogin() {
             ← Back to portal selection
           </Link>
 
-          <Modal isOpen={isForgotPassword} onClose={() => { if (!submitting) setIsForgotPassword(false); }} title="Reset your password" maxWidth="480px">
-            <p className="fin-forgot-modal-intro">Enter your registered email address. We’ll send a secure reset link if an account matches.</p>
-            <form className="fin-login-form fin-forgot-modal-form" onSubmit={handleForgotPasswordSubmit}>
+          <Modal
+            isOpen={isForgotPassword}
+            onClose={() => {
+              if (!submitting) {
+                setIsForgotPassword(false);
+              }
+            }}
+            title="Reset your password"
+            maxWidth="480px"
+          >
+            <p className="fin-forgot-modal-intro">
+              Enter your registered email address. We’ll send a secure
+              reset link if an account matches.
+            </p>
+
+            <form
+              className="fin-login-form fin-forgot-modal-form"
+              onSubmit={handleForgotPasswordSubmit}
+            >
               <div className="fin-login-field">
-                <label htmlFor="forgot-email-dialog">Email Address</label>
-                <input id="forgot-email-dialog" type="email" value={forgotEmail} onChange={(e) => { setForgotEmail(e.target.value); setForgotStatus(''); }} placeholder="you@example.com" autoComplete="email" required />
+                <label htmlFor="forgot-email-dialog">
+                  Email Address
+                </label>
+
+                <input
+                  id="forgot-email-dialog"
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => {
+                    setForgotEmail(e.target.value);
+                    setForgotStatus('');
+                  }}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  required
+                />
               </div>
-              {forgotStatus && <div className="fin-login-reset-status" role="status">{forgotStatus}</div>}
+
+              {forgotStatus && (
+                <div
+                  className="fin-login-reset-status"
+                  role="status"
+                >
+                  {forgotStatus}
+                </div>
+              )}
+
               <div className="fin-forgot-modal-actions">
-                <button type="button" className="fin-forgot-modal-cancel" onClick={() => setIsForgotPassword(false)} disabled={submitting}>Cancel</button>
-                <button type="submit" className="fin-login-submit" disabled={submitting}>{submitting ? 'Sending…' : 'Send reset instructions'}</button>
+                <button
+                  type="button"
+                  className="fin-forgot-modal-cancel"
+                  onClick={() => setIsForgotPassword(false)}
+                  disabled={submitting}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="fin-login-submit"
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? 'Sending…'
+                    : 'Send reset instructions'}
+                </button>
               </div>
             </form>
           </Modal>
-
         </div>
-
       </div>
     );
   }
 
   /* =====================================================
      FORGOT PASSWORD VIEW
-     ===================================================== */
+  ===================================================== */
 
   if (isForgotPassword) {
     return (
       <div className="fin-login-page">
-
         <div className="fin-login-card fin-forgot-card">
 
           {/* Brand */}
           <div className="fin-login-brand">
-
             <img
               src={logo}
               alt="INRFS"
               className="fin-login-logo"
             />
-
           </div>
 
           {/* Heading */}
           <div className="fin-login-heading">
-
             <h1>Forgot password?</h1>
 
             <p>
               Enter your registered email address to reset your password.
             </p>
-
           </div>
 
           {/* Forgot Password Form */}
@@ -313,9 +500,7 @@ export default function FinancerLogin() {
             className="fin-login-form"
             onSubmit={handleForgotPasswordSubmit}
           >
-
             <div className="fin-login-field">
-
               <label htmlFor="forgot-email">
                 Email Address
               </label>
@@ -324,12 +509,14 @@ export default function FinancerLogin() {
                 id="forgot-email"
                 type="email"
                 value={forgotEmail}
-                onChange={(e) => setForgotEmail(e.target.value)}
+                onChange={(e) => {
+                  setForgotEmail(e.target.value);
+                  setForgotStatus('');
+                }}
                 placeholder="you@example.com"
                 autoComplete="email"
                 required
               />
-
             </div>
 
             <button
@@ -340,13 +527,18 @@ export default function FinancerLogin() {
               {submitting ? 'Sending…' : 'Send reset instructions'}
             </button>
 
-            {error && <div className="fin-login-error" role="status">{error}</div>}
-
+            {error && (
+              <div
+                className="fin-login-error"
+                role="status"
+              >
+                {error}
+              </div>
+            )}
           </form>
 
           {/* Back to Login */}
           <div className="fin-forgot-back">
-
             <button
               type="button"
               onClick={() => {
@@ -356,44 +548,36 @@ export default function FinancerLogin() {
             >
               ← Back to Login
             </button>
-
           </div>
-
         </div>
-
       </div>
     );
   }
 
   /* =====================================================
      REGISTER VIEW
-     ===================================================== */
+  ===================================================== */
 
   return (
     <div className="fin-login-page">
-
       <div className="fin-login-card fin-register-card">
 
         {/* Brand */}
         <div className="fin-login-brand fin-register-brand">
-
           <img
             src={logo}
             alt="INRFS"
             className="fin-login-logo"
           />
-
         </div>
 
         {/* Register Heading */}
         <div className="fin-login-heading fin-register-heading">
-
           <h1>Create your INRFS account</h1>
 
           <p>
             Join thousands of financers managing loans digitally
           </p>
-
         </div>
 
         {/* Register Form */}
@@ -404,7 +588,6 @@ export default function FinancerLogin() {
 
           {/* Full Name */}
           <div className="fin-register-field">
-
             <label htmlFor="fullName">
               Full Name
             </label>
@@ -416,14 +599,14 @@ export default function FinancerLogin() {
               value={formData.fullName}
               onChange={handleRegisterChange}
               placeholder="Suresh Patel"
+              maxLength={100}
+              autoComplete="name"
               required
             />
-
           </div>
 
           {/* Business Name */}
           <div className="fin-register-field">
-
             <label htmlFor="businessName">
               Business / Finance Name
             </label>
@@ -437,12 +620,10 @@ export default function FinancerLogin() {
               placeholder="Patel Finance Services"
               required
             />
-
           </div>
 
           {/* Mobile */}
           <div className="fin-register-field">
-
             <label htmlFor="register-mobile">
               Mobile Number
             </label>
@@ -456,16 +637,15 @@ export default function FinancerLogin() {
               placeholder="+91 98765 43210"
               autoComplete="tel"
               inputMode="numeric"
-              pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
+              pattern="[6-9][0-9]{9}"
               title="Enter a valid 10-digit Indian mobile number"
+              maxLength={10}
               required
             />
-
           </div>
 
           {/* Email */}
           <div className="fin-register-field">
-
             <label htmlFor="email">
               Email Address
             </label>
@@ -480,12 +660,10 @@ export default function FinancerLogin() {
               autoComplete="email"
               required
             />
-
           </div>
 
           {/* City */}
           <div className="fin-register-field">
-
             <label htmlFor="city">
               City
             </label>
@@ -499,12 +677,10 @@ export default function FinancerLogin() {
               placeholder="Ahmedabad"
               required
             />
-
           </div>
 
           {/* State */}
           <div className="fin-register-field">
-
             <label htmlFor="state">
               State
             </label>
@@ -518,7 +694,6 @@ export default function FinancerLogin() {
               placeholder="Gujarat"
               required
             />
-
           </div>
 
           {/* Send OTP */}
@@ -527,16 +702,23 @@ export default function FinancerLogin() {
             className="fin-login-submit fin-register-submit"
             disabled={submitting}
           >
-            {submitting ? 'Sending OTP…' : 'Send OTP to Verify'}
+            {submitting
+              ? 'Sending OTP…'
+              : 'Send OTP to Verify'}
           </button>
 
-          {error && <div className="fin-login-error" role="alert">{error}</div>}
-
+          {error && (
+            <div
+              className="fin-login-error"
+              role="alert"
+            >
+              {error}
+            </div>
+          )}
         </form>
 
         {/* Existing account */}
         <div className="fin-register-existing">
-
           <span>
             Already have an account?
           </span>
@@ -550,11 +732,8 @@ export default function FinancerLogin() {
           >
             Login
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

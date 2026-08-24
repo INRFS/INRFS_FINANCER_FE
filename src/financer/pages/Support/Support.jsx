@@ -45,8 +45,32 @@ export default function Support() {
   };
 
   const createTicket = async (event) => {
-    event.preventDefault(); setSubmitting(true); setActionError('');
-    try { await platformApi.support.create(newTicket); setCreateOpen(false); setNewTicket({ subject: '', category: 'Technical', description: '', priority: 'Medium' }); await refetch(); }
+    event.preventDefault();
+    // Subject — must not be whitespace-only
+    if (!newTicket.subject.trim()) {
+      setActionError('Ticket subject is required and cannot be blank or spaces only.');
+      return;
+    }
+    // Description — must not be whitespace-only and must have reasonable length
+    if (!newTicket.description.trim()) {
+      setActionError('Description is required and cannot be blank or spaces only.');
+      return;
+    }
+    if (newTicket.description.trim().length < 20) {
+      setActionError('Please provide a more detailed description (at least 20 characters).');
+      return;
+    }
+    setSubmitting(true); setActionError('');
+    try {
+      await platformApi.support.create({
+        ...newTicket,
+        subject: newTicket.subject.trim(),
+        description: newTicket.description.trim(),
+      });
+      setCreateOpen(false);
+      setNewTicket({ subject: '', category: 'Technical', description: '', priority: 'Medium' });
+      await refetch();
+    }
     catch (requestError) { setActionError(requestError.message); }
     finally { setSubmitting(false); }
   };

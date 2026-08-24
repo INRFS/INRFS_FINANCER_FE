@@ -4,7 +4,7 @@ import Button from '../../../common/components/Button';
 import { platformApi } from '../../../common/services/platformApi';
 import { useApiQuery } from '../../../common/hooks/useApiQuery';
 import { useAuth } from '../../../auth/authState';
-import { isValidEmail, isValidIndianMobile } from '../../../common/utils/formValidation';
+import { isValidEmail, isValidIndianMobile, validateName } from '../../../common/utils/formValidation';
 import './Settings.css';
 
 const userFullName = (user) =>
@@ -60,16 +60,31 @@ export default function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!profile.name.trim() || !profile.businessName.trim() || !profile.city.trim() || !profile.state.trim()) {
-      setSaveError('Name, business name, city, and state are required.');
+    // Full name — must be a plausible person name, not numbers-only or symbols
+    const nameError = validateName(profile.name, 'Full name');
+    if (nameError) { setSaveError(nameError); return; }
+    if (!profile.businessName.trim()) {
+      setSaveError('Business name is required.');
+      return;
+    }
+    if (profile.businessName.trim().length > 150) {
+      setSaveError('Business name must not exceed 150 characters.');
       return;
     }
     if (!isValidIndianMobile(profile.mobile)) {
-      setSaveError('Enter a valid 10-digit Indian mobile number.');
+      setSaveError('Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
       return;
     }
     if (!isValidEmail(profile.email)) {
-      setSaveError('Enter a valid email address.');
+      setSaveError('Enter a valid email address (e.g. name@example.com).');
+      return;
+    }
+    if (!profile.city.trim()) {
+      setSaveError('City is required.');
+      return;
+    }
+    if (!profile.state.trim()) {
+      setSaveError('State is required.');
       return;
     }
     setSaving(true);
@@ -220,12 +235,12 @@ export default function Settings() {
               {/* Full Name */}
               <div className="fin-settings-input-group">
                 <label htmlFor="fullName">
-                  Full Name
+                  Full Name <span aria-hidden="true">*</span>
                 </label>
 
                 <input
                   id="fullName"
-                  type="tel"
+                  type="text"
                   value={profile.name}
                   onChange={(e) =>
                     setProfile({
@@ -233,9 +248,9 @@ export default function Settings() {
                       name: e.target.value,
                     })
                   }
-                  inputMode="numeric"
-                  pattern="(?:[+]91[ ]?)?[6-9][0-9]{4}[ ]?[0-9]{5}"
-                  title="Enter a valid 10-digit Indian mobile number"
+                  placeholder="Suresh Patel"
+                  maxLength={100}
+                  autoComplete="name"
                   required
                 />
               </div>
