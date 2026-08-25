@@ -855,7 +855,6 @@ export default function Customers() {
                 <input
                   type="number"
                   min="0.01"
-                  max="100"
                   step="0.01"
                   value={loanForm.rate}
                   onChange={(event) =>

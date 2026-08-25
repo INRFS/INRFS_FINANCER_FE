@@ -10,6 +10,7 @@ import {
 
 import './ServiceCharge.css';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
+import { groupServiceCharges } from './serviceChargeUtils';
 
 const formatCurrency = (value) =>
   `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -20,10 +21,24 @@ export default function ServiceCharge() {
   const [pageError, setPageError] = useState('');
 
   useEffect(() => {
-    platformApi.admin.invoices({ pageSize: 200 }).then((payload) => setBilling(pageItems(payload).map((item) => ({ ...item, month: new Date(`${item.periodStart}T00:00:00`).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }), interestCollected: item.interestActivity, chargeRate: item.chargePercentage, amountPayable: item.chargeAmount, amountPaid: item.collectedAmount || 0, outstanding: Number(item.chargeAmount || 0) - Number(item.collectedAmount || 0) })))).catch((error) => setPageError(error.message));
+    platformApi.admin
+      .invoices({ pageSize: 200 })
+      .then((payload) =>
+        setBilling(groupServiceCharges(pageItems(payload)))
+      )
+      .catch((error) => setPageError(error.message));
   }, []);
 
-  const currentBilling = billing[0] || { month: 'No billing period', interestCollected: 0, chargeRate: 0, amountPayable: 0, amountPaid: 0, outstanding: 0, status: 'Pending' };
+  const currentBilling = billing[0] || {
+    month: 'No billing period',
+    interestCollected: 0,
+    chargeRate: 0,
+    amountPayable: 0,
+    amountPaid: 0,
+    outstanding: 0,
+    status: 'Pending',
+    recordCount: 0,
+  };
 
   const _totals = useMemo(() => {
     const totalPayable = billing.reduce(
@@ -44,8 +59,17 @@ export default function ServiceCharge() {
   }, [billing]);
 
   const handleContactOperations = async () => {
-    try { await platformApi.support.create({ subject: 'Service charge assistance', category: 'Billing', priority: 'Medium', description: 'Please contact me regarding the current service charge invoice.' }); }
-    catch (error) { setPageError(error.message); }
+    try {
+      await platformApi.support.create({
+        subject: 'Service charge assistance',
+        category: 'Billing',
+        priority: 'Medium',
+        description:
+          'Please contact me regarding the current service charge invoice.',
+      });
+    } catch (error) {
+      setPageError(error.message);
+    }
   };
 
   const handleDownloadStatement = () => {
@@ -79,8 +103,14 @@ export default function ServiceCharge() {
               <h2>{currentBilling.month}</h2>
             </div>
 
-            <span className="service-charge-status pending">
-              Pending
+            <span
+              className={`service-charge-status ${String(
+                currentBilling.status || 'pending'
+              )
+                .toLowerCase()
+                .replace(/\s+/g, '-')}`}
+            >
+              {currentBilling.status || 'Pending'}
             </span>
           </div>
 
@@ -101,7 +131,9 @@ export default function ServiceCharge() {
             <div className="service-charge-calc-box rate-box">
               <span>Service Charge</span>
               <strong>
-                {currentBilling.chargeRate}%
+                {currentBilling.chargeRate === 'Mixed'
+                  ? 'Mixed'
+                  : `${currentBilling.chargeRate}%`}
               </strong>
             </div>
 
@@ -170,7 +202,7 @@ export default function ServiceCharge() {
                 <tbody>
 
                   {billing.map((row) => (
-                    <tr key={row.month}>
+                    <tr key={row.id || row.month}>
 
                       <td>
                         <strong>{row.month}</strong>
@@ -182,7 +214,9 @@ export default function ServiceCharge() {
 
                       <td>
                         <span className="service-charge-rate">
-                          {row.chargeRate}%
+                          {row.chargeRate === 'Mixed'
+                            ? 'Mixed'
+                            : `${row.chargeRate}%`}
                         </span>
                       </td>
 
@@ -218,9 +252,11 @@ export default function ServiceCharge() {
 
                       <td>
                         <span
-                          className={`service-charge-status ${
-                            row.status.toLowerCase()
-                          }`}
+                          className={`service-charge-status ${String(
+                            row.status || ''
+                          )
+                            .toLowerCase()
+                            .replace(/\s+/g, '-')}`}
                         >
                           {row.status}
                         </span>
@@ -249,35 +285,6 @@ export default function ServiceCharge() {
             </div>
 
           </div>
-
-          {/* SUMMARY */}
-          {/* <div className="service-charge-summary-strip">
-
-            <div>
-              <span>Total Payable</span>
-
-              <strong>
-                {formatCurrency(totals.totalPayable)}
-              </strong>
-            </div>
-
-            <div>
-              <span>Total Paid</span>
-
-              <strong className="paid">
-                {formatCurrency(totals.totalPaid)}
-              </strong>
-            </div>
-
-            <div>
-              <span>Total Outstanding</span>
-
-              <strong className="outstanding">
-                {formatCurrency(totals.totalOutstanding)}
-              </strong>
-            </div>
-
-          </div> */}
 
         </section>
 
@@ -372,7 +379,9 @@ export default function ServiceCharge() {
                 <div>
                   <span>Service Charge Rate</span>
                   <strong>
-                    {selectedStatement.chargeRate}%
+                    {selectedStatement.chargeRate === 'Mixed'
+                      ? 'Mixed'
+                      : `${selectedStatement.chargeRate}%`}
                   </strong>
                 </div>
 

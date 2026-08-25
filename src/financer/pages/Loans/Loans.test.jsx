@@ -146,6 +146,96 @@ describe('Loans Page Component', () => {
     });
   });
 
+  it('calculates monthly interest correctly as ₹1,800 for ₹10,000 principal at 18% monthly rate', async () => {
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: mockCustomers });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+
+    render(
+      <MemoryRouter>
+        <Loans />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const createBtns = screen.getAllByRole('button', { name: /new loan account/i });
+    fireEvent.click(createBtns[0]);
+
+    // Fill Principal: 10000
+    const principalInput = screen.getByPlaceholderText('10000');
+    fireEvent.change(principalInput, { target: { value: '10000' } });
+
+    // Fill Monthly Interest Rate: 18% (default is already 18)
+    const rateInput = screen.getByDisplayValue('18');
+    fireEvent.change(rateInput, { target: { value: '18' } });
+
+    // Select Monthly frequency and 1 Month duration
+    const unitSelect = screen.getByDisplayValue('Days');
+    fireEvent.change(unitSelect, { target: { value: 'Months' } });
+
+    const countInput = screen.getByDisplayValue('13');
+    fireEvent.change(countInput, { target: { value: '1' } });
+
+    const freqSelect = screen.getByDisplayValue('Daily');
+    fireEvent.change(freqSelect, { target: { value: 'Monthly' } });
+
+    // Check that Estimated First Monthly Interest and Estimated Total Interest are both ₹1,800
+    const values = screen.getAllByDisplayValue('₹1,800');
+    expect(values.length).toBe(2); // One for collection interest, one for total interest
+  });
+
+  it('submits loan with monthly rate (e.g. 10%) without exceeding 0-100 annual interest rate constraint', async () => {
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: mockCustomers });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({
+      items: [{ id: 'prod-1', name: 'Standard Product', isActive: true, minimumTenureMonths: 1 }],
+    });
+    const createSpy = vi.spyOn(platformApi.loans, 'create').mockResolvedValue({ id: 'loan-new', loanNumber: 'LN-NEW-1' });
+
+    render(
+      <MemoryRouter>
+        <Loans />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const createBtns = screen.getAllByRole('button', { name: /new loan account/i });
+    fireEvent.click(createBtns[0]);
+
+    // Select customer
+    const customerSelect = screen.getByDisplayValue('Select customer');
+    fireEvent.change(customerSelect, { target: { value: 'c-1' } });
+
+    // Fill Principal: 10000
+    const principalInput = screen.getByPlaceholderText('10000');
+    fireEvent.change(principalInput, { target: { value: '10000' } });
+
+    // Fill Monthly Interest Rate: 10%
+    const rateInput = screen.getByDisplayValue('18');
+    fireEvent.change(rateInput, { target: { value: '10' } });
+
+    // Submit form
+    const submitBtn = screen.getByRole('button', { name: /create loan/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(createSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customerId: 'c-1',
+          principal: 10000,
+          interestRate: 10,
+          interestRateBasis: 'PerMonth',
+          annualInterestRate: expect.any(Number),
+        })
+      );
+      const callArg = createSpy.mock.calls[0][0];
+      expect(callArg.annualInterestRate).toBeLessThanOrEqual(100);
+      expect(callArg.annualInterestRate).toBeGreaterThanOrEqual(0);
+    });
+  });
+
   it('displays error alert when API fetch fails', async () => {
     vi.spyOn(platformApi.loans, 'all').mockRejectedValue(new Error('Failed to load loans'));
     vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });

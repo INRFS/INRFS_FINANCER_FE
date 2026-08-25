@@ -198,12 +198,9 @@ function BillingStatementModal({
   billing,
   onClose,
   onCollect,
-  onCredit,
 }) {
   const [reference, setReference] = useState('');
   const [collecting, setCollecting] = useState(false);
-  const [creditAmount, setCreditAmount] = useState('');
-  const [creditReason, setCreditReason] = useState('');
   if (!billing) {
     return null;
   }
@@ -383,56 +380,39 @@ function BillingStatementModal({
 
         </div>
 
-        <div className="inrfs-monthly-billing-modal-footer">
-
-          <button
-            type="button"
-            className="inrfs-monthly-billing-secondary-btn"
-            onClick={onClose}
-          >
-            Close
-          </button>
-
-          <button
-            type="button"
-            className="inrfs-monthly-billing-download-btn"
-            onClick={() => downloadBillingStatement(billing)}
-          >
-            <Download size={15} />
-            Download Invoice
-          </button>
-          {billing.collectedAmount > 0 && <button type="button" className="inrfs-monthly-billing-download-btn" onClick={() => downloadBillingStatement(billing, 'receipt')}><ReceiptIndianRupee size={15} />Download Payment Receipt</button>}
-
-          {billing.outstandingAmount > 0 && (
-            <form onSubmit={async (event) => {
-              event.preventDefault();
-              setCollecting(true);
-              try {
-                await onCollect(billing, reference.trim());
-              } finally {
-                setCollecting(false);
-              }
-            }}>
+        {billing.outstandingAmount > 0 && (
+          <div className="inrfs-monthly-billing-modal-footer">
+            <form
+              className="inrfs-monthly-billing-record-payment-form"
+              onSubmit={async (event) => {
+                event.preventDefault();
+                setCollecting(true);
+                try {
+                  await onCollect(billing, reference.trim());
+                } finally {
+                  setCollecting(false);
+                }
+              }}
+            >
               <label>
                 Payment reference
-                <input value={reference} onChange={(event) => setReference(event.target.value)} required />
+                <input
+                  value={reference}
+                  onChange={(event) => setReference(event.target.value)}
+                  placeholder="Enter payment reference / UTR"
+                  required
+                />
               </label>
-              <button type="submit" disabled={collecting} className="inrfs-monthly-billing-download-btn">
-                {collecting ? 'Saving…' : `Collect ${formatCurrency(billing.outstandingAmount)}`}
+              <button
+                type="submit"
+                disabled={collecting}
+                className="inrfs-monthly-billing-download-btn"
+              >
+                {collecting ? 'Saving…' : `Record Payment ${formatCurrency(billing.outstandingAmount)}`}
               </button>
             </form>
-          )}
-          {billing.serviceChargeAmount > billing.collectedAmount && <form onSubmit={async (event) => {
-            event.preventDefault(); setCollecting(true);
-            try { await onCredit(billing, Number(creditAmount), creditReason.trim()); }
-            finally { setCollecting(false); }
-          }}>
-            <label>Credit-note amount<input type="number" min="0.01" step="0.01" max={billing.outstandingAmount} value={creditAmount} onChange={(event) => setCreditAmount(event.target.value)} required /></label>
-            <label>Adjustment reason<input value={creditReason} onChange={(event) => setCreditReason(event.target.value)} maxLength="300" required /></label>
-            <button type="submit" disabled={collecting} className="inrfs-monthly-billing-secondary-btn">Issue Credit Note</button>
-          </form>}
-
-        </div>
+          </div>
+        )}
 
       </div>
     </div>
@@ -685,7 +665,7 @@ export default function AdminMonthlyBilling() {
     }
   };
 
-  const handleCredit = async (billing, creditAmount, reason) => {
+  const _handleCredit = async (billing, creditAmount, reason) => {
     setPageError('');
     try {
       let remaining = creditAmount;
@@ -1518,7 +1498,6 @@ export default function AdminMonthlyBilling() {
       <BillingStatementModal
         billing={selectedBilling}
         onCollect={handleCollect}
-        onCredit={handleCredit}
         onClose={() =>
           setSelectedBilling(null)
         }
