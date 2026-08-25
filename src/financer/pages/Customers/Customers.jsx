@@ -21,7 +21,7 @@ import {
 
 import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
-import { customerFromApi, customerToApi, loanFromApi } from '../../../common/utils/domainAdapters';
+import { customerFromApi, customerToApi, isCreatedThisMonth, loanFromApi } from '../../../common/utils/domainAdapters';
 import { validateCustomerForm } from '../../../common/utils/formValidation';
 
 import './Customers.css';
@@ -293,6 +293,9 @@ export default function Customers() {
   const activeCustomers = customers.filter(
     (customer) => customer.status === 'Active'
   ).length;
+  const newCustomersThisMonth = customers.filter(
+    (customer) => isCreatedThisMonth(customer.createdAt ?? customer.created_at ?? customer.createdDate)
+  ).length;
   const overdueCustomers = customers.filter(
     (customer) => customer.status === 'Overdue'
   ).length;
@@ -366,7 +369,10 @@ export default function Customers() {
         ['aadhaarDocument', 'Aadhaar'], ['panDocument', 'Pan'], ['addressProof', 'AddressProof'], ['photograph', 'Photograph'], ['otherDocuments', 'Other'],
       ].filter(([field]) => customerForm[field]);
       await Promise.all(uploads.map(([field, category]) => platformApi.documents.upload(customerForm[field], category, created.id)));
-      const newCustomer = buildCustomerDetails(customerFromApi(created), customers.length);
+      const newCustomer = buildCustomerDetails(customerFromApi({
+        ...created,
+        createdAt: created.createdAt || created.created_at || new Date().toISOString(),
+      }), customers.length);
       setCustomers((prev) => [newCustomer, ...prev]);
       closeAddCustomer();
       setSelectedCustomerId(newCustomer.id);
@@ -634,7 +640,7 @@ export default function Customers() {
           icon={<UserPlus size={19} />}
           iconClass="cyan"
           label="New This Month"
-          value={12}
+          value={newCustomersThisMonth}
         />
 
         <StatCard

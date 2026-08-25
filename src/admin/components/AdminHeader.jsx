@@ -30,10 +30,17 @@ export default function AdminHeader({ onToggleSidebar }) {
   const [notifications, setNotifications] = useState([]);
   const [openMenu, setOpenMenu] = useState('');
 
-  useEffect(() => {
+  const loadNotifications = () => {
     platformApi.notifications.list({ pageSize: 10 })
       .then((payload) => setNotifications(pageItems(payload)))
       .catch(() => setNotifications([]));
+  };
+
+  useEffect(() => {
+    loadNotifications();
+    const handleUpdate = () => loadNotifications();
+    window.addEventListener('inrfs-notification-updated', handleUpdate);
+    return () => window.removeEventListener('inrfs-notification-updated', handleUpdate);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -57,14 +64,14 @@ export default function AdminHeader({ onToggleSidebar }) {
   const initials = [user?.firstName, user?.lastName].filter(Boolean).map((value) => value[0]).join('').slice(0, 2).toUpperCase() || 'A';
   const role = user?.roles?.[0] || 'Administrator';
 
-  const go = (path) => { navigate(path); setSearch(''); setOpenMenu(''); };
+  const go = (path, state) => { navigate(path, { state }); setSearch(''); setOpenMenu(''); };
   const handleLogout = async () => { await logout(); navigate('/admin/login', { replace: true }); };
   const openNotification = async (item) => {
     if (!item.readAt) {
       await platformApi.notifications.read(item.id).catch(() => {});
       setNotifications((current) => current.map((entry) => entry.id === item.id ? { ...entry, readAt: new Date().toISOString() } : entry));
     }
-    go('/admin/notifications');
+    go('/admin/notifications', { selectedConcernId: item.concernId || item.entityId });
   };
 
   return (

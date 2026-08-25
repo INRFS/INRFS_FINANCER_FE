@@ -102,6 +102,50 @@ describe('Loans Page Component', () => {
     });
   });
 
+  it('renders Customer Collection Concern checkbox unchecked by default and sends flag on submit', async () => {
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: mockCustomers });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [{ id: 'prod-1', name: 'Standard', isActive: true }] });
+    const createSpy = vi.spyOn(platformApi.loans, 'create').mockResolvedValue({ id: 'l-new', loanNumber: 'LN-NEW-001' });
+
+    render(
+      <MemoryRouter>
+        <Loans />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const createBtns = screen.getAllByRole('button', { name: /new loan account/i });
+    fireEvent.click(createBtns[0]);
+
+    const concernCheckbox = screen.getByRole('checkbox', { name: /customer collection concern/i });
+    expect(concernCheckbox).toBeInTheDocument();
+    expect(concernCheckbox).not.toBeChecked();
+    expect(screen.getByText(/flag this customer if you expect difficulty collecting repayments/i)).toBeInTheDocument();
+
+    // Select customer
+    const selectCustomer = screen.getByDisplayValue('Select customer');
+    fireEvent.change(selectCustomer, { target: { value: 'c-1' } });
+
+    // Check the concern checkbox
+    fireEvent.click(concernCheckbox);
+    expect(concernCheckbox).toBeChecked();
+
+    // Submit loan
+    const submitBtn = screen.getByRole('button', { name: /create loan/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(createSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customerId: 'c-1',
+          collectionConcern: true,
+        })
+      );
+    });
+  });
+
   it('displays error alert when API fetch fails', async () => {
     vi.spyOn(platformApi.loans, 'all').mockRejectedValue(new Error('Failed to load loans'));
     vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
