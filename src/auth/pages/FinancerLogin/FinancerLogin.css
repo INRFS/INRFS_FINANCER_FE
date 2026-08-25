@@ -1,7 +1,43 @@
 /* =========================================================
    FINANCER LOGIN / REGISTER PAGE
    ========================================================= */
+.fin-password-input-wrap {
+  position: relative;
+  width: 100%;
+}
 
+.fin-password-input-wrap input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+.fin-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+
+  padding: 4px;
+}
+
+.fin-password-toggle:hover {
+  color: #1e293b;
+}
+
+.fin-password-toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 .fin-login-page {
   width: 100%;
   height: 100vh;

@@ -1707,23 +1707,21 @@ function CustomerWizard({
             <form onSubmit={onNext}>
               <div className="fin-customer-single-form">
 <FormField label="Aadhaar Number">
-  <input
-    value={form.aadhaar}
-    onChange={(event) =>
-      updateForm(
-        'aadhaar',
-        sanitizeCustomerField(
-          'aadhaar',
-          event.target.value,
-        ),
-      )
-    }
-    placeholder="1234 5678 9012"
-    inputMode="numeric"
-    maxLength={12}
-    pattern="[2-9][0-9]{11}"
-    title="Enter a valid 12-digit Aadhaar number starting with 2-9"
-  />
+<input
+
+  value={formatAadhaar(form.aadhaar)}
+  onChange={(event) =>
+    handleChange(
+      'aadhaar',
+      event.target.value,
+    )
+  }
+  placeholder="1234 5678 9012"
+  inputMode="numeric"
+  maxLength={14}
+  pattern="[0-9]{4} [0-9]{4} [0-9]{4}"
+  title="Enter exactly 12 digits"
+/>
 </FormField>
 
 <FormField label="PAN Number">
@@ -1732,6 +1730,7 @@ function CustomerWizard({
     onChange={(event) =>
       updateForm(
         'pan',
+        
         sanitizeCustomerField(
           'pan',
           event.target.value,
@@ -1822,6 +1821,12 @@ function CustomerWizard({
 /* =========================================================
    REUSABLE UI
    ========================================================= */
+   const formatAadhaar = (value) => {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 12)
+    .replace(/(\d{4})(?=\d)/g, '$1 ');
+};
 const sanitizeCustomerField = (field, value) => {
   switch (field) {
     case 'name':
