@@ -32,13 +32,15 @@
 .ops-table-wrap th, .ops-table-wrap td { padding: 15px 16px; border-bottom: 1px solid #edf0f5; text-align: left; white-space: nowrap; }
 .ops-table-wrap th { padding-block: 13px; background: #f8fafd; color: #5f708d; font-size: 10.5px; letter-spacing: .35px; text-transform: uppercase; }
 .ops-table-wrap tbody tr { transition: background .15s; } .ops-table-wrap tbody tr:hover { background: #f8fbff; }
-.ops-table-wrap td > strong, .ops-table-wrap td > small { display: block; } .ops-table-wrap td > strong { font-size: 13px; } .ops-table-wrap td small { margin-top: 4px; color: #71809b; font-size: 11px; }
+.ops-table-wrap td > strong, .ops-table-wrap td > small { display: block; } .ops-table-wrap td > strong { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ops-table-wrap td small { margin-top: 4px; color: #71809b; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ops-table-wrap td button, .ops-form button { border-color: #2563eb; background: #2563eb; color: #fff; } .ops-table-wrap td button { padding: 7px 11px; border-radius: 7px; font-size: 11px; }
 .danger, .today { display: inline-flex; padding: 5px 8px; border-radius: 20px; font-size: 10.5px; } .danger { background: #feecec; color: #dc2626; } .today { background: #fff4dd; color: #b66a00; }
 .ops-status { display: inline-flex; padding: 5px 9px; border-radius: 20px; background: #eef4ff; color: #315fba; font-size: 11px; font-weight: 750; }
 .ops-modal-bg { position: fixed; inset: 0; z-index: 2000; display: flex; justify-content: flex-end; background: #0f172a80; }
 .ops-modal { position: relative; width: min(560px, 100%); overflow: auto; padding: 28px; background: #fff; box-shadow: -18px 0 50px #0f172a25; }
 .ops-close { position: absolute; top: 16px; right: 18px; font-size: 22px; } .ops-modal > h2 { margin: 10px 0 5px; font-size: 25px; } .ops-modal > p { color: #60708f; }
+.ops-concern-reason { margin: 10px 0 14px; padding: 10px 14px; border-radius: 9px; background: #fef2f2; border: 1px solid #fee2e2; color: #991b1b; font-size: 13px; line-height: 1.5; }
+.ops-concern-reason strong { color: #7f1d1d; }
 .ops-action-grid { margin: 20px 0; } .ops-action-grid button { flex: 1 1 30%; min-height: 45px; background: #f8fafd; } .ops-action-grid button:hover { border-color: #2563eb; background: #eef5ff; color: #2563eb; }
 .ops-form { display: grid; gap: 10px; margin: 16px 0; padding: 16px; border-radius: 12px; background: #f6f8fc; } .ops-form h3 { margin: 0; } .ops-form textarea { min-height: 70px; }
 .ops-history { margin-top: 20px; } .ops-history > div { display: grid; gap: 3px; margin: 8px 0; padding: 8px 12px; border-left: 3px solid #bfdbfe; } .ops-history span, .ops-history small { color: #60708f; }
