@@ -95,6 +95,22 @@ function DurationLoanModal({ customers, form, setForm, error, onClose, onSubmit 
             <div className="fin-create-loan-field"><label>{collectionInterestLabel(form.interestFrequency)}</label><input value={formatCurrency(periodInterest)} readOnly /></div>
             <div className="fin-create-loan-field"><label>Estimated Total Interest</label><input value={formatCurrency(totalInterest)} readOnly /></div>
           </div>
+          <div className="fin-create-loan-concern-section">
+            <label className="fin-create-loan-concern-checkbox-container" htmlFor="customerCollectionConcern">
+              <input
+                type="checkbox"
+                id="customerCollectionConcern"
+                name="customerCollectionConcern"
+                checked={Boolean(form.collectionConcern)}
+                onChange={(event) => update('collectionConcern', event.target.checked)}
+                className="fin-create-loan-concern-checkbox"
+              />
+              <div className="fin-create-loan-concern-text">
+                <span className="fin-create-loan-concern-title">Customer Collection Concern</span>
+                <span className="fin-create-loan-concern-subtitle">Flag this customer if you expect difficulty collecting repayments.</span>
+              </div>
+            </label>
+          </div>
           {error && <div role="alert">{error}</div>}
           <div className="fin-create-loan-actions"><button type="button" className="fin-create-loan-cancel" onClick={onClose}>Cancel</button><button type="submit" className="fin-create-loan-submit"><Plus size={17} />Create Loan</button></div>
         </form>
@@ -182,6 +198,7 @@ export default function Loans() {
     dateGiven: getTodayDate(),
     interestFrequency: 'Daily',
     interestRate: '18',
+    collectionConcern: false,
   });
 
 
@@ -357,6 +374,7 @@ export default function Loans() {
       dateGiven: getTodayDate(),
       interestFrequency: 'Daily',
       interestRate: '18',
+      collectionConcern: false,
     });
   };
 
@@ -452,8 +470,12 @@ const handleCreateSubmit = async (e) => {
       return;
     }
 
+    const selectedCustomer = customers.find((item) => item.id === newLoanForm.customer);
+
     await platformApi.loans.create({
       customerId: newLoanForm.customer,
+      customerName: selectedCustomer?.fullName || selectedCustomer?.name || '',
+      customerNumber: selectedCustomer?.customerNumber || '',
       loanProductId: product.id,
       principal,
       annualInterestRate: rate,
@@ -464,6 +486,7 @@ const handleCreateSubmit = async (e) => {
       durationValue: duration,
       durationUnit: newLoanForm.durationUnit,
       startDate: newLoanForm.dateGiven,
+      collectionConcern: Boolean(newLoanForm.collectionConcern),
     });
 
     closeCreateModal();

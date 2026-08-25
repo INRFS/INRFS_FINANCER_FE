@@ -1,4 +1,5 @@
 import { api } from './apiClient';
+import { collectionConcernService } from './collectionConcernService';
 
 const queryString = (params = {}) => {
   const query = new URLSearchParams();
@@ -61,13 +62,34 @@ export const platformApi = {
   loans: {
     list: (params) => list('/loans', params),
     all: (params) => all('/loans', params),
-    create: (data) => api.post('/loans', data),
+    create: async (data) => {
+      const result = await api.post('/loans', data);
+      if (data?.collectionConcern) {
+        try {
+          await collectionConcernService.createConcern({
+            ...data,
+            loanId: result?.id || data.loanId,
+            loanNumber: result?.loanNumber || data.loanNumber,
+          });
+        } catch {
+          // safe
+        }
+      }
+      return result;
+    },
     get: (id) => api.get(`/loans/${id}`),
     schedule: (id) => api.get(`/loans/${id}/schedule`),
     products: (includeInactive = false) => list('/loan-products', { includeInactive }),
     applications: (params) => list('/loan-applications', params),
     createApplication: (data) => api.post('/loan-applications', data),
     transition: (id, action, data = {}) => api.post(`/loan-applications/${id}/${action}`, data),
+  },
+  collectionConcerns: {
+    list: (params) => collectionConcernService.listConcerns(params),
+    all: (params) => collectionConcernService.listConcerns(params),
+    get: (id) => collectionConcernService.getConcern(id),
+    create: (data) => collectionConcernService.createConcern(data),
+    update: (id, data) => collectionConcernService.updateConcern(id, data),
   },
   payments: {
     list: (params) => list('/payments', params),
@@ -89,10 +111,23 @@ export const platformApi = {
     remind: (loanId, data) => api.post(`/collections/${loanId}/reminders`, data),
   },
   notifications: {
-    list: (params) => list('/notifications', params),
+    list: async (params) => {
+      try {
+        const backend = await list('/notifications', params);
+        return collectionConcernService.getMergedNotifications(backend);
+      } catch {
+        return collectionConcernService.getMergedNotifications([]);
+      }
+    },
     create: (data) => api.post('/notifications', data),
-    read: (id) => api.post(`/notifications/${id}/read`, {}),
-    readAll: () => api.post('/notifications/read-all', {}),
+    read: async (id) => {
+      await collectionConcernService.markNotificationRead(id);
+      return api.post(`/notifications/${id}/read`, {}).catch(() => ({}));
+    },
+    readAll: async () => {
+      await collectionConcernService.markAllNotificationsRead();
+      return api.post('/notifications/read-all', {}).catch(() => ({}));
+    },
   },
   support: {
     list: (params) => list('/support-tickets', params),

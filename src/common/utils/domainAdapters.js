@@ -18,7 +18,30 @@ export const customerFromApi = (item) => ({
   payments: item.payments ?? [],
   notes: item.notes ?? [],
   smsHistory: item.smsHistory ?? [],
+  createdAt: item.createdAt || item.created_at || item.createdDate || null,
 });
+
+export const isCreatedThisMonth = (createdAt, referenceDate = new Date()) => {
+  if (!createdAt) return false;
+  const created = new Date(createdAt);
+  if (Number.isNaN(created.getTime())) return false;
+
+  const ref = new Date(referenceDate);
+  if (Number.isNaN(ref.getTime())) return false;
+
+  const startOfMonth = new Date(ref.getFullYear(), ref.getMonth(), 1, 0, 0, 0, 0);
+  const startOfNextMonth = new Date(ref.getFullYear(), ref.getMonth() + 1, 1, 0, 0, 0, 0);
+
+  return created >= startOfMonth && created < startOfNextMonth;
+};
+
+export const countNewCustomersThisMonth = (customers = [], referenceDate = new Date()) => {
+  if (!Array.isArray(customers)) return 0;
+  return customers.filter((customer) => {
+    const rawDate = customer?.createdAt ?? customer?.created_at ?? customer?.createdDate;
+    return isCreatedThisMonth(rawDate, referenceDate);
+  }).length;
+};
 
 export const normalizeDateOnly = (value) => {
   const input = String(value || '').trim();
