@@ -577,3 +577,9 @@
 
   .admin-settings-name-grid { grid-template-columns: 1fr; gap: 0; }
 }
+
+
+.admin-settings-admin-list select {
+  margin-left: 6px;
+  
+}

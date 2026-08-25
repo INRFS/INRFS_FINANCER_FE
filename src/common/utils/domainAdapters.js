@@ -7,10 +7,17 @@ export const customerFromApi = (item) => ({
   dob: item.dateOfBirth,
   houseNumber: item.addressLine1,
   street: item.addressLine2 || '',
-  area: '',
-  pinCode: item.postalCode,
-  aadhaar: item.aadhaarMasked || '',
-  pan: item.panMasked || '',
+  area: item.area || '',
+  city: item.city || '',
+  state: item.state || '',
+  pinCode: item.postalCode || '',
+
+  // Read whichever Aadhaar field the API provides.
+  aadhaar: item.aadhaar || item.aadhaarMasked || '',
+
+  // Read whichever PAN field the API provides.
+  pan: item.pan || item.panMasked || '',
+
   activeLoans: item.activeLoans ?? 0,
   outstanding: item.outstanding ?? 0,
   nextDue: item.nextDue ?? '-',
@@ -89,12 +96,34 @@ export const customerToApi = (form, includeStatus = false) => ({
   gender: form.gender || null,
   phone: form.mobile.trim(),
   email: form.email.trim() || null,
-  addressLine1: [form.houseNumber, form.street].filter(Boolean).join(', ') || form.area,
-  addressLine2: form.area || null,
+
+  addressLine1:
+    [form.houseNumber, form.street]
+      .filter(Boolean)
+      .join(', ') || form.area,
+
+  addressLine2: form.area?.trim() || null,
+
   city: form.city.trim(),
   state: form.state.trim(),
   postalCode: form.pinCode.trim(),
-  ...(includeStatus ? { status: form.status || 'Active' } : { aadhaar: form.aadhaar.trim() || null, pan: form.pan.trim() || null }),
+
+  // Always send Aadhaar and PAN.
+  // Remove spaces before sending Aadhaar to backend.
+  aadhaar: String(form.aadhaar || '')
+    .replace(/\D/g, '')
+    .slice(0, 12) || null,
+
+  pan: String(form.pan || '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+    .slice(0, 10) || null,
+
+  ...(includeStatus
+    ? {
+        status: form.status || 'Active',
+      }
+    : {}),
 });
 
 export const loanFromApi = (item, customer) => ({

@@ -106,6 +106,241 @@ describe('Customers Page Component', () => {
     });
   });
 
+  it('validates mandatory fields and blocks wizard progression on empty submission', async () => {
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+
+    render(
+      <MemoryRouter>
+        <Customers />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+    fireEvent.click(addBtns[0]);
+
+    // Click Continue without filling anything
+    const continueBtn = screen.getByRole('button', { name: /continue/i });
+    fireEvent.submit(continueBtn.closest('form'));
+
+    // Expect validation errors to appear and remain on Step 1
+    await waitFor(() => {
+      expect(screen.getAllByText(/Full name is required/i).length).toBeGreaterThan(0);
+      expect(screen.getByText(/Step 1 of 4/i)).toBeInTheDocument();
+    });
+  });
+
+  it('validates duplicate mobile number and blocks duplicate registration', async () => {
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: mockCustomers });
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+
+    render(
+      <MemoryRouter>
+        <Customers />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+    fireEvent.click(addBtns[0]);
+
+    const nameInput = screen.getByPlaceholderText('Ramesh Kumar');
+    fireEvent.change(nameInput, { target: { value: 'Sunil Kumar' } });
+
+    // Enter existing customer's mobile
+    const mobileInput = screen.getByPlaceholderText('+91 98001 11111');
+    fireEvent.change(mobileInput, { target: { value: '9876543210' } });
+
+    const continueBtn = screen.getByRole('button', { name: /continue/i });
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Mobile number already exists.').length).toBeGreaterThan(0);
+      expect(screen.getByText(/Step 1 of 4/i)).toBeInTheDocument();
+    });
+  });
+
+  it('allows completing customer creation with 0 uploaded documents (optional documents)', async () => {
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+
+    const createSpy = vi.spyOn(platformApi.customers, 'create').mockResolvedValue({
+      id: 'c-new',
+      fullName: 'Vikram Singh',
+      phone: '9988776655',
+      city: 'Pune',
+      state: 'Maharashtra',
+      postalCode: '411001',
+      dateOfBirth: '1995-03-10',
+      status: 'Active',
+    });
+
+    render(
+      <MemoryRouter>
+        <Customers />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+    fireEvent.click(addBtns[0]);
+
+    // Step 1: Fill Personal Info
+    fireEvent.change(screen.getByPlaceholderText('Ramesh Kumar'), { target: { value: 'Vikram Singh' } });
+    fireEvent.change(screen.getByPlaceholderText('+91 98001 11111'), { target: { value: '9988776655' } });
+    const genderSelect = screen.getByLabelText(/Gender/i);
+    fireEvent.change(genderSelect, { target: { value: 'Male' } });
+    const dobInputs = document.querySelectorAll('input[type="date"]');
+    fireEvent.change(dobInputs[0], { target: { value: '1995-03-10' } });
+
+    // Continue to Step 2
+    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+    // Step 2: Address
+    expect(await screen.findByText(/Step 2 of 4/i)).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText('MG Road'), { target: { value: 'FC Road' } });
+    fireEvent.change(screen.getByPlaceholderText('Mumbai'), { target: { value: 'Pune' } });
+    fireEvent.change(screen.getByPlaceholderText('Maharashtra'), { target: { value: 'Maharashtra' } });
+    fireEvent.change(screen.getByPlaceholderText('400001'), { target: { value: '411001' } });
+
+    // Continue to Step 3
+    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+    // Step 3: KYC (Optional)
+    expect(await screen.findByText(/Step 3 of 4/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+    // Step 4: Documents (Optional)
+    expect(await screen.findByText(/Step 4 of 4/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /save customer/i })).toBeInTheDocument();
+
+    // Click Save Customer without uploading documents
+    fireEvent.click(screen.getByRole('button', { name: /save customer/i }));
+
+    await waitFor(() => {
+      expect(createSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          fullName: 'Vikram Singh',
+          phone: '9988776655',
+          city: 'Pune',
+          state: 'Maharashtra',
+          postalCode: '411001',
+        })
+      );
+    });
+  });
+
+  it('rejects street name starting with numbers', async () => {
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+
+    render(
+      <MemoryRouter>
+        <Customers />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+    const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+    fireEvent.click(addBtns[0]);
+
+    // Step 1
+    fireEvent.change(screen.getByPlaceholderText('Ramesh Kumar'), { target: { value: 'Vikram Singh' } });
+    fireEvent.change(screen.getByPlaceholderText('+91 98001 11111'), { target: { value: '9988776655' } });
+    fireEvent.change(screen.getByLabelText(/Gender/i), { target: { value: 'Male' } });
+    const dobInputs = document.querySelectorAll('input[type="date"]');
+    fireEvent.change(dobInputs[0], { target: { value: '1995-03-10' } });
+    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+    // Step 2
+    expect(await screen.findByText(/Step 2 of 4/i)).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText('MG Road'), { target: { value: '12 Main Street' } });
+    fireEvent.change(screen.getByPlaceholderText('Mumbai'), { target: { value: 'Pune' } });
+    fireEvent.change(screen.getByPlaceholderText('Maharashtra'), { target: { value: 'Maharashtra' } });
+    fireEvent.change(screen.getByPlaceholderText('400001'), { target: { value: '411001' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Street name must start with an alphabet.').length).toBeGreaterThan(0);
+      expect(screen.getByText(/Step 2 of 4/i)).toBeInTheDocument();
+    });
+  });
+
+  it('renders Customer Collection Concern checkbox when adding a loan from Customer screen', async () => {
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: mockCustomers });
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.loans, 'products').mockResolvedValue({
+      items: [{ id: 'prod-1', name: 'Standard Product', annualInterestRate: 18, isActive: true, minimumPrincipal: 1000, maximumPrincipal: 1000000 }],
+    });
+    vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+    const createLoanSpy = vi.spyOn(platformApi.loans, 'create').mockResolvedValue({ id: 'l-new', loanNumber: 'LN-NEW-1' });
+
+    render(
+      <MemoryRouter>
+        <Customers />
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText('Ramesh Kumar')).toBeInTheDocument();
+
+    // Open view customer modal
+    const viewBtns = screen.getAllByTitle(/view ramesh kumar/i);
+    fireEvent.click(viewBtns[0]);
+
+    // Click Add Loan button in CustomerDetailsModal
+    const addLoanBtn = await screen.findByRole('button', { name: /add loan/i });
+    fireEvent.click(addLoanBtn);
+
+    // Verify Add Loan modal is open
+    expect(await screen.findByRole('heading', { name: /add loan/i })).toBeInTheDocument();
+
+    // Check Customer Collection Concern checkbox is present and can be toggled
+    const concernCheckbox = screen.getByRole('checkbox', { name: /customer collection concern/i });
+    expect(concernCheckbox).toBeInTheDocument();
+    expect(concernCheckbox).not.toBeChecked();
+
+    fireEvent.click(concernCheckbox);
+    expect(concernCheckbox).toBeChecked();
+
+    // Fill Principal: 50000
+    const principalInput = screen.getByPlaceholderText('10000');
+    fireEvent.change(principalInput, { target: { value: '50000' } });
+
+    // Submit loan
+    const addLoanModalButtons = screen.getAllByRole('button', { name: /add loan/i });
+    const submitBtn = addLoanModalButtons.find((btn) => btn.getAttribute('type') === 'submit');
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(createLoanSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customerId: 'cust-1',
+          principal: 50000,
+          collectionConcern: true,
+        })
+      );
+    });
+  });
+
   it('displays error alert when API call fails', async () => {
     vi.spyOn(platformApi.customers, 'all').mockRejectedValue(new Error('Network error loading customers'));
     vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });

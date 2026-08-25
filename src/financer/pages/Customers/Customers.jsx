@@ -22,7 +22,11 @@ import {
 import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { customerFromApi, customerToApi, isCreatedThisMonth, loanFromApi } from '../../../common/utils/domainAdapters';
-import { validateCustomerForm } from '../../../common/utils/formValidation';
+import {
+  validateCustomerStep,
+  validateCustomerField,
+} from '../../../common/utils/formValidation';
+import { autoFetchPincode, lookupByPin } from '../../../common/utils/addressLookup';
 
 import './Customers.css';
 import { useLocation } from 'react-router-dom';
@@ -182,6 +186,7 @@ const emptyLoanForm = {
   durationValue: '13',
   collectionFrequency: 'Daily',
   startDate: todayISO(),
+  collectionConcern: false,
 };
 
 const emptyPaymentForm = {
@@ -266,6 +271,9 @@ export default function Customers() {
   const [paymentForm, setPaymentForm] = useState(emptyPaymentForm);
   const [smsMessage, setSmsMessage] = useState('');
 
+  const [formErrors, setFormErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
+
   const [currentStep, setCurrentStep] = useState(1);
   const [noteText, setNoteText] = useState('');
 
@@ -324,6 +332,8 @@ export default function Customers() {
 
   const openAddCustomer = () => {
     setPageError('');
+    setFormErrors({});
+    setTouchedFields({});
     setCustomerForm({ ...emptyCustomerForm });
     setCurrentStep(1);
     setIsAddCustomerOpen(true);
@@ -331,16 +341,57 @@ export default function Customers() {
 
   const closeAddCustomer = () => {
     setPageError('');
+    setFormErrors({});
+    setTouchedFields({});
     setIsAddCustomerOpen(false);
     setCurrentStep(1);
   };
 
-  const updateCustomerForm = (field, value) => {
+  const updateCustomerForm = async (field, value) => {
     setPageError('');
-    setCustomerForm((prev) => ({
-      ...prev,
+    const nextForm = {
+      ...customerForm,
       [field]: value,
-    }));
+    };
+    setCustomerForm(nextForm);
+    setTouchedFields((prev) => ({ ...prev, [field]: true }));
+
+    // Instant field validation
+    const err = validateCustomerField(
+      field,
+      value,
+      nextForm,
+      customers,
+      isEditCustomerOpen ? selectedCustomer?.id : null
+    );
+    setFormErrors((prev) => ({ ...prev, [field]: err }));
+
+    // Address to Pincode auto-fetch
+    if (field === 'city' || field === 'area' || field === 'street' || field === 'state') {
+      const autoPin = await autoFetchPincode(nextForm);
+      if (autoPin && autoPin !== nextForm.pinCode) {
+        setCustomerForm((current) => ({ ...current, pinCode: autoPin }));
+        setFormErrors((prev) => ({ ...prev, pinCode: '' }));
+      }
+    }
+
+    // Reverse lookup by PIN
+    if (field === 'pinCode' && String(value).length === 6) {
+      const rev = lookupByPin(value);
+      if (rev) {
+        setCustomerForm((current) => ({
+          ...current,
+          city: current.city || rev.city,
+          state: current.state || rev.state,
+        }));
+        setFormErrors((prev) => ({
+          ...prev,
+          city: '',
+          state: '',
+          pinCode: '',
+        }));
+      }
+    }
   };
 
   const handleCustomerFile = (field, event) => {
@@ -350,35 +401,63 @@ export default function Customers() {
   const handleCustomerWizardNext = async (event) => {
     event?.preventDefault();
 
-    const validationError = validateCustomerForm(customerForm, currentStep < 4 ? { step: currentStep } : undefined);
-    if (validationError) {
-      setPageError(validationError);
+    const stepValidation = validateCustomerStep(
+      currentStep,
+      customerForm,
+      customers,
+      isEditCustomerOpen ? selectedCustomer?.id : null
+    );
+
+    if (!stepValidation.isValid) {
+      setFormErrors((prev) => ({ ...prev, ...stepValidation.errors }));
+      setTouchedFields((prev) => ({
+        ...prev,
+        ...Object.keys(stepValidation.errors).reduce((acc, k) => ({ ...acc, [k]: true }), {}),
+      }));
+      setPageError(stepValidation.firstError);
       return;
     }
 
     if (currentStep < 4) {
+      setPageError('');
       setCurrentStep((prev) => prev + 1);
       return;
     }
 
+    // Final Submission at step 4
     setSaving(true);
     setPageError('');
     try {
       const created = await platformApi.customers.create(customerToApi(customerForm));
       const uploads = [
-        ['aadhaarDocument', 'Aadhaar'], ['panDocument', 'Pan'], ['addressProof', 'AddressProof'], ['photograph', 'Photograph'], ['otherDocuments', 'Other'],
+        ['aadhaarDocument', 'Aadhaar'],
+        ['panDocument', 'Pan'],
+        ['addressProof', 'AddressProof'],
+        ['photograph', 'Photograph'],
+        ['otherDocuments', 'Other'],
       ].filter(([field]) => customerForm[field]);
-      await Promise.all(uploads.map(([field, category]) => platformApi.documents.upload(customerForm[field], category, created.id)));
-      const newCustomer = buildCustomerDetails(customerFromApi({
-        ...created,
-        createdAt: created.createdAt || created.created_at || new Date().toISOString(),
-      }), customers.length);
+
+      if (uploads.length > 0) {
+        await Promise.all(
+          uploads.map(([field, category]) =>
+            platformApi.documents.upload(customerForm[field], category, created.id)
+          )
+        );
+      }
+
+      const newCustomer = buildCustomerDetails(
+        customerFromApi({
+          ...created,
+          createdAt: created.createdAt || created.created_at || new Date().toISOString(),
+        }),
+        customers.length
+      );
       setCustomers((prev) => [newCustomer, ...prev]);
       closeAddCustomer();
       setSelectedCustomerId(newCustomer.id);
       setActiveTab('overview');
     } catch (error) {
-      setPageError(error.message);
+      setPageError(error.message || 'Failed to create customer.');
     } finally {
       setSaving(false);
     }
@@ -386,6 +465,7 @@ export default function Customers() {
 
   const handleWizardBack = () => {
     if (currentStep > 1) {
+      setPageError('');
       setCurrentStep((prev) => prev - 1);
     }
   };
@@ -397,6 +477,9 @@ export default function Customers() {
   const openEditCustomer = (customer = selectedCustomer) => {
     if (!customer) return;
 
+    setPageError('');
+    setFormErrors({});
+    setTouchedFields({});
     setCustomerForm({
       ...emptyCustomerForm,
       name: customer.name || '',
@@ -422,20 +505,32 @@ export default function Customers() {
 
     if (!selectedCustomer) return;
 
-    // Validate all steps; re-validate identity fields that have been filled in
-    const validationError = validateCustomerForm(customerForm, { validateIdentity: true });
-    if (validationError) {
-      setPageError(validationError);
-      return;
+    for (const step of [1, 2, 3]) {
+      const stepVal = validateCustomerStep(step, customerForm, customers, selectedCustomer.id);
+      if (!stepVal.isValid) {
+        setFormErrors((prev) => ({ ...prev, ...stepVal.errors }));
+        setTouchedFields((prev) => ({
+          ...prev,
+          ...Object.keys(stepVal.errors).reduce((acc, k) => ({ ...acc, [k]: true }), {}),
+        }));
+        setPageError(stepVal.firstError);
+        return;
+      }
     }
 
     setSaving(true);
+    setPageError('');
     try {
-      const updated = await platformApi.customers.update(selectedCustomer.id, customerToApi({ ...customerForm, status: selectedCustomer.status }, true));
-      updateCustomerById(selectedCustomer.id, (customer) => buildCustomerDetails({ ...customer, ...customerFromApi(updated) }, 0));
+      const updated = await platformApi.customers.update(
+        selectedCustomer.id,
+        customerToApi({ ...customerForm, status: selectedCustomer.status }, true)
+      );
+      updateCustomerById(selectedCustomer.id, (customer) =>
+        buildCustomerDetails({ ...customer, ...customerFromApi(updated) }, 0)
+      );
       setIsEditCustomerOpen(false);
     } catch (error) {
-      setPageError(error.message);
+      setPageError(error.message || 'Failed to update customer.');
     } finally {
       setSaving(false);
     }
@@ -454,6 +549,7 @@ export default function Customers() {
       ...emptyLoanForm,
       rate: String(product?.annualInterestRate ?? emptyLoanForm.rate),
       startDate,
+      collectionConcern: false,
     });
 
     setIsAddLoanOpen(true);
@@ -477,12 +573,33 @@ export default function Customers() {
     try {
       const product = loanProducts.find((item) => item.isActive !== false) || loanProducts[0];
       if (!product) throw new Error('No active loan product is configured.');
-      if (principal < Number(product.minimumPrincipal) || principal > Number(product.maximumPrincipal)) throw new Error(`Principal must be between ${formatCurrency(product.minimumPrincipal)} and ${formatCurrency(product.maximumPrincipal)}.`);
+      if (principal < Number(product.minimumPrincipal) || principal > Number(product.maximumPrincipal)) {
+        throw new Error(`Principal must be between ${formatCurrency(product.minimumPrincipal)} and ${formatCurrency(product.maximumPrincipal)}.`);
+      }
       const monthlyInterestRate = toNumber(loanForm.rate);
-      await platformApi.loans.create({ customerId: selectedCustomer.id, loanProductId: product.id, principal, annualInterestRate: monthlyInterestRate, tenureMonths: Math.max(product.minimumTenureMonths || 1, 1), startDate: loanForm.startDate, durationValue: toNumber(loanForm.durationValue), durationUnit: loanForm.durationUnit, interestRate: monthlyInterestRate, interestRateBasis: 'PerMonth', interestCollectionFrequency: loanForm.collectionFrequency });
-      setIsAddLoanOpen(false); setLoanForm({ ...emptyLoanForm }); setActiveTab('loans'); await loadCustomers();
-    } catch (error) { setLoanError(error.message); }
-    finally { setSaving(false); }
+      await platformApi.loans.create({
+        customerId: selectedCustomer.id,
+        loanProductId: product.id,
+        principal,
+        annualInterestRate: monthlyInterestRate,
+        tenureMonths: Math.max(product.minimumTenureMonths || 1, 1),
+        startDate: loanForm.startDate,
+        durationValue: toNumber(loanForm.durationValue),
+        durationUnit: loanForm.durationUnit,
+        interestRate: monthlyInterestRate,
+        interestRateBasis: 'PerMonth',
+        interestCollectionFrequency: loanForm.collectionFrequency,
+        collectionConcern: Boolean(loanForm.collectionConcern),
+      });
+      setIsAddLoanOpen(false);
+      setLoanForm({ ...emptyLoanForm });
+      setActiveTab('loans');
+      await loadCustomers();
+    } catch (error) {
+      setLoanError(error.message || 'Failed to create loan.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   /* =======================================================
@@ -779,6 +896,8 @@ export default function Customers() {
           onClose={closeAddCustomer}
           onFileChange={handleCustomerFile}
           error={pageError}
+          errors={formErrors}
+          touched={touchedFields}
           saving={saving}
         />
       )}
@@ -809,6 +928,8 @@ export default function Customers() {
             <CustomerFields
               form={customerForm}
               updateForm={updateCustomerForm}
+              errors={formErrors}
+              touched={touchedFields}
               compact
             />
 
@@ -916,6 +1037,23 @@ export default function Customers() {
               <FormField label="Estimated Total Interest">
                 <input type="text" value={formatCurrency(estimatedTotalInterest(loanForm))} readOnly />
               </FormField>
+            </div>
+
+            <div className="fin-create-loan-concern-section">
+              <label className="fin-create-loan-concern-checkbox-container" htmlFor="customerCollectionConcern">
+                <input
+                  type="checkbox"
+                  id="customerCollectionConcern"
+                  name="customerCollectionConcern"
+                  checked={Boolean(loanForm.collectionConcern)}
+                  onChange={(event) => updateLoanForm('collectionConcern', event.target.checked)}
+                  className="fin-create-loan-concern-checkbox"
+                />
+                <div className="fin-create-loan-concern-text">
+                  <span className="fin-create-loan-concern-title">Customer Collection Concern</span>
+                  <span className="fin-create-loan-concern-subtitle">Flag this customer if you expect difficulty collecting repayments.</span>
+                </div>
+              </label>
             </div>
 
             {loanError && <div className="fin-customer-modal-error" role="alert">{loanError}</div>}
@@ -1560,6 +1698,7 @@ function CustomerWizard({
   onClose,
   onFileChange,
   error,
+  errors = {},
   saving,
 }) {
   const labels = ['Personal Info', 'Address', 'KYC', 'Documents'];
@@ -1611,35 +1750,42 @@ function CustomerWizard({
         <div className="fin-customer-wizard-content">
           {currentStep === 1 && (
             <form onSubmit={onNext}>
-              <CustomerFields form={form} updateForm={updateForm} />
-              <WizardActions onClose={onClose} />
+              <CustomerFields form={form} updateForm={updateForm} errors={errors} />
+              <div className="fin-customer-form-actions">
+                <button type="button" className="fin-customer-secondary-btn" onClick={onClose}>
+                  Cancel
+                </button>
+                <button type="submit" className="fin-customer-primary-btn wizard-next">
+                  Continue <ChevronLeft size={17} className="rotate-180" />
+                </button>
+              </div>
             </form>
           )}
 
           {currentStep === 2 && (
             <form onSubmit={onNext}>
               <div className="fin-customer-form-grid">
-                <FormField label="House / Flat Number">
+                <FormField label="House / Flat Number" error={errors?.houseNumber}>
                   <input
                     value={form.houseNumber}
                     onChange={(event) =>
                       updateForm('houseNumber', event.target.value)
                     }
-                    placeholder="12, MG Road"
+                    placeholder="12"
                   />
                 </FormField>
 
-                <FormField label="Street">
+                <FormField label="Street" error={errors?.street}>
                   <input
                     value={form.street}
                     onChange={(event) =>
                       updateForm('street', event.target.value)
                     }
-                    placeholder="Andheri West"
+                    placeholder="MG Road"
                   />
                 </FormField>
 
-                <FormField label="Area">
+                <FormField label="Area" error={errors?.area}>
                   <input
                     value={form.area}
                     onChange={(event) =>
@@ -1649,111 +1795,117 @@ function CustomerWizard({
                   />
                 </FormField>
 
-<FormField label="City" required>
-  <input
-    value={form.city}
-    onChange={(event) =>
-      updateForm(
-        'city',
-        sanitizeCustomerField('city', event.target.value),
-      )
-    }
-    placeholder="Mumbai"
-    maxLength={100}
-    pattern="[A-Za-z\s.'-]+"
-    title="City can contain only letters, spaces, apostrophe, dot and hyphen"
-    required
-  />
-</FormField>
+                <FormField label="City" required error={errors?.city}>
+                  <input
+                    value={form.city}
+                    onChange={(event) =>
+                      updateForm(
+                        'city',
+                        sanitizeCustomerField('city', event.target.value),
+                      )
+                    }
+                    placeholder="Mumbai"
+                    maxLength={100}
+                    pattern="[A-Za-z\s.'-]+"
+                    title="City can contain only letters, spaces, apostrophe, dot and hyphen"
+                    required
+                  />
+                </FormField>
 
-<FormField label="State" required>
-  <input
-    value={form.state}
-    onChange={(event) =>
-      updateForm(
-        'state',
-        sanitizeCustomerField('state', event.target.value),
-      )
-    }
-    placeholder="Maharashtra"
-    maxLength={100}
-    pattern="[A-Za-z\s.'-]+"
-    title="State can contain only letters, spaces, apostrophe, dot and hyphen"
-    required
-  />
-</FormField>
+                <FormField label="State" required error={errors?.state}>
+                  <input
+                    value={form.state}
+                    onChange={(event) =>
+                      updateForm(
+                        'state',
+                        sanitizeCustomerField('state', event.target.value),
+                      )
+                    }
+                    placeholder="Maharashtra"
+                    maxLength={100}
+                    pattern="[A-Za-z\s.'-]+"
+                    title="State can contain only letters, spaces, apostrophe, dot and hyphen"
+                    required
+                  />
+                </FormField>
 
-<FormField label="PIN Code" required>
-  <input
-    value={form.pinCode}
-    onChange={(event) =>
-      updateForm(
-        'pinCode',
-        sanitizeCustomerField('pinCode', event.target.value),
-      )
-    }
-    inputMode="numeric"
-    pattern="[1-9][0-9]{5}"
-    maxLength={6}
-    title="Enter a valid 6-digit Indian PIN code"
-    required
-  />
-</FormField>
+                <FormField label="PIN Code" required error={errors?.pinCode}>
+                  <input
+                    value={form.pinCode}
+                    onChange={(event) =>
+                      updateForm(
+                        'pinCode',
+                        sanitizeCustomerField('pinCode', event.target.value),
+                      )
+                    }
+                    inputMode="numeric"
+                    placeholder="400001"
+                    pattern="[1-9][0-9]{5}"
+                    maxLength={6}
+                    title="Enter a valid 6-digit Indian PIN code"
+                    required
+                  />
+                </FormField>
               </div>
 
-              <WizardNavigation onBack={onBack} />
-              <button type="submit" className="fin-customer-primary-btn wizard-next">
-                Continue <ChevronLeft size={17} className="rotate-180" />
-              </button>
+              <div className="fin-customer-form-actions">
+                <button type="button" className="fin-customer-secondary-btn" onClick={onBack}>
+                  ← Back
+                </button>
+                <button type="submit" className="fin-customer-primary-btn wizard-next">
+                  Continue <ChevronLeft size={17} className="rotate-180" />
+                </button>
+              </div>
             </form>
           )}
 
           {currentStep === 3 && (
             <form onSubmit={onNext}>
               <div className="fin-customer-single-form">
-<FormField label="Aadhaar Number">
-<input
+                <FormField label="Aadhaar Number" error={errors?.aadhaar}>
+                  <input
+                    type="text"
+                    value={formatAadhaar(form.aadhaar)}
+                    onChange={(event) =>
+                      updateForm(
+                        'aadhaar',
+                        sanitizeCustomerField('aadhaar', event.target.value)
+                      )
+                    }
+                    inputMode="numeric"
+                    maxLength={14}
+                    placeholder="2345 6789 0123"
+                    title="Aadhaar must contain exactly 12 digits"
+                  />
+                </FormField>
 
-  value={formatAadhaar(form.aadhaar)}
-  onChange={(event) =>
-    handleChange(
-      'aadhaar',
-      event.target.value,
-    )
-  }
-  placeholder="1234 5678 9012"
-  inputMode="numeric"
-  maxLength={14}
-  pattern="[0-9]{4} [0-9]{4} [0-9]{4}"
-  title="Enter exactly 12 digits"
-/>
-</FormField>
-
-<FormField label="PAN Number">
-  <input
-    value={form.pan}
-    onChange={(event) =>
-      updateForm(
-        'pan',
-        
-        sanitizeCustomerField(
-          'pan',
-          event.target.value,
-        ),
-      )
-    }
-    placeholder="ABCDE1234F"
-    pattern="[A-Z]{5}[0-9]{4}[A-Z]"
-    maxLength={10}
-    title="Use PAN format ABCDE1234F"
-  />
-</FormField>
+                <FormField label="PAN Number" error={errors?.pan}>
+                  <input
+                    value={form.pan}
+                    onChange={(event) =>
+                      updateForm(
+                        'pan',
+                        sanitizeCustomerField(
+                          'pan',
+                          event.target.value,
+                        ),
+                      )
+                    }
+                    placeholder="ABCDE1234F"
+                    maxLength={10}
+                    title="Use PAN format ABCDE1234F"
+                  />
+                </FormField>
               </div>
 
-              <WizardNavigation onBack={onBack} />
-              <button type="submit" className="fin-customer-primary-btn wizard-next">
-                Continue <ChevronLeft size={17} className="rotate-180" />
-              </button>
+              <div className="fin-customer-form-actions">
+                <button type="button" className="fin-customer-secondary-btn" onClick={onBack}>
+                  ← Back
+                </button>
+                <button type="submit" className="fin-customer-primary-btn wizard-next">
+                  Continue <ChevronLeft size={17} className="rotate-180" />
+                </button>
+              </div>
             </form>
           )}
 
@@ -1761,7 +1913,7 @@ function CustomerWizard({
             <form onSubmit={onNext}>
               <div className="fin-customer-document-grid">
                 <DocumentUpload
-                  label="Upload Aadhaar Card"
+                  label="Upload Aadhaar Card (Optional)"
                   file={form.aadhaarDocument}
                   onChange={(event) =>
                     onFileChange('aadhaarDocument', event)
@@ -1769,7 +1921,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload PAN Card"
+                  label="Upload PAN Card (Optional)"
                   file={form.panDocument}
                   onChange={(event) =>
                     onFileChange('panDocument', event)
@@ -1777,7 +1929,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload Address Proof"
+                  label="Upload Address Proof (Optional)"
                   file={form.addressProof}
                   onChange={(event) =>
                     onFileChange('addressProof', event)
@@ -1785,7 +1937,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload Photograph"
+                  label="Upload Photograph (Optional)"
                   file={form.photograph}
                   onChange={(event) =>
                     onFileChange('photograph', event)
@@ -1793,7 +1945,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload Other Documents"
+                  label="Upload Other Documents (Optional)"
                   file={form.otherDocuments}
                   onChange={(event) =>
                     onFileChange('otherDocuments', event)
@@ -1826,8 +1978,8 @@ function CustomerWizard({
 /* =========================================================
    REUSABLE UI
    ========================================================= */
-   const formatAadhaar = (value) => {
-  return value
+const formatAadhaar = (value) => {
+  return String(value || '')
     .replace(/\D/g, '')
     .slice(0, 12)
     .replace(/(\d{4})(?=\d)/g, '$1 ');
@@ -1848,7 +2000,8 @@ const sanitizeCustomerField = (field, value) => {
 
     case 'city':
     case 'state':
-      // City / State: letters, spaces, apostrophe, dot and hyphen
+    case 'area':
+      // City / State / Area: letters, spaces, apostrophe, dot and hyphen only
       return value.replace(/[^a-zA-Z\s.'-]/g, '');
 
     case 'pinCode':
@@ -1870,7 +2023,7 @@ const sanitizeCustomerField = (field, value) => {
       return value;
   }
 };
-function CustomerFields({ form, updateForm, compact = false }) {
+function CustomerFields({ form, updateForm, errors = {}, compact = false }) {
   const handleChange = (field, value) => {
     updateForm(field, sanitizeCustomerField(field, value));
   };
@@ -1878,7 +2031,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
   return (
     <div className="fin-customer-form-grid">
       {/* Full Name */}
-      <FormField label="Full Name" required full={compact ? false : true}>
+      <FormField label="Full Name" required full={compact ? false : true} error={errors?.name}>
         <input
           value={form.name}
           onChange={(event) =>
@@ -1893,7 +2046,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
       </FormField>
 
       {/* Mobile */}
-      <FormField label="Mobile Number" required>
+      <FormField label="Mobile Number" required error={errors?.mobile}>
         <input
           type="tel"
           value={form.mobile}
@@ -1910,7 +2063,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
       </FormField>
 
       {/* Email */}
-      <FormField label="Email Address">
+      <FormField label="Email Address" error={errors?.email}>
         <input
           type="email"
           value={form.email}
@@ -1925,7 +2078,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
       </FormField>
 
       {/* Date of Birth */}
-      <FormField label="Date of Birth" required>
+      <FormField label="Date of Birth" required error={errors?.dob}>
         <input
           type="date"
           value={form.dob}
@@ -1946,12 +2099,13 @@ function CustomerFields({ form, updateForm, compact = false }) {
       </FormField>
 
       {/* Gender */}
-      <FormField label="Gender">
+      <FormField label="Gender" required error={errors?.gender}>
         <select
           value={form.gender}
           onChange={(event) =>
             updateForm('gender', event.target.value)
           }
+          required
         >
           <option value="">Select</option>
           <option value="Male">Male</option>
@@ -1963,7 +2117,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
       {compact && (
         <>
           {/* House / Flat Number */}
-          <FormField label="House / Flat Number">
+          <FormField label="House / Flat Number" error={errors?.houseNumber}>
             <input
               value={form.houseNumber}
               onChange={(event) =>
@@ -1972,60 +2126,72 @@ function CustomerFields({ form, updateForm, compact = false }) {
                   event.target.value,
                 )
               }
+              placeholder="12"
               maxLength={100}
             />
           </FormField>
 
           {/* Street */}
-          <FormField label="Street">
+          <FormField label="Street" error={errors?.street}>
             <input
               value={form.street}
               onChange={(event) =>
                 updateForm('street', event.target.value)
               }
+              placeholder="MG Road"
               maxLength={150}
             />
           </FormField>
 
           {/* Area */}
-          <FormField label="Area">
+          <FormField label="Area" error={errors?.area}>
             <input
               value={form.area}
               onChange={(event) =>
-                updateForm('area', event.target.value)
+                updateForm(
+                  'area',
+                  sanitizeCustomerField('area', event.target.value)
+                )
               }
-              maxLength={150}
+              placeholder="Andheri"
+              maxLength={100}
+              pattern="[A-Za-z\s.'-]+"
+              title="Area can contain only letters, spaces, apostrophe, dot and hyphen"
             />
           </FormField>
 
           {/* City */}
-          <FormField label="City">
+          <FormField label="City" required error={errors?.city}>
             <input
               value={form.city}
               onChange={(event) =>
                 handleChange('city', event.target.value)
               }
+              placeholder="Mumbai"
               maxLength={100}
               pattern="[A-Za-z\s.'-]+"
               title="City can contain only letters, spaces, apostrophe, dot and hyphen"
+              required
             />
           </FormField>
 
           {/* State */}
-          <FormField label="State">
+          <FormField label="State" required error={errors?.state}>
             <input
               value={form.state}
               onChange={(event) =>
                 handleChange('state', event.target.value)
               }
+              placeholder="Maharashtra"
               maxLength={100}
               pattern="[A-Za-z\s.'-]+"
               title="State can contain only letters, spaces, apostrophe, dot and hyphen"
+              required
             />
           </FormField>
 
           {/* PIN Code */}
-          <FormField label="PIN Code">
+          <FormField label="PIN Code" required error={errors?.pinCode}>
             <input
               value={form.pinCode}
               onChange={(event) =>
@@ -2035,14 +2201,16 @@ function CustomerFields({ form, updateForm, compact = false }) {
                 )
               }
               inputMode="numeric"
+              placeholder="400001"
               pattern="[1-9][0-9]{5}"
               maxLength={6}
               title="Enter a valid 6-digit Indian PIN code"
+              required
             />
           </FormField>
 
           {/* Aadhaar */}
-          <FormField label="Aadhaar">
+          <FormField label="Aadhaar" error={errors?.aadhaar}>
             <input
               value={form.aadhaar}
               onChange={(event) =>
@@ -2051,7 +2219,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
                   event.target.value,
                 )
               }
-              placeholder="Enter 12-digit Aadhaar number"
+              placeholder="2345 6789 0123"
               inputMode="numeric"
               maxLength={12}
               pattern="[2-9][0-9]{11}"
@@ -2060,7 +2228,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
           </FormField>
 
           {/* PAN */}
-          <FormField label="PAN">
+          <FormField label="PAN" error={errors?.pan}>
             <input
               value={form.pan}
               onChange={(event) =>
@@ -2081,7 +2249,7 @@ function CustomerFields({ form, updateForm, compact = false }) {
   );
 }
 
-function FormField({ label, required = false, full = false, children }) {
+function FormField({ label, required = false, full = false, error = '', children }) {
   const generatedId = React.useId();
   const controlId = React.isValidElement(children) ? (children.props.id || generatedId) : generatedId;
   return (
@@ -2090,7 +2258,18 @@ function FormField({ label, required = false, full = false, children }) {
         {label}
         {required && <span aria-hidden="true">*</span>}
       </label>
-      {React.isValidElement(children) ? React.cloneElement(children, { id: controlId }) : children}
+      {React.isValidElement(children)
+        ? React.cloneElement(children, {
+            id: controlId,
+            className: `${children.props.className || ''} ${error ? 'fin-input-error' : ''}`.trim(),
+            'aria-invalid': Boolean(error),
+          })
+        : children}
+      {error && (
+        <span className="fin-customer-field-error" role="alert">
+          {error}
+        </span>
+      )}
     </div>
   );
 }
@@ -2204,38 +2383,6 @@ function FormModal({ title, subtitle, onClose, children, wide = false }) {
 
         <div className="fin-customer-form-modal-content">{children}</div>
       </div>
-    </div>
-  );
-}
-
-function WizardActions({ onClose }) {
-  return (
-    <div className="fin-customer-form-actions wizard-actions">
-      <button
-        type="button"
-        className="fin-customer-secondary-btn"
-        onClick={onClose}
-      >
-        Cancel
-      </button>
-
-      <button type="submit" className="fin-customer-primary-btn">
-        Continue <ChevronLeft size={17} className="rotate-180" />
-      </button>
-    </div>
-  );
-}
-
-function WizardNavigation({ onBack }) {
-  return (
-    <div className="fin-customer-wizard-back-row">
-      <button
-        type="button"
-        className="fin-customer-secondary-btn"
-        onClick={onBack}
-      >
-        ← Back
-      </button>
     </div>
   );
 }

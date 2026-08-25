@@ -273,6 +273,7 @@
   align-items: center;
   gap: 10px;
   min-width: 175px;
+  white-space: nowrap;
 }
 
 .inrfs-loans-customer-cell > div:last-child {
@@ -280,20 +281,28 @@
   flex-direction: column;
   gap: 3px;
   min-width: 0;
+  white-space: nowrap;
 }
 
 .inrfs-loans-customer-cell strong {
+  display: block;
   overflow: hidden;
   color: #1f2937;
   font-size: 13px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .inrfs-loans-customer-cell span {
+  display: block;
+  overflow: hidden;
   color: #9ca3af;
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .inrfs-loans-avatar {

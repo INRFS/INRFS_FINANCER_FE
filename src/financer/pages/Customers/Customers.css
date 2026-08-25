@@ -1540,3 +1540,77 @@
   color: #a61b29;
   font-size: 13px;
 }
+
+.fin-customer-field-error {
+  display: block;
+  margin-top: 4px;
+  color: #d32f2f;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.fin-customer-form-field input.fin-input-error,
+.fin-customer-form-field select.fin-input-error,
+.fin-customer-form-field textarea.fin-input-error {
+  border-color: #e53935 !important;
+  background-color: #fff8f8;
+}
+
+.fin-customer-form-field input.fin-input-error:focus,
+.fin-customer-form-field select.fin-input-error:focus,
+.fin-customer-form-field textarea.fin-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.15) !important;
+}
+
+/* Customer Collection Concern Checkbox in Customer Modals */
+.fin-create-loan-concern-section {
+  margin-top: 16px;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  background: #fbfcfe;
+  border: 1px solid #e1e8f0;
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+
+.fin-create-loan-concern-section:hover {
+  background: #f4f8fc;
+  border-color: #cbd8e8;
+}
+
+.fin-create-loan-concern-checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fin-create-loan-concern-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #0db2e8;
+  cursor: pointer;
+}
+
+.fin-create-loan-concern-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fin-create-loan-concern-title {
+  font-size: 13.5px;
+  font-weight: 650;
+  color: #1a2a3e;
+}
+
+.fin-create-loan-concern-subtitle {
+  font-size: 12px;
+  color: #6a809b;
+  line-height: 1.4;
+}
+

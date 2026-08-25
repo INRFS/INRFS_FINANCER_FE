@@ -1013,6 +1013,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
+  white-space: nowrap;
 }
 
 .detail-person-avatar {
@@ -1029,8 +1030,14 @@
 }
 
 .detail-person strong {
+  display: block;
   color: #343d51;
   font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* =========================================================
