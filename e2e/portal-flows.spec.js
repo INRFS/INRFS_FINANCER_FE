@@ -102,7 +102,7 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
 
   await page.goto('/financer/login');
   await page.getByRole('button', { name: 'Create account' }).click();
-  await page.getByLabel('Full Name').fill('E2E Financer');
+  await page.getByLabel('Full Name').fill('End To End Financer');
   await page.getByLabel('Business / Finance Name').fill('E2E Finance');
   await page.getByLabel('Mobile Number').fill(mobile);
   await page.getByLabel('Email Address').fill(email);
@@ -118,13 +118,13 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
   registeredFinancerCredentials = credentials;
   expect(credentials.userId).toBe(mobile);
   await page.getByLabel('Mobile Number').fill(credentials.userId);
-  await page.getByLabel('Password').fill(credentials.password);
+  await page.getByLabel('Password', { exact: true }).fill(credentials.password);
   await page.getByRole('button', { name: 'Login' }).click();
   await expect(page).toHaveURL(/\/financer\/welcome$/);
   await page.getByRole('button', { name: /Continue to Dashboard/ }).click();
-  await expect(page.getByRole('heading', { name: /Welcome, E2E Financer/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Welcome, .*Financer/ })).toBeVisible();
 
-  const customerName = `Customer ${suffix}`;
+  const customerName = 'End To End Customer';
   await page.goto('/financer/customers');
   await page.getByRole('button', { name: 'Add Customer' }).click();
   await page.getByLabel('Full Name').fill(customerName);
@@ -168,7 +168,7 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
   await createLoanForm.hover();
   await page.mouse.wheel(0, 500);
   await expect.poll(() => createLoanForm.evaluate((form) => form.scrollTop)).toBeGreaterThan(0);
-  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('button', { name: 'Cancel' }).click();
   await page.setViewportSize({ width: 1280, height: 720 });
 
   await page.goto('/financer/support');
@@ -204,7 +204,7 @@ test('financer registers with OTP and can open core API-backed pages', async ({ 
   await expect(page.getByRole('status')).toContainText('Password reset successfully');
   registeredFinancerCredentials.password = newPassword;
   await page.getByLabel('Mobile Number').fill(registeredFinancerCredentials.userId);
-  await page.getByLabel('Password').fill(newPassword);
+  await page.getByLabel('Password', { exact: true }).fill(newPassword);
   await page.getByRole('button', { name: 'Login' }).click();
   await expect(page).toHaveURL(/\/financer\/welcome$/);
 });
@@ -263,10 +263,10 @@ test('admin completes password and OTP login, then reaches platform workflows', 
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.getByRole('button', { name: 'View statement' }).first().click();
   await expect(page.getByText(generatedInvoice.invoiceNumber).first()).toBeVisible();
+  await page.getByRole('button', { name: 'Close statement' }).click();
   const invoiceDownload = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Download Invoice' }).click();
+  await page.getByRole('button', { name: 'Download statement' }).first().click();
   expect((await invoiceDownload).suggestedFilename()).toMatch(/-invoice-DEMO\.pdf$/);
-  await page.getByRole('button', { name: 'Close', exact: true }).click();
 
   await page.goto('/admin/settings');
   await page.getByRole('button', { name: 'Administrators' }).click();
@@ -290,7 +290,7 @@ test('admin completes password and OTP login, then reaches platform workflows', 
 
   await page.goto('/financer/login');
   await page.getByLabel('Mobile Number').fill(registeredFinancerCredentials.userId);
-  await page.getByLabel('Password').fill(registeredFinancerCredentials.password);
+  await page.getByLabel('Password', { exact: true }).fill(registeredFinancerCredentials.password);
   await page.getByRole('button', { name: 'Login' }).click();
   await expect(page).toHaveURL(/\/financer\/welcome$/);
   await page.getByRole('button', { name: /Continue to Dashboard/ }).click();

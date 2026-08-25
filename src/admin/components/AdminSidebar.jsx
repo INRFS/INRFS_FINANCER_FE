@@ -11,7 +11,6 @@ import {
   Settings,
   Headphones,
   Bell,
-  Activity,
   HandCoins,
 } from 'lucide-react';
 import { useAuth } from '../../auth/authState';

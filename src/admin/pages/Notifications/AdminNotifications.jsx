@@ -1,18 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ShieldAlert,
   Building2,
   Send,
   AlertTriangle,
   CheckCircle2,
-  Clock,
   User,
   Search,
   X,
   FileText,
   Eye,
   Check,
-  RefreshCw,
   Info,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -71,7 +69,6 @@ export default function AdminNotifications() {
   const [financers, setFinancers] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
 
   // Concern filters & search
   const [concernStatusFilter, setConcernStatusFilter] = useState('All');
@@ -90,8 +87,8 @@ export default function AdminNotifications() {
   const adminFullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || user?.name || user?.email || 'Administrator';
   const adminId = user?.id || 'admin_user';
 
-  const loadData = async () => {
-    setLoading(true);
+  const selectedConcernId = location.state?.selectedConcernId;
+  const loadData = useCallback(async () => {
     try {
       const [notifsPayload, financersPayload, concernsPayload] = await Promise.all([
         platformApi.notifications.list({ pageSize: 200 }).catch(() => ({ items: [] })),
@@ -107,25 +104,31 @@ export default function AdminNotifications() {
       setConcerns(concernItems);
 
       // Check if navigated with a selected concern ID
-      if (location.state?.selectedConcernId) {
-        const found = concernItems.find((c) => c.id === location.state.selectedConcernId);
+      if (selectedConcernId) {
+        const found = concernItems.find((c) => c.id === selectedConcernId);
         if (found) {
-          openConcernModal(found);
+          setSelectedConcern(found);
+          setSelectedStatus(found.status || 'PENDING');
+          setAdminNotes(found.adminNotes || '');
+          const relatedNotification = notifItems.find(
+            (item) => item.concernId === found.id || item.entityId === found.id,
+          );
+          if (relatedNotification && !relatedNotification.readAt) {
+            void platformApi.notifications.read(relatedNotification.id).catch(() => {});
+          }
         }
       }
     } catch (reason) {
       setError(reason.message);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [selectedConcernId]);
 
   useEffect(() => {
-    loadData();
-    const handleUpdate = () => loadData();
+    void loadData();
+    const handleUpdate = () => void loadData();
     window.addEventListener('inrfs-notification-updated', handleUpdate);
     return () => window.removeEventListener('inrfs-notification-updated', handleUpdate);
-  }, []);
+  }, [loadData]);
 
   const openConcernModal = (concern) => {
     setSelectedConcern(concern);

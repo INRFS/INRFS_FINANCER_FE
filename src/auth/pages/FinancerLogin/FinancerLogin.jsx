@@ -338,7 +338,17 @@ const [showPassword, setShowPassword] = useState(false);
 
   {/* Forgot Password */}
   <div className="fin-forgot-password-row">
-    
+    <button
+      type="button"
+      className="fin-forgot-password"
+      onClick={() => {
+        setError('');
+        setForgotStatus('');
+        setIsForgotPassword(true);
+      }}
+    >
+      Forgot password?
+    </button>
   </div>
 </div>
 

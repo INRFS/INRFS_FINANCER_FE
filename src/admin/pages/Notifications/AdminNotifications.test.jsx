@@ -4,7 +4,6 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import AdminNotifications from './AdminNotifications';
 import { platformApi } from '../../../common/services/platformApi';
-import { collectionConcernService } from '../../../common/services/collectionConcernService';
 
 describe('AdminNotifications Component', () => {
   beforeEach(() => {
