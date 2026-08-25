@@ -64,7 +64,7 @@ const adminNavigation = [
   },
   { label: 'Support', path: '/admin/support', icon: Headphones, roles: SUPPORT_MANAGE_ROLES },
   { label: 'Announcements', path: '/admin/notifications', icon: Bell, roles: CONFIG_MANAGE_ROLES },
-  { label: 'Operations', path: '/admin/operations', icon: Activity },
+  // { label: 'Operations', path: '/admin/operations', icon: Activity },
   { label: 'Settings', path: '/admin/settings', icon: Settings, roles: CONFIG_MANAGE_ROLES },
 ];
 
