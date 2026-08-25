@@ -2718,3 +2718,40 @@
   padding: 10px 0 2px;
   background: #fff;
 }
+
+
+/* =========================================================
+   FINAL CREATE LOAN FORM SCROLLBAR
+   Visible + draggable scrollbar
+   ========================================================= */
+
+.fin-create-loan-form {
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+
+  scrollbar-width: auto !important;
+  scrollbar-color: #7f94aa #e8edf2 !important;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Chrome / Edge / Safari */
+.fin-create-loan-form::-webkit-scrollbar {
+  width: 12px !important;
+  display: block !important;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-track {
+  background: #e8edf2 !important;
+  border-radius: 8px;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-thumb {
+  background: #7f94aa !important;
+  border-radius: 8px;
+  border: 2px solid #e8edf2;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-thumb:hover {
+  background: #60788f !important;
+}

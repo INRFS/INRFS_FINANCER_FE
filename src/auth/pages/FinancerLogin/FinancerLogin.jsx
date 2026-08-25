@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './FinancerLogin.css';
-
+import {
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 import logo from '../../../assets/logo.png';
 import { api } from '../../../common/services/apiClient';
 import { useAuth } from '../../authState';
@@ -25,7 +28,7 @@ export default function FinancerLogin() {
 
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
-
+const [showPassword, setShowPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotStatus, setForgotStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -306,37 +309,38 @@ export default function FinancerLogin() {
             </div>
 
             {/* Password */}
-            <div className="fin-login-field">
-              <label htmlFor="login-password">
-                Password
-              </label>
+<div className="fin-login-field">
+  <label htmlFor="login-password">
+    Password
+  </label>
 
-              <input
-                id="login-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                required
-              />
+  <div className="fin-password-input-wrap">
+    <input
+      id="login-password"
+      type={showPassword ? 'text' : 'password'}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      placeholder="Enter your password"
+      autoComplete="current-password"
+      required
+    />
 
-              {/* Forgot Password */}
-              <div className="fin-forgot-password-row">
-                <button
-                  type="button"
-                  className="fin-forgot-password"
-                  onClick={() => {
-                    setForgotEmail('');
-                    setForgotStatus('');
-                    setIsForgotPassword(true);
-                    setIsRegistering(false);
-                  }}
-                >
-                  Forgot password?
-                </button>
-              </div>
-            </div>
+    <button
+      type="button"
+      className="fin-password-toggle"
+      onClick={() => setShowPassword((previous) => !previous)}
+      aria-label={showPassword ? 'Hide password' : 'Show password'}
+      title={showPassword ? 'Hide password' : 'Show password'}
+    >
+      {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+    </button>
+  </div>
+
+  {/* Forgot Password */}
+  <div className="fin-forgot-password-row">
+    
+  </div>
+</div>
 
             {/* Login Button */}
             <button
