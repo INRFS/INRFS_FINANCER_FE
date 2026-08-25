@@ -61,7 +61,7 @@ export default function AdministratorSettings() {
         roleIds: [adminRole.id],
       });
       setForm(emptyForm);
-      setSuccess('Administrator account created successfully. Share the temporary password through a secure channel.');
+      setSuccess(`Administrator account created successfully. Login details were sent to ${form.email.trim().toLowerCase()}. A one-time code will be emailed after password verification.`);
       await load();
     } catch (requestError) {
       setError(requestError.message);
