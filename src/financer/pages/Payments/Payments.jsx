@@ -894,6 +894,8 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
   const maximum = paymentType === 'FullSettlement' ? Number(settlementQuote?.settlementAmount || 0)
     : paymentType === 'InterestOnly' ? interestMaximum : Math.max(payment.amount, payment.loanOutstanding);
 
+  const customerInitial = (payment.customerName || 'C').trim().charAt(0).toUpperCase() || 'C';
+
   useEffect(() => {
     if (paymentType !== 'FullSettlement') return;
     let active = true;
@@ -941,44 +943,94 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
         </button>
 
         <ol className="pmt-steps">
-          <li className={step >= 1 ? "is-active" : ""}>
-            <span className="pmt-step-dot">1</span>Due
+          <li className={`pmt-step-item ${step >= 1 ? "is-active" : ""} ${step > 1 ? "is-complete" : ""}`}>
+            <span className="pmt-step-dot">{step > 1 ? <Check size={12} strokeWidth={3} /> : "1"}</span>
+            <span className="pmt-step-label">Due</span>
           </li>
-          <li className={step >= 2 ? "is-active" : ""}>
-            <span className="pmt-step-dot">2</span>Record Payment
+          <div className={`pmt-step-connector ${step >= 2 ? "is-active" : ""}`} />
+          <li className={`pmt-step-item ${step >= 2 ? "is-active" : ""} ${step > 2 ? "is-complete" : ""}`}>
+            <span className="pmt-step-dot">{step > 2 ? <Check size={12} strokeWidth={3} /> : "2"}</span>
+            <span className="pmt-step-label">Record Payment</span>
           </li>
-          <li className={step >= 3 ? "is-active" : ""}>
-            <span className="pmt-step-dot">3</span>Success
+          <div className={`pmt-step-connector ${step >= 3 ? "is-active" : ""}`} />
+          <li className={`pmt-step-item ${step >= 3 ? "is-active" : ""}`}>
+            <span className="pmt-step-dot">3</span>
+            <span className="pmt-step-label">Success</span>
           </li>
         </ol>
 
         {step === 1 && (
-          <div className="pmt-modal-body">
-            <h3>Payment due</h3>
-            <p className="pmt-modal-line">
-              <strong>{payment.customerName}</strong> ({payment.customerDisplayId})
-            </p>
-            <p className="pmt-modal-line">
-              Loan <strong>{payment.loanDisplayId}</strong> — due{" "}
-              {payment.dueDate ? formatDueDateLabel(payment.dueDate) : "—"}
-            </p>
-            <p className="pmt-modal-amount">{formatCurrency(payment.amount)}</p>
-            <button className="pmt-modal-cta" onClick={() => setStep(2)}>
+          <div className="pmt-modal-body pmt-modal-body--card">
+            <div className="pmt-modal-header-block">
+              <h3 className="pmt-modal-heading">Payment Due</h3>
+              <p className="pmt-modal-subheading">Review the payment details before recording.</p>
+            </div>
+
+            <div className="pmt-customer-summary-card">
+              <div className="pmt-customer-card-header">
+                <div className="pmt-customer-card-avatar">{customerInitial}</div>
+                <div className="pmt-customer-card-info">
+                  <strong className="pmt-customer-card-name">{payment.customerName || "Customer"}</strong>
+                  <span className="pmt-customer-card-id">{payment.customerDisplayId || "—"}</span>
+                </div>
+              </div>
+
+              <div className="pmt-customer-card-divider" />
+
+              <div className="pmt-customer-card-grid">
+                <div className="pmt-customer-card-meta">
+                  <span className="pmt-card-meta-label">Loan</span>
+                  <strong className="pmt-card-meta-val">{payment.loanDisplayId || "—"}</strong>
+                </div>
+                <div className="pmt-customer-card-meta pmt-customer-card-meta--right">
+                  <span className="pmt-card-meta-label">Due Date</span>
+                  <strong className="pmt-card-meta-val">
+                    {payment.dueDate ? formatDueDateLabel(payment.dueDate) : "—"}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="pmt-amount-due-card">
+              <span className="pmt-amount-due-label">Amount Due</span>
+              <span className="pmt-amount-due-val">{formatCurrency(payment.amount)}</span>
+            </div>
+
+            <button type="button" className="pmt-modal-cta" onClick={() => setStep(2)}>
               Continue
             </button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="pmt-modal-body">
-            <h3>Record payment</h3>
+          <div className="pmt-modal-body pmt-modal-body--card">
+            <div className="pmt-modal-header-block">
+              <h3 className="pmt-modal-heading">Record Payment</h3>
+              <p className="pmt-modal-subheading">Enter payment details and payment method.</p>
+            </div>
+
+            <div className="pmt-compact-context-card">
+              <div className="pmt-compact-avatar">{customerInitial}</div>
+              <div className="pmt-compact-info">
+                <strong className="pmt-compact-name">{payment.customerName}</strong>
+                <span className="pmt-compact-sub">
+                  Loan <strong>{payment.loanDisplayId}</strong> · Due {payment.dueDate ? formatDueDateLabel(payment.dueDate) : "—"}
+                </span>
+              </div>
+              <div className="pmt-compact-due">
+                <span>Due</span>
+                <strong>{formatCurrency(payment.amount)}</strong>
+              </div>
+            </div>
+
             <div className="pmt-payment-types" role="group" aria-label="Payment type">
               <button type="button" className={paymentType === 'InterestOnly' ? 'is-active' : ''} onClick={() => selectPaymentType('InterestOnly')}>Interest Payment</button>
               <button type="button" className={paymentType === 'Regular' ? 'is-active' : ''} onClick={() => selectPaymentType('Regular')}>Regular Payment</button>
               <button type="button" className={paymentType === 'FullSettlement' ? 'is-active' : ''} onClick={() => selectPaymentType('FullSettlement')}>Full Settlement</button>
             </div>
-            {paymentType === 'InterestOnly' && <p className="pmt-modal-line">Pay partial or full interest. Principal will not be reduced.</p>}
-            {paymentType === 'Regular' && <p className="pmt-modal-line">Payment is applied to fees and interest first, then principal.</p>}
+
+            {paymentType === 'InterestOnly' && <p className="pmt-type-hint">Pay partial or full interest. Principal will not be reduced.</p>}
+            {paymentType === 'Regular' && <p className="pmt-type-hint">Payment is applied to fees and interest first, then principal.</p>}
             {paymentType === 'FullSettlement' && settlementQuote && (
               <div className="pmt-settlement-quote">
                 <div><span>Principal outstanding</span><strong>{formatCurrency(settlementQuote.principalOutstanding)}</strong></div>
@@ -988,46 +1040,130 @@ function RecordPaymentModal({ payment, onClose, onConfirm }) {
                 <div className="pmt-settlement-total"><span>Settlement amount</span><strong>{formatCurrency(settlementQuote.settlementAmount)}</strong></div>
               </div>
             )}
-            <label className="pmt-field"><span>Amount received</span><input type="number" min="0.01" step="0.01" max={maximum} value={amount} readOnly={paymentType === 'FullSettlement'} onChange={(event) => setAmount(event.target.value)} /></label>
-            <div className="pmt-partial-summary" role="status"><strong>{paymentType === 'FullSettlement' ? 'Settlement' : 'Payment'}</strong><span>{paymentType === 'FullSettlement' && !settlementQuote ? (quoteLoading ? 'Calculating…' : 'Quote unavailable') : `Maximum allowed: ${formatCurrency(maximum)}`}</span></div>
-            {remainingAfterPayment > 0 && (
+
+            <div className="pmt-form-section">
+              <label className="pmt-field">
+                <span>Amount received</span>
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  max={maximum}
+                  value={amount}
+                  readOnly={paymentType === 'FullSettlement'}
+                  onChange={(event) => setAmount(event.target.value)}
+                />
+              </label>
+
               <div className="pmt-partial-summary" role="status">
-                <strong>Partial payment</strong>
-                <span>{formatCurrency(remainingAfterPayment)} will remain outstanding.</span>
+                <strong>{paymentType === 'FullSettlement' ? 'Settlement' : 'Payment'}</strong>
+                <span>{paymentType === 'FullSettlement' && !settlementQuote ? (quoteLoading ? 'Calculating…' : 'Quote unavailable') : `Maximum allowed: ${formatCurrency(maximum)}`}</span>
               </div>
-            )}
-            <label className="pmt-field"><span>Payment date</span><input type="date" max={dateKeyInTimeZone()} value={paymentDate} onChange={(event) => setPaymentDate(event.target.value)} /></label>
-            <p className="pmt-modal-line">Select the payment method used.</p>
-            <div className="pmt-method-grid">
-              {METHODS.map((m) => (
-                <button
-                  key={m}
-                  className={`pmt-method-option${method === m ? " is-active" : ""}`}
-                  onClick={() => setMethod(m)}
-                  type="button"
-                >
-                  {m}
-                </button>
-              ))}
+
+              {remainingAfterPayment > 0 && (
+                <div className="pmt-partial-summary" role="status">
+                  <strong>Partial payment</strong>
+                  <span>{formatCurrency(remainingAfterPayment)} will remain outstanding.</span>
+                </div>
+              )}
+
+              <label className="pmt-field">
+                <span>Payment date</span>
+                <input
+                  type="date"
+                  max={dateKeyInTimeZone()}
+                  value={paymentDate}
+                  onChange={(event) => setPaymentDate(event.target.value)}
+                />
+              </label>
+
+              <div className="pmt-field-group">
+                <span className="pmt-field-label">Payment method</span>
+                <div className="pmt-method-grid">
+                  {METHODS.map((m) => (
+                    <button
+                      key={m}
+                      className={`pmt-method-option${method === m ? " is-active" : ""}`}
+                      onClick={() => setMethod(m)}
+                      type="button"
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <label className="pmt-field">
+                <span>Reference number (optional)</span>
+                <input
+                  value={reference}
+                  placeholder="e.g. UPI Ref / Cheque No."
+                  onChange={(event) => setReference(event.target.value)}
+                />
+              </label>
+
+              <label className="pmt-field">
+                <span>Note (optional)</span>
+                <textarea
+                  rows={2}
+                  value={notes}
+                  placeholder="Add note..."
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+              </label>
             </div>
-            <label className="pmt-field"><span>Reference number (optional)</span><input value={reference} onChange={(event) => setReference(event.target.value)} /></label>
-            <label className="pmt-field"><span>Note (optional)</span><textarea rows={2} value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
+
             {submitError && <p className="pmt-submit-error" role="alert">{submitError}</p>}
-            <button className="pmt-modal-cta" disabled={submitting || quoteLoading || Number(amount) <= 0 || Number(amount) > maximum} onClick={handleConfirm}>
-              {submitting ? 'Recording…' : paymentType === 'FullSettlement' ? `Settle for ${formatCurrency(amount)}` : `Record ${formatCurrency(amount)}`}
-            </button>
+
+            <div className="pmt-modal-button-row">
+              <button type="button" className="pmt-modal-btn-secondary" onClick={() => setStep(1)}>
+                Back
+              </button>
+              <button
+                type="button"
+                className="pmt-modal-cta"
+                disabled={submitting || quoteLoading || Number(amount) <= 0 || Number(amount) > maximum}
+                onClick={handleConfirm}
+              >
+                {submitting ? 'Recording…' : paymentType === 'FullSettlement' ? `Settle for ${formatCurrency(amount)}` : `Record ${formatCurrency(amount)}`}
+              </button>
+            </div>
           </div>
         )}
 
         {step === 3 && (
           <div className="pmt-modal-body pmt-modal-body--success">
-            <div className="pmt-success-icon">
-              <Check size={28} />
+            <div className="pmt-success-badge">
+              <Check size={32} strokeWidth={2.5} />
             </div>
-            <h3>Payment recorded</h3>
-            <p className="pmt-modal-line">
-              {formatCurrency(amount)} recorded via {method}. Any remaining balance stays outstanding.
+
+            <h3 className="pmt-success-title">Payment Recorded Successfully</h3>
+            <p className="pmt-success-subtitle">
+              The payment has been recorded and the loan account has been updated.
             </p>
+
+            <div className="pmt-success-details-card">
+              <div className="pmt-success-row">
+                <span className="pmt-success-row-label">Customer</span>
+                <strong className="pmt-success-row-value">{payment.customerName}</strong>
+              </div>
+              <div className="pmt-success-row">
+                <span className="pmt-success-row-label">Loan</span>
+                <strong className="pmt-success-row-value">{payment.loanDisplayId}</strong>
+              </div>
+              <div className="pmt-success-row">
+                <span className="pmt-success-row-label">Amount Paid</span>
+                <strong className="pmt-success-row-value pmt-success-amount-val">{formatCurrency(amount)}</strong>
+              </div>
+              <div className="pmt-success-row">
+                <span className="pmt-success-row-label">Method</span>
+                <strong className="pmt-success-row-value">{method}</strong>
+              </div>
+            </div>
+
+            <button type="button" className="pmt-modal-cta" onClick={onClose}>
+              Done
+            </button>
           </div>
         )}
       </div>

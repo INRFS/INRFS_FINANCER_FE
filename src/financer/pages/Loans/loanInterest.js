@@ -1,3 +1,43 @@
+export function calculateMonthlyInterest(principal, monthlyRate) {
+  return (Number(principal) || 0) * (Number(monthlyRate) || 0) / 100;
+}
+
+export function calculateTotalInterest(principal, monthlyRate, durationUnit, durationValue) {
+  const monthly = calculateMonthlyInterest(principal, monthlyRate);
+  const count = Number(durationValue) || 0;
+  if (durationUnit === 'Months') {
+    return monthly * count;
+  }
+  if (durationUnit === 'Weeks') {
+    return (monthly / 30) * 7 * count;
+  }
+  // Days
+  return (monthly / 30) * count;
+}
+
+export function calculatePeriodInterest(principal, monthlyRate, frequency, totalInterest) {
+  const monthly = calculateMonthlyInterest(principal, monthlyRate);
+  const daily = monthly / 30;
+  const weekly = daily * 7;
+
+  let period = 0;
+  if (frequency === 'Daily') {
+    period = daily;
+  } else if (frequency === 'Weekly') {
+    period = weekly;
+  } else if (frequency === 'Monthly') {
+    period = monthly;
+  } else {
+    // AtMaturity
+    period = totalInterest !== undefined ? totalInterest : monthly;
+  }
+
+  if (totalInterest > 0 && period > totalInterest) {
+    return totalInterest;
+  }
+  return period;
+}
+
 export function interestForDays(principal, annualRate, days) {
   const amount = Number(principal) || 0;
   const rate = Number(annualRate) || 0;
@@ -30,3 +70,4 @@ export function formatInterestAmount(value) {
     maximumFractionDigits: 2,
   }).format(Number(value) || 0);
 }
+

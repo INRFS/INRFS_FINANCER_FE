@@ -20,7 +20,11 @@ import Modal from '../../../common/components/Modal';
 import { formatCurrency, formatLoanNumber } from '../../../common/utils/formatters';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
 import { loanFromApi } from '../../../common/utils/domainAdapters';
-import { formatInterestAmount, interestForDays, monthlyPeriodDays, rateForDays } from './loanInterest';
+import {
+  calculatePeriodInterest,
+  calculateTotalInterest,
+  rateForDays
+} from './loanInterest';
 
 import './Loans.css';
 import { useLocation } from 'react-router-dom';
@@ -59,7 +63,6 @@ const addLoanDuration = (startDate, value, unit) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
-const dateDays = (from, to) => from && to ? Math.round((new Date(`${to}T00:00:00`) - new Date(`${from}T00:00:00`)) / 86400000) : 0;
 const firstInterestDue = (form, maturity) => {
   const candidate = form.interestFrequency === 'Daily' ? addLoanDuration(form.dateGiven, 1, 'Days')
     : form.interestFrequency === 'Weekly' ? addLoanDuration(form.dateGiven, 1, 'Weeks')
@@ -67,15 +70,14 @@ const firstInterestDue = (form, maturity) => {
   return candidate && maturity && candidate < maturity ? candidate : maturity;
 };
 const collectionInterestLabel = (frequency) => ({ Daily: 'Estimated Interest per Day', Weekly: 'Estimated Interest per Week', Monthly: 'Estimated First Monthly Interest', AtMaturity: 'Estimated Interest at Maturity' }[frequency] || 'Estimated Collection Interest');
-const monthlyInterestForDays = (principal, monthlyRate, days) => Number(principal || 0) * Number(monthlyRate || 0) / 100 * 12 * days / 365;
 const legacyNewLoanForm = false;
 
 function DurationLoanModal({ customers, form, setForm, error, onClose, onSubmit }) {
   const update = (field, value) => setForm((current) => ({ ...current, [field]: value }));
   const maturity = addLoanDuration(form.dateGiven, form.durationValue, form.durationUnit);
   const dueDate = firstInterestDue(form, maturity);
-  const periodInterest = monthlyInterestForDays(form.amount, form.interestRate, dateDays(form.dateGiven, dueDate));
-  const totalInterest = monthlyInterestForDays(form.amount, form.interestRate, dateDays(form.dateGiven, maturity));
+  const totalInterest = calculateTotalInterest(form.amount, form.interestRate, form.durationUnit, form.durationValue);
+  const periodInterest = calculatePeriodInterest(form.amount, form.interestRate, form.interestFrequency, totalInterest);
 
   return (
     <div className="fin-create-loan-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -85,7 +87,17 @@ function DurationLoanModal({ customers, form, setForm, error, onClose, onSubmit 
           <div className="fin-create-loan-field"><label>Select Customer<span>*</span></label><select value={form.customer} onChange={(event) => update('customer', event.target.value)} required><option value="">Select customer</option>{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.fullName} ({customer.customerNumber})</option>)}</select></div>
           <div className="fin-create-loan-two-column">
             <div className="fin-create-loan-field"><label>Principal Amount (₹)<span>*</span></label><input type="number" min="1" value={form.amount} onChange={(event) => update('amount', event.target.value)} placeholder="10000" required /></div>
-            <div className="fin-create-loan-field"><label>Monthly Interest Rate (%)<span>*</span></label><input type="number" min="0.01" max="100" step="0.01" value={form.interestRate} onChange={(event) => update('interestRate', event.target.value)} required /></div>
+<div className="fin-create-loan-field">
+  <label>Monthly Interest Rate (%)<span>*</span></label>
+  <input
+    type="number"
+    min="0.01"
+    step="0.01"
+    value={form.interestRate}
+    onChange={(event) => update('interestRate', event.target.value)}
+    required
+  />
+</div>
             <div className="fin-create-loan-field"><label>Loan Period Unit<span>*</span></label><select value={form.durationUnit} onChange={(event) => update('durationUnit', event.target.value)}><option>Days</option><option>Weeks</option><option>Months</option></select></div>
             <div className="fin-create-loan-field"><label>Number of {form.durationUnit}<span>*</span></label><input type="number" min="1" value={form.durationValue} onChange={(event) => update('durationValue', event.target.value)} required /></div>
             <div className="fin-create-loan-field"><label>Interest Collection<span>*</span></label><select value={form.interestFrequency} onChange={(event) => update('interestFrequency', event.target.value)}><option>Daily</option><option>Weekly</option><option>Monthly</option><option value="AtMaturity">At Maturity</option></select></div>
@@ -250,27 +262,27 @@ export default function Loans() {
   const enteredRate =
     Number(newLoanForm.interestRate) || 0;
 
-  const monthlyDays = monthlyPeriodDays(newLoanForm.dateGiven);
+const dailyRate = rateForDays(enteredRate, 1);
 
+const weeklyRate = rateForDays(enteredRate, 7);
 
-  const dailyRate =
-    rateForDays(enteredRate, 1);
+/*
+ * Interest Rate is entered as a MONTHLY percentage.
+ * Example:
+ * Principal = ₹10,000
+ * Monthly Rate = 18%
+ * Monthly Interest = ₹1,800
+ */
+const monthlyRate = enteredRate;
 
-  const weeklyRate =
-    rateForDays(enteredRate, 7);
+const dailyAmount =
+  (amount * enteredRate) / 100 / 30;
 
-  const monthlyRate =
-    rateForDays(enteredRate, monthlyDays);
+const weeklyAmount =
+  (amount * enteredRate) / 100 / 30 * 7;
 
-
-  const dailyAmount =
-    interestForDays(amount, enteredRate, 1);
-
-  const weeklyAmount =
-    interestForDays(amount, enteredRate, 7);
-
-  const monthlyAmount =
-    interestForDays(amount, enteredRate, monthlyDays);
+const monthlyAmount =
+  (amount * enteredRate) / 100;
 
 
   const _getFrequencyRate = (frequency) => {
@@ -472,22 +484,34 @@ const handleCreateSubmit = async (e) => {
 
     const selectedCustomer = customers.find((item) => item.id === newLoanForm.customer);
 
-    await platformApi.loans.create({
-      customerId: newLoanForm.customer,
-      customerName: selectedCustomer?.fullName || selectedCustomer?.name || '',
-      customerNumber: selectedCustomer?.customerNumber || '',
-      loanProductId: product.id,
-      principal,
-      annualInterestRate: rate,
-      interestRate: rate,
-      interestRateBasis: 'PerMonth',
-      interestCollectionFrequency: newLoanForm.interestFrequency,
-      tenureMonths: Math.max(product.minimumTenureMonths || 1, 1),
-      durationValue: duration,
-      durationUnit: newLoanForm.durationUnit,
-      startDate: newLoanForm.dateGiven,
-      collectionConcern: Boolean(newLoanForm.collectionConcern),
-    });
+await platformApi.loans.create({
+  customerId: newLoanForm.customer,
+  customerName: selectedCustomer?.fullName || selectedCustomer?.name || '',
+  customerNumber: selectedCustomer?.customerNumber || '',
+  loanProductId: product.id,
+
+  principal,
+
+  // Ensure annualInterestRate stays within 0-100 bounds for backend schema
+  annualInterestRate: Math.min(Math.max(0, rate), 100),
+
+  // Keep the actual entered rate as monthly
+  interestRate: rate,
+  interestRateBasis: 'PerMonth',
+
+  interestCollectionFrequency:
+    newLoanForm.interestFrequency,
+
+  tenureMonths:
+    Math.max(product.minimumTenureMonths || 1, 1),
+
+  durationValue: duration,
+  durationUnit: newLoanForm.durationUnit,
+  startDate: newLoanForm.dateGiven,
+
+  collectionConcern:
+    Boolean(newLoanForm.collectionConcern),
+});
 
     closeCreateModal();
     await loadData();
@@ -723,9 +747,10 @@ const handleCreateSubmit = async (e) => {
               Weekly Collection
             </option>
 
-            <option value="Monthly Interest">
+            <option value="Monthly">
               Monthly Interest
             </option>
+  
 
           </select>
 

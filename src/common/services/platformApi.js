@@ -63,7 +63,11 @@ export const platformApi = {
     list: (params) => list('/loans', params),
     all: (params) => all('/loans', params),
     create: async (data) => {
-      const result = await api.post('/loans', data);
+      const payload = { ...data };
+      if (payload.annualInterestRate != null && payload.annualInterestRate > 100) {
+        payload.annualInterestRate = Math.min(Number(payload.interestRate || payload.annualInterestRate), 100);
+      }
+      const result = await api.post('/loans', payload);
       if (data?.collectionConcern) {
         try {
           await collectionConcernService.createConcern({
