@@ -512,4 +512,137 @@ describe('Customers Page Component', () => {
       expect(newThisMonthVal).toBe('0');
     });
   });
+
+  describe('Customer Wizard Step 4 - Document Upload & Camera Capture', () => {
+    it('renders both Upload from Device and Capture with Camera for all document types', async () => {
+      vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+
+      render(
+        <MemoryRouter>
+          <Customers />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+      // Open Add Customer Wizard
+      const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+      fireEvent.click(addBtns[0]);
+
+      // Fill Step 1
+      fireEvent.change(screen.getByPlaceholderText('Ramesh Kumar'), { target: { value: 'Anita Desai' } });
+      fireEvent.change(screen.getByPlaceholderText('+91 98001 11111'), { target: { value: '9876543210' } });
+      fireEvent.change(screen.getByLabelText(/Gender/i), { target: { value: 'Female' } });
+      const dobInputs = document.querySelectorAll('input[type="date"]');
+      fireEvent.change(dobInputs[0], { target: { value: '1995-05-15' } });
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Fill Step 2
+      expect(await screen.findByText(/Step 2 of 4/i)).toBeInTheDocument();
+      fireEvent.change(screen.getByPlaceholderText('MG Road'), { target: { value: 'Connaught Place' } });
+      fireEvent.change(screen.getByPlaceholderText('Mumbai'), { target: { value: 'Delhi' } });
+      fireEvent.change(screen.getByPlaceholderText('Maharashtra'), { target: { value: 'Delhi' } });
+      fireEvent.change(screen.getByPlaceholderText('400001'), { target: { value: '110001' } });
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Step 3
+      expect(await screen.findByText(/Step 3 of 4/i)).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Step 4: Documents
+      expect(await screen.findByText(/Step 4 of 4/i)).toBeInTheDocument();
+
+      // Verify buttons for Aadhaar Card
+      expect(screen.getByLabelText(/upload aadhaar card from device/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/capture aadhaar card with camera/i)).toBeInTheDocument();
+
+      // Verify buttons for PAN Card
+      expect(screen.getByLabelText(/upload pan card from device/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/capture pan card with camera/i)).toBeInTheDocument();
+
+      // Open camera modal for Aadhaar
+      fireEvent.click(screen.getByLabelText(/capture aadhaar card with camera/i));
+      expect(await screen.findByRole('heading', { name: /capture aadhaar card/i })).toBeInTheDocument();
+
+      // Cancel camera
+      fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+      expect(screen.queryByRole('heading', { name: /capture aadhaar card/i })).not.toBeInTheDocument();
+    });
+
+    it('uploads documents using platformApi.documents.upload on submit', async () => {
+      vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.loans, 'products').mockResolvedValue({ items: [] });
+      vi.spyOn(platformApi.payments, 'allSchedules').mockResolvedValue({ items: [] });
+      const createSpy = vi.spyOn(platformApi.customers, 'create').mockResolvedValue({
+        id: 'cust-new-123',
+        fullName: 'Kiran Patel',
+        phone: '9812345678',
+        city: 'Surat',
+        state: 'Gujarat',
+        postalCode: '395001',
+      });
+      const uploadSpy = vi.spyOn(platformApi.documents, 'upload').mockResolvedValue({ id: 'doc-1' });
+
+      render(
+        <MemoryRouter>
+          <Customers />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+      // Open Add Customer Wizard
+      const addBtns = screen.getAllByRole('button', { name: /add customer/i });
+      fireEvent.click(addBtns[0]);
+
+      // Fill Step 1
+      fireEvent.change(screen.getByPlaceholderText('Ramesh Kumar'), { target: { value: 'Kiran Patel' } });
+      fireEvent.change(screen.getByPlaceholderText('+91 98001 11111'), { target: { value: '9812345678' } });
+      fireEvent.change(screen.getByLabelText(/Gender/i), { target: { value: 'Male' } });
+      const dobInputs = document.querySelectorAll('input[type="date"]');
+      fireEvent.change(dobInputs[0], { target: { value: '1992-08-20' } });
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Fill Step 2
+      expect(await screen.findByText(/Step 2 of 4/i)).toBeInTheDocument();
+      fireEvent.change(screen.getByPlaceholderText('MG Road'), { target: { value: 'Ring Road' } });
+      fireEvent.change(screen.getByPlaceholderText('Mumbai'), { target: { value: 'Surat' } });
+      fireEvent.change(screen.getByPlaceholderText('Maharashtra'), { target: { value: 'Gujarat' } });
+      fireEvent.change(screen.getByPlaceholderText('400001'), { target: { value: '395001' } });
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Step 3
+      expect(await screen.findByText(/Step 3 of 4/i)).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+
+      // Step 4
+      expect(await screen.findByText(/Step 4 of 4/i)).toBeInTheDocument();
+
+      // Attach an Aadhaar file via file input
+      const testFile = new File(['sample content'], 'aadhaar_front.jpg', { type: 'image/jpeg' });
+      const aadhaarInput = document.getElementById('upload-aadhaar');
+      fireEvent.change(aadhaarInput, { target: { files: [testFile] } });
+
+      // Verify file is shown
+      expect(await screen.findByText('aadhaar_front.jpg')).toBeInTheDocument();
+
+      // Save customer
+      fireEvent.click(screen.getByRole('button', { name: /save customer/i }));
+
+      await waitFor(() => {
+        expect(createSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            fullName: 'Kiran Patel',
+          })
+        );
+        expect(uploadSpy).toHaveBeenCalledWith(testFile, 'Aadhaar', 'cust-new-123');
+      });
+    });
+  });
 });
