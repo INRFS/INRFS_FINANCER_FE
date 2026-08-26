@@ -38,22 +38,27 @@ import { useLocation } from 'react-router-dom';
 const todayISO = () => new Date(Date.now() + 330 * 60 * 1000).toISOString().slice(0, 10);
 
 const addLoanDuration = (startDate, value, unit) => {
-  if (!startDate || Number(value) <= 0) return '';
+  if (!startDate || !value || Number(value) <= 0 || !unit) return '';
   const [year, month, day] = startDate.split('-').map(Number);
+  if (!year || !month || !day) return '';
   const date = new Date(year, month - 1, day);
+  if (isNaN(date.getTime())) return '';
   if (unit === 'Days') date.setDate(date.getDate() + Number(value));
   else if (unit === 'Weeks') date.setDate(date.getDate() + Number(value) * 7);
-  else {
+  else if (unit === 'Months') {
     const targetDay = date.getDate();
     date.setDate(1); date.setMonth(date.getMonth() + Number(value));
     const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     date.setDate(Math.min(targetDay, lastDay));
+  } else {
+    return '';
   }
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
 const dateDays = (from, to) => from && to ? Math.round((new Date(`${to}T00:00:00`) - new Date(`${from}T00:00:00`)) / 86400000) : 0;
 const firstInterestDue = (form, maturity) => {
+  if (!form.startDate || !maturity || !form.collectionFrequency) return '';
   const candidate = form.collectionFrequency === 'Daily' ? addLoanDuration(form.startDate, 1, 'Days')
     : form.collectionFrequency === 'Weekly' ? addLoanDuration(form.startDate, 1, 'Weeks')
       : form.collectionFrequency === 'Monthly' ? addLoanDuration(form.startDate, 1, 'Months') : maturity;
@@ -66,18 +71,26 @@ const collectionInterestLabel = (frequency) => ({
   AtMaturity: 'Estimated Interest at Maturity',
 }[frequency] || 'Estimated Collection Interest');
 const estimatedCollectionInterest = (form) => {
+  if (!form.principal || !form.rate || !form.startDate || !form.durationValue || !form.durationUnit || !form.collectionFrequency) return null;
   const maturity = addLoanDuration(form.startDate, form.durationValue, form.durationUnit);
+  if (!maturity) return null;
   const dueDate = firstInterestDue(form, maturity);
+  if (!dueDate) return null;
   const interestDays = dateDays(form.startDate, dueDate);
   return toNumber(form.principal) * toNumber(form.rate) / 100 * 12 * interestDays / 365;
 };
 
-const estimatedTotalInterest = (form) => (
-  toNumber(form.principal)
-  * toNumber(form.rate) / 100
-  * 12
-  * dateDays(form.startDate, addLoanDuration(form.startDate, form.durationValue, form.durationUnit)) / 365
-);
+const estimatedTotalInterest = (form) => {
+  if (!form.principal || !form.rate || !form.startDate || !form.durationValue || !form.durationUnit) return null;
+  const maturity = addLoanDuration(form.startDate, form.durationValue, form.durationUnit);
+  if (!maturity) return null;
+  return (
+    toNumber(form.principal)
+    * toNumber(form.rate) / 100
+    * 12
+    * dateDays(form.startDate, maturity) / 365
+  );
+};
 
 const formatDate = (value) => {
   if (!value || value === '-') return '-';
@@ -181,11 +194,11 @@ const emptyCustomerForm = {
 
 const emptyLoanForm = {
   principal: '',
-  rate: '18',
-  durationUnit: 'Days',
-  durationValue: '13',
-  collectionFrequency: 'Daily',
-  startDate: todayISO(),
+  rate: '',
+  durationUnit: '',
+  durationValue: '',
+  collectionFrequency: '',
+  startDate: '',
   collectionConcern: false,
 };
 
@@ -542,16 +555,8 @@ export default function Customers() {
 
   const openAddLoan = (customer = selectedCustomer) => {
     if (!customer) return;
-    const product = loanProducts.find((item) => item.isActive !== false) || loanProducts[0];
-    const startDate = todayISO();
     setLoanError('');
-    setLoanForm({
-      ...emptyLoanForm,
-      rate: String(product?.annualInterestRate ?? emptyLoanForm.rate),
-      startDate,
-      collectionConcern: false,
-    });
-
+    setLoanForm({ ...emptyLoanForm });
     setIsAddLoanOpen(true);
   };
 
@@ -566,8 +571,14 @@ export default function Customers() {
     if (!selectedCustomer) return;
 
     const principal = toNumber(loanForm.principal);
-    if (principal <= 0) { setLoanError('Enter a valid principal amount.'); return; }
-    if (toNumber(loanForm.durationValue) <= 0) { setLoanError('Enter a valid number of periods.'); return; }
+    if (!loanForm.principal || principal <= 0) { setLoanError('Enter a valid principal amount.'); return; }
+    const monthlyInterestRate = toNumber(loanForm.rate);
+    if (!loanForm.rate || monthlyInterestRate <= 0) { setLoanError('Enter a valid interest rate.'); return; }
+    if (!loanForm.durationUnit) { setLoanError('Please select a loan period unit.'); return; }
+    if (!loanForm.durationValue || toNumber(loanForm.durationValue) <= 0) { setLoanError('Enter a valid number of periods.'); return; }
+    if (!loanForm.collectionFrequency) { setLoanError('Please select an interest collection frequency.'); return; }
+    if (!loanForm.startDate) { setLoanError('Please enter a start date.'); return; }
+
     setSaving(true);
     setLoanError('');
     try {
@@ -576,7 +587,6 @@ export default function Customers() {
       if (principal < Number(product.minimumPrincipal) || principal > Number(product.maximumPrincipal)) {
         throw new Error(`Principal must be between ${formatCurrency(product.minimumPrincipal)} and ${formatCurrency(product.maximumPrincipal)}.`);
       }
-      const monthlyInterestRate = toNumber(loanForm.rate);
       await platformApi.loans.create({
         customerId: selectedCustomer.id,
         loanProductId: product.id,
@@ -967,7 +977,7 @@ export default function Customers() {
                   onChange={(event) =>
                     updateLoanForm('principal', event.target.value)
                   }
-                  placeholder="10000"
+                  placeholder="Enter principal amount"
                   required
                 />
               </FormField>
@@ -986,12 +996,15 @@ export default function Customers() {
               </FormField>
 
               <FormField label="Loan Period Unit" required>
-                <select value={loanForm.durationUnit} onChange={(event) => updateLoanForm('durationUnit', event.target.value)}>
-                  <option>Days</option><option>Weeks</option><option>Months</option>
+                <select value={loanForm.durationUnit} onChange={(event) => updateLoanForm('durationUnit', event.target.value)} required>
+                  <option value="" disabled>Select period unit</option>
+                  <option value="Days">Days</option>
+                  <option value="Weeks">Weeks</option>
+                  <option value="Months">Months</option>
                 </select>
               </FormField>
 
-              <FormField label={`Number of ${loanForm.durationUnit}`} required>
+              <FormField label={`Number of ${loanForm.durationUnit || 'Days'}`} required>
                 <input
                   type="number"
                   min="1"
@@ -1002,8 +1015,12 @@ export default function Customers() {
               </FormField>
 
               <FormField label="Interest Collection" required>
-                <select value={loanForm.collectionFrequency} onChange={(event) => updateLoanForm('collectionFrequency', event.target.value)}>
-                  <option>Daily</option><option>Weekly</option><option>Monthly</option><option value="AtMaturity">At Maturity</option>
+                <select value={loanForm.collectionFrequency} onChange={(event) => updateLoanForm('collectionFrequency', event.target.value)} required>
+                  <option value="" disabled>Select collection frequency</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="AtMaturity">At Maturity</option>
                 </select>
               </FormField>
 
@@ -1031,11 +1048,11 @@ export default function Customers() {
               </FormField>
 
               <FormField label={collectionInterestLabel(loanForm.collectionFrequency)}>
-                <input type="text" value={formatCurrency(estimatedCollectionInterest(loanForm))} readOnly />
+                <input type="text" value={estimatedCollectionInterest(loanForm) !== null ? formatCurrency(estimatedCollectionInterest(loanForm)) : ''} readOnly />
               </FormField>
 
               <FormField label="Estimated Total Interest">
-                <input type="text" value={formatCurrency(estimatedTotalInterest(loanForm))} readOnly />
+                <input type="text" value={estimatedTotalInterest(loanForm) !== null ? formatCurrency(estimatedTotalInterest(loanForm)) : ''} readOnly />
               </FormField>
             </div>
 

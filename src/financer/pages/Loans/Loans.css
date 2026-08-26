@@ -2804,3 +2804,229 @@
 .fin-create-loan-form::-webkit-scrollbar-thumb:hover {
   background: #60788f !important;
 }
+
+/* =========================================================
+   FINAL CREATE LOAN MODAL FIX
+   Keeps modal centered on desktop + mobile.
+   Background page never scrolls while modal is open.
+   Only modal content scrolls when necessary.
+   ========================================================= */
+
+/* Lock the background page while Create Loan is open */
+html:has(.fin-create-loan-overlay),
+body:has(.fin-create-loan-overlay) {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+/* Overlay always covers the actual viewport */
+.fin-create-loan-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100vw !important;
+  height: 100dvh !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 16px !important;
+  box-sizing: border-box !important;
+
+  overflow: hidden !important;
+
+  z-index: 99999 !important;
+
+  background: rgba(8, 28, 53, 0.46) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Modal stays centered and never pushes the page down */
+.fin-create-loan-modal {
+  position: relative !important;
+
+  width: min(740px, calc(100vw - 32px)) !important;
+
+  max-height: calc(100dvh - 32px) !important;
+  height: auto !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  box-sizing: border-box !important;
+
+  overflow: hidden !important;
+
+  background: #ffffff !important;
+
+  border-radius: 14px !important;
+
+  box-shadow:
+    0 20px 60px rgba(4, 28, 55, 0.25) !important;
+}
+
+/* Header always remains visible */
+.fin-create-loan-header {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+
+  position: relative !important;
+
+  z-index: 3 !important;
+
+  background: #ffffff !important;
+}
+
+/* Only the form content scrolls */
+.fin-create-loan-form {
+  flex: 1 1 auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+  height: auto !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  box-sizing: border-box !important;
+
+  -webkit-overflow-scrolling: touch !important;
+
+  overscroll-behavior: contain !important;
+
+  scrollbar-width: thin !important;
+  scrollbar-color: #8fa3b8 #eef2f6 !important;
+}
+
+/* Desktop scrollbar */
+.fin-create-loan-form::-webkit-scrollbar {
+  width: 9px !important;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-track {
+  background: #eef2f6 !important;
+  border-radius: 8px !important;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-thumb {
+  background: #8fa3b8 !important;
+  border-radius: 8px !important;
+
+  border: 2px solid #eef2f6 !important;
+}
+
+.fin-create-loan-form::-webkit-scrollbar-thumb:hover {
+  background: #71879e !important;
+}
+
+/* Footer remains visible */
+.fin-create-loan-actions {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+
+  position: relative !important;
+
+  z-index: 4 !important;
+
+  background: #ffffff !important;
+
+  border-top: 1px solid #e5ebf1 !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .fin-create-loan-overlay {
+    width: 100vw !important;
+    height: 100dvh !important;
+
+    padding: 8px !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .fin-create-loan-modal {
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    max-height: calc(100dvh - 16px) !important;
+
+    height: auto !important;
+
+    margin: 0 !important;
+
+    border-radius: 12px !important;
+  }
+
+  .fin-create-loan-header {
+    flex-shrink: 0 !important;
+
+    min-height: 50px !important;
+
+    padding: 10px 13px !important;
+  }
+
+  .fin-create-loan-form {
+    flex: 1 1 auto !important;
+
+    min-height: 0 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 12px !important;
+
+    -webkit-overflow-scrolling: touch !important;
+
+    scrollbar-width: thin !important;
+  }
+
+  .fin-create-loan-actions {
+    flex-shrink: 0 !important;
+
+    min-height: 56px !important;
+
+    padding: 9px 12px !important;
+
+    background: #ffffff !important;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .fin-create-loan-overlay {
+    padding: 5px !important;
+  }
+
+  .fin-create-loan-modal {
+    max-height: calc(100dvh - 10px) !important;
+
+    border-radius: 11px !important;
+  }
+
+  .fin-create-loan-form {
+    padding: 10px !important;
+  }
+
+  .fin-create-loan-actions {
+    min-height: 54px !important;
+
+    padding: 8px 10px !important;
+  }
+}

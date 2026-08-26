@@ -1260,3 +1260,82 @@ body,
   box-sizing: border-box;
 }
 
+
+/* =========================================================
+   CUSTOMER LIST SCROLL OVERRIDE
+   Paste at the VERY BOTTOM of the CSS file
+   ========================================================= */
+
+.fin-ledger-customer-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+
+/* Scroll only the customer list */
+.fin-ledger-customer-panel .fin-ledger-customer-list {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding-right: 5px !important;
+
+  scrollbar-width: thin !important;
+  scrollbar-color: #c7d3e0 transparent !important;
+}
+
+
+/* Chrome / Edge / Safari */
+.fin-ledger-customer-panel .fin-ledger-customer-list::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.fin-ledger-customer-panel .fin-ledger-customer-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.fin-ledger-customer-panel .fin-ledger-customer-list::-webkit-scrollbar-thumb {
+  background: #c7d3e0 !important;
+  border-radius: 10px !important;
+}
+
+.fin-ledger-customer-panel .fin-ledger-customer-list::-webkit-scrollbar-thumb:hover {
+  background: #9fb1c5 !important;
+}
+
+
+/* Keep customer items from shrinking */
+.fin-ledger-customer-panel .fin-ledger-customer-item {
+  flex: 0 0 auto !important;
+}
+
+
+/* =========================================================
+   MOBILE — keep existing mobile grid behavior
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  .fin-ledger-customer-panel {
+    display: block !important;
+    height: auto !important;
+    overflow: hidden !important;
+  }
+
+  .fin-ledger-customer-panel .fin-ledger-customer-list {
+    display: grid !important;
+    flex: none !important;
+    min-height: auto !important;
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    padding-right: 0 !important;
+  }
+}

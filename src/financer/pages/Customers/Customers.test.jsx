@@ -313,6 +313,25 @@ describe('Customers Page Component', () => {
     // Verify Add Loan modal is open
     expect(await screen.findByRole('heading', { name: /add loan/i })).toBeInTheDocument();
 
+    // Verify form opens completely blank
+    const principalInput = screen.getByPlaceholderText('Enter principal amount');
+    expect(principalInput).toHaveValue(null);
+
+    const rateInput = screen.getByLabelText(/monthly interest rate/i);
+    expect(rateInput).toHaveValue(null);
+
+    const unitSelect = screen.getByLabelText(/loan period unit/i);
+    expect(unitSelect).toHaveValue('');
+
+    const durationInput = screen.getByLabelText(/number of/i);
+    expect(durationInput).toHaveValue(null);
+
+    const freqSelect = screen.getByLabelText(/interest collection/i);
+    expect(freqSelect).toHaveValue('');
+
+    const startDateInput = screen.getByLabelText(/start date/i);
+    expect(startDateInput).toHaveValue('');
+
     // Check Customer Collection Concern checkbox is present and can be toggled
     const concernCheckbox = screen.getByRole('checkbox', { name: /customer collection concern/i });
     expect(concernCheckbox).toBeInTheDocument();
@@ -321,9 +340,13 @@ describe('Customers Page Component', () => {
     fireEvent.click(concernCheckbox);
     expect(concernCheckbox).toBeChecked();
 
-    // Fill Principal: 50000
-    const principalInput = screen.getByPlaceholderText('10000');
+    // Fill required fields
     fireEvent.change(principalInput, { target: { value: '50000' } });
+    fireEvent.change(rateInput, { target: { value: '18' } });
+    fireEvent.change(unitSelect, { target: { value: 'Days' } });
+    fireEvent.change(durationInput, { target: { value: '13' } });
+    fireEvent.change(freqSelect, { target: { value: 'Daily' } });
+    fireEvent.change(startDateInput, { target: { value: '2026-01-01' } });
 
     // Submit loan
     const addLoanModalButtons = screen.getAllByRole('button', { name: /add loan/i });
@@ -335,6 +358,10 @@ describe('Customers Page Component', () => {
         expect.objectContaining({
           customerId: 'cust-1',
           principal: 50000,
+          interestRate: 18,
+          durationUnit: 'Days',
+          durationValue: 13,
+          startDate: '2026-01-01',
           collectionConcern: true,
         })
       );
