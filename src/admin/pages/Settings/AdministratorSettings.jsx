@@ -4,7 +4,9 @@ import { CheckCircle2, ShieldCheck, UserPlus } from 'lucide-react';
 import { pageItems, platformApi } from '../../../common/services/platformApi';
 
 const emptyForm = { firstName: '', lastName: '', email: '', phone: '', password: '' };
-
+const NAME_REGEX = /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/;
+const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const MOBILE_REGEX = /^[0-9]{10}$/;
 export default function AdministratorSettings() {
   const [admins, setAdmins] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -36,51 +38,170 @@ export default function AdministratorSettings() {
 
   useEffect(() => { load(); }, []);
 
-  const update = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+const update = (event) => {
+  const { name, value } = event.target;
+
+  let newValue = value;
+
+  // First Name / Last Name — alphabets only
+  if (name === 'firstName' || name === 'lastName') {
+    newValue = value.replace(/[^A-Za-z '-]/g, '');
+  }
+
+  // Mobile Number — digits only and maximum 10 digits
+  if (name === 'phone') {
+    newValue = value.replace(/\D/g, '').slice(0, 10);
+  }
+
+  setForm((current) => ({
+    ...current,
+    [name]: newValue,
+  }));
+};
   const changeRole = async (admin, roleId) => { setError(''); try { await platformApi.admin.setUserRoles(admin.id, [roleId]); await load(); } catch (requestError) { setError(requestError.message); } };
   const deactivate = async (admin) => { if (!window.confirm(`Deactivate ${admin.firstName} ${admin.lastName} and revoke all sessions?`)) return; setError(''); try { await platformApi.admin.deactivateUser(admin.id); await load(); } catch (requestError) { setError(requestError.message); } };
   const showSessions = async (admin) => { setError(''); try { setSessions({ admin, items: await platformApi.admin.userSessions(admin.id) }); } catch (requestError) { setError(requestError.message); } };
   const revokeSession = async (sessionId) => { await platformApi.admin.revokeSession(sessions.admin.id, sessionId); await showSessions(sessions.admin); };
 
-  const submit = async (event) => {
-    event.preventDefault();
-    setError('');
-    setSuccess('');
-    if (!adminRole) { setError('The Admin role is not configured.'); return; }
-    if (form.password.length < 8) { setError('Temporary password must contain at least 8 characters.'); return; }
+const submit = async (event) => {
+  event.preventDefault();
 
-    setSubmitting(true);
-    try {
-      await platformApi.admin.createUser({
-        financerId: null,
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-        password: form.password,
-        roleIds: [adminRole.id],
-      });
-      setForm(emptyForm);
-      setSuccess(`Administrator account created successfully. Login details were sent to ${form.email.trim().toLowerCase()}. A one-time code will be emailed after password verification.`);
-      await load();
-    } catch (requestError) {
-      setError(requestError.message);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  setError('');
+  setSuccess('');
 
+  const firstName = form.firstName.trim();
+  const lastName = form.lastName.trim();
+  const email = form.email.trim().toLowerCase();
+  const phone = form.phone.trim();
+  const password = form.password;
+
+  // First name validation
+  if (!NAME_REGEX.test(firstName)) {
+    setError(
+      'First Name can contain alphabets only.'
+    );
+    return;
+  }
+
+  // Last name validation
+  if (!NAME_REGEX.test(lastName)) {
+    setError(
+      'Last Name can contain alphabets only.'
+    );
+    return;
+  }
+
+  // Email validation
+  if (!EMAIL_REGEX.test(email)) {
+    setError(
+      'Please enter a valid email address.'
+    );
+    return;
+  }
+
+  // Mobile validation
+  if (!MOBILE_REGEX.test(phone)) {
+    setError(
+      'Mobile Number must contain exactly 10 digits.'
+    );
+    return;
+  }
+
+  // Admin role validation
+  if (!adminRole) {
+    setError('The Admin role is not configured.');
+    return;
+  }
+
+  // Password validation
+  if (password.length < 8) {
+    setError(
+      'Temporary password must contain at least 8 characters.'
+    );
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    await platformApi.admin.createUser({
+      financerId: null,
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+      roleIds: [adminRole.id],
+    });
+
+    setForm(emptyForm);
+
+    setSuccess(
+      `Administrator account created successfully. Login details were sent to ${email}. A one-time code will be emailed after password verification.`
+    );
+
+    await load();
+  } catch (requestError) {
+    setError(requestError.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
   return <div className="admin-settings-admin-grid">
     <section className="admin-settings-card admin-create-card">
       <div className="admin-settings-section-title"><span><UserPlus size={20} /></span><div><h3>Add Administrator</h3><p>Create a platform account with the standard Admin role.</p></div></div>
       <form onSubmit={submit}>
         <div className="admin-settings-name-grid">
-          <div className="admin-settings-group"><label htmlFor="adminFirstName">First Name</label><input id="adminFirstName" name="firstName" value={form.firstName} onChange={update} required autoComplete="given-name" /></div>
-          <div className="admin-settings-group"><label htmlFor="adminLastName">Last Name</label><input id="adminLastName" name="lastName" value={form.lastName} onChange={update} required autoComplete="family-name" /></div>
+          <div className="admin-settings-group"><label htmlFor="adminFirstName">First Name</label><input
+  id="adminFirstName"
+  name="firstName"
+  value={form.firstName}
+  onChange={update}
+  required
+  autoComplete="given-name"
+  pattern="[A-Za-z]+(?:[ '-][A-Za-z]+)*"
+  title="First Name can contain alphabets only"
+/></div>
+          <div className="admin-settings-group"><label htmlFor="adminLastName">Last Name</label><input
+  id="adminLastName"
+  name="lastName"
+  value={form.lastName}
+  onChange={update}
+  required
+  autoComplete="family-name"
+  pattern="[A-Za-z]+(?:[ '-][A-Za-z]+)*"
+  title="Last Name can contain alphabets only"
+/></div>
         </div>
-        <div className="admin-settings-group"><label htmlFor="adminEmail">Email Address</label><input id="adminEmail" name="email" type="email" value={form.email} onChange={update} required autoComplete="email" /></div>
-        <div className="admin-settings-group"><label htmlFor="adminPhone">Mobile Number</label><input id="adminPhone" name="phone" type="tel" value={form.phone} onChange={update} required autoComplete="tel" pattern="[+0-9 ()-]{8,20}" /></div>
-        <div className="admin-settings-group"><label htmlFor="adminPassword">Temporary Password</label><input id="adminPassword" name="password" type="password" value={form.password} onChange={update} required minLength="8" autoComplete="new-password" /><small>At least 8 characters. Share it securely with the new administrator.</small></div>
+        <div className="admin-settings-group"><label htmlFor="adminEmail">Email Address</label><input
+  id="adminEmail"
+  name="email"
+  type="email"
+  value={form.email}
+  onChange={update}
+  required
+  autoComplete="email"
+/></div>
+        <div className="admin-settings-group"><label htmlFor="adminPhone">Mobile Number</label><input
+  id="adminPhone"
+  name="phone"
+  type="tel"
+  value={form.phone}
+  onChange={update}
+  required
+  autoComplete="tel"
+  pattern="[+0-9 ()-]{8,20}"
+/></div>
+        <div className="admin-settings-group"><label htmlFor="adminPassword">Temporary Password</label><input
+  id="adminPassword"
+  name="password"
+  type="password"
+  value={form.password}
+  onChange={update}
+  required
+  minLength="8"
+  autoComplete="new-password"
+/><small>At least 8 characters. Share it securely with the new administrator.</small></div>
         {error && <div className="admin-settings-error" role="alert">{error}</div>}
         {success && <div className="admin-settings-success" role="status"><CheckCircle2 size={17} />{success}</div>}
         <button type="submit" className="admin-settings-purple-btn" disabled={submitting || loading}>{submitting ? 'Creating Administrator...' : 'Create Administrator'}</button>
