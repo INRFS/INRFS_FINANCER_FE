@@ -17,6 +17,9 @@ import {
   Send,
   ChevronLeft,
   Download,
+  Camera,
+  RotateCw,
+  Trash2,
 } from 'lucide-react';
 
 import { formatCurrency, formatCustomerNumber, formatLoanNumber } from '../../../common/utils/formatters';
@@ -407,8 +410,9 @@ export default function Customers() {
     }
   };
 
-  const handleCustomerFile = (field, event) => {
-    updateCustomerForm(field, event.target.files?.[0] || null);
+  const handleCustomerFile = (field, fileOrEvent) => {
+    const file = fileOrEvent?.target?.files ? fileOrEvent.target.files[0] || null : fileOrEvent || null;
+    updateCustomerForm(field, file);
   };
 
   const handleCustomerWizardNext = async (event) => {
@@ -1931,41 +1935,51 @@ function CustomerWizard({
               <div className="fin-customer-document-grid">
                 <DocumentUpload
                   label="Upload Aadhaar Card (Optional)"
+                  documentName="Aadhaar Card"
+                  fileNamePrefix="aadhaar"
                   file={form.aadhaarDocument}
-                  onChange={(event) =>
-                    onFileChange('aadhaarDocument', event)
+                  onChange={(fileOrEvent) =>
+                    onFileChange('aadhaarDocument', fileOrEvent)
                   }
                 />
 
                 <DocumentUpload
                   label="Upload PAN Card (Optional)"
+                  documentName="PAN Card"
+                  fileNamePrefix="pan"
                   file={form.panDocument}
-                  onChange={(event) =>
-                    onFileChange('panDocument', event)
+                  onChange={(fileOrEvent) =>
+                    onFileChange('panDocument', fileOrEvent)
                   }
                 />
 
                 <DocumentUpload
                   label="Upload Address Proof (Optional)"
+                  documentName="Address Proof"
+                  fileNamePrefix="address-proof"
                   file={form.addressProof}
-                  onChange={(event) =>
-                    onFileChange('addressProof', event)
+                  onChange={(fileOrEvent) =>
+                    onFileChange('addressProof', fileOrEvent)
                   }
                 />
 
                 <DocumentUpload
                   label="Upload Photograph (Optional)"
+                  documentName="Photograph"
+                  fileNamePrefix="photograph"
                   file={form.photograph}
-                  onChange={(event) =>
-                    onFileChange('photograph', event)
+                  onChange={(fileOrEvent) =>
+                    onFileChange('photograph', fileOrEvent)
                   }
                 />
 
                 <DocumentUpload
                   label="Upload Other Documents (Optional)"
+                  documentName="Other Documents"
+                  fileNamePrefix="other-documents"
                   file={form.otherDocuments}
-                  onChange={(event) =>
-                    onFileChange('otherDocuments', event)
+                  onChange={(fileOrEvent) =>
+                    onFileChange('otherDocuments', fileOrEvent)
                   }
                 />
               </div>
@@ -2404,8 +2418,197 @@ function FormModal({ title, subtitle, onClose, children, wide = false }) {
   );
 }
 
-function DocumentUpload({ label, file, onChange }) {
-  const handleChange = (event) => {
+function DocumentCameraModal({ title = 'Capture Document', onCapture, onClose }) {
+  const videoRef = React.useRef(null);
+  const streamRef = React.useRef(null);
+  const [capturedBlob, setCapturedBlob] = React.useState(null);
+  const [capturedDataUrl, setCapturedDataUrl] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [isInitializing, setIsInitializing] = React.useState(true);
+
+  const stopStream = React.useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        try {
+          track.stop();
+        } catch {
+          // ignore
+        }
+      });
+      streamRef.current = null;
+    }
+  }, []);
+
+  const startCamera = React.useCallback(async () => {
+    setError('');
+    setIsInitializing(true);
+    setCapturedBlob(null);
+    setCapturedDataUrl('');
+    stopStream();
+
+    if (!navigator?.mediaDevices?.getUserMedia) {
+      setError('Camera access is not supported in this browser. Please use Upload from Device.');
+      setIsInitializing(false);
+      return;
+    }
+
+    try {
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+          audio: false,
+        });
+      } catch {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+      }
+
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(() => {});
+      }
+    } catch (err) {
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError('Camera permission was denied. Please allow camera access in your browser or use Upload from Device.');
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setError('No camera device found. Please use Upload from Device.');
+      } else {
+        setError(err.message || 'Unable to access camera. Please use Upload from Device.');
+      }
+    } finally {
+      setIsInitializing(false);
+    }
+  }, [stopStream]);
+
+  React.useEffect(() => {
+    startCamera();
+    return () => {
+      stopStream();
+    };
+  }, [startCamera, stopStream]);
+
+  const handleCapture = () => {
+    if (!videoRef.current) return;
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    const width = video.videoWidth || 1280;
+    const height = video.videoHeight || 720;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0, width, height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    setCapturedDataUrl(dataUrl);
+
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          setCapturedBlob(blob);
+          stopStream();
+        }
+      },
+      'image/jpeg',
+      0.9
+    );
+  };
+
+  const handleRetake = () => {
+    startCamera();
+  };
+
+  const handleConfirm = () => {
+    if (!capturedBlob) return;
+    stopStream();
+    onCapture(capturedBlob);
+  };
+
+  const handleClose = () => {
+    stopStream();
+    onClose();
+  };
+
+  return (
+    <div className="fin-camera-overlay" onMouseDown={handleClose} role="dialog" aria-modal="true" aria-label={title}>
+      <div className="fin-camera-modal" onMouseDown={(e) => e.stopPropagation()}>
+        <div className="fin-camera-header">
+          <div>
+            <h3>{title}</h3>
+            <p>Align the document inside the frame and capture</p>
+          </div>
+          <button type="button" className="fin-camera-close-btn" onClick={handleClose} aria-label="Close camera">
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="fin-camera-body">
+          {error ? (
+            <div className="fin-camera-error" role="alert">
+              <AlertCircle size={28} />
+              <p>{error}</p>
+              <button type="button" className="fin-camera-retry-btn" onClick={startCamera}>
+                <RotateCw size={15} /> Try Again
+              </button>
+            </div>
+          ) : capturedDataUrl ? (
+            <div className="fin-camera-preview-container">
+              <img src={capturedDataUrl} alt="Captured Document Preview" className="fin-camera-captured-img" />
+              <div className="fin-camera-badge">Captured Preview</div>
+            </div>
+          ) : (
+            <div className="fin-camera-video-container">
+              {isInitializing && (
+                <div className="fin-camera-loading">
+                  <span>Initializing camera...</span>
+                </div>
+              )}
+              <video ref={videoRef} autoPlay playsInline muted className="fin-camera-video" />
+              <div className="fin-camera-frame-guide" aria-hidden="true" />
+            </div>
+          )}
+        </div>
+
+        <div className="fin-camera-footer">
+          {capturedDataUrl ? (
+            <>
+              <button type="button" className="fin-camera-btn-secondary" onClick={handleRetake}>
+                <RotateCw size={16} /> Retake
+              </button>
+              <button type="button" className="fin-camera-btn-primary" onClick={handleConfirm}>
+                <Check size={16} /> Use Photo
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="fin-camera-btn-secondary" onClick={handleClose}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="fin-camera-btn-primary"
+                onClick={handleCapture}
+                disabled={Boolean(error) || isInitializing}
+              >
+                <Camera size={16} /> Capture Photo
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DocumentUpload({ label, documentName, fileNamePrefix = 'document', file, onChange }) {
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const fileInputRef = React.useRef(null);
+
+  const handleFileChange = (event) => {
     const selected = event.target.files?.[0] || null;
 
     if (!selected) {
@@ -2464,23 +2667,118 @@ function DocumentUpload({ label, file, onChange }) {
     onChange(event);
   };
 
+  const handleCameraCapture = (blob) => {
+    const filename = `${fileNamePrefix || 'document'}-${Date.now()}.jpg`;
+    const capturedFile = new File([blob], filename, { type: 'image/jpeg', lastModified: Date.now() });
+
+    if (capturedFile.size > 5 * 1024 * 1024) {
+      alert('Captured image exceeds the 5 MB limit. Please try again.');
+      return;
+    }
+
+    onChange(capturedFile);
+    setIsCameraOpen(false);
+  };
+
+  const handleRemove = (e) => {
+    e.stopPropagation();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    onChange(null);
+  };
+
+  const displayName = documentName || label?.replace(/\s*\(Optional\)/i, '') || 'Document';
+
   return (
-    <label className="fin-customer-document-upload">
+    <div className={`fin-customer-doc-card ${file ? 'has-file' : ''}`}>
       <input
+        ref={fileInputRef}
         type="file"
+        id={`upload-${fileNamePrefix || 'doc'}`}
         accept=".jpg,.jpeg,.png,.pdf"
-        onChange={handleChange}
+        onChange={handleFileChange}
+        className="fin-doc-hidden-input"
       />
 
-      <div className="document-upload-left">
-        <Upload size={19} />
-        <span>{file ? file.name : label}</span>
+      <div className="fin-doc-card-header">
+        <span className="fin-doc-title">{label}</span>
       </div>
 
-      <strong>
-        {file ? 'Selected' : 'Browse'}
-      </strong>
-    </label>
+      {file ? (
+        <div className="fin-doc-selected-view">
+          <div className="fin-doc-file-info">
+            <FileText size={20} className="fin-doc-file-icon" />
+            <div className="fin-doc-file-details">
+              <span className="fin-doc-filename" title={file.name}>{file.name}</span>
+              <span className="fin-doc-filesize">
+                {file.size ? `${(file.size / 1024).toFixed(1)} KB` : 'Ready'}
+              </span>
+            </div>
+          </div>
+          <div className="fin-doc-selected-actions">
+            <button
+              type="button"
+              className="fin-doc-action-btn camera-retake"
+              onClick={() => setIsCameraOpen(true)}
+              title="Retake with Camera"
+              aria-label={`Retake ${displayName} with camera`}
+            >
+              <Camera size={15} />
+              <span>Retake</span>
+            </button>
+            <button
+              type="button"
+              className="fin-doc-action-btn change-file"
+              onClick={() => fileInputRef.current?.click()}
+              title="Upload Different File"
+              aria-label={`Upload different file for ${displayName}`}
+            >
+              <Upload size={15} />
+              <span>Upload</span>
+            </button>
+            <button
+              type="button"
+              className="fin-doc-action-btn remove-file"
+              onClick={handleRemove}
+              title="Remove File"
+              aria-label={`Remove ${displayName}`}
+            >
+              <Trash2 size={15} />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="fin-doc-card-actions">
+          <button
+            type="button"
+            className="fin-doc-upload-btn"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label={`Upload ${displayName} from Device`}
+          >
+            <Upload size={16} />
+            <span>Upload from Device</span>
+          </button>
+          <button
+            type="button"
+            className="fin-doc-camera-btn"
+            onClick={() => setIsCameraOpen(true)}
+            aria-label={`Capture ${displayName} with Camera`}
+          >
+            <Camera size={16} />
+            <span>Capture with Camera</span>
+          </button>
+        </div>
+      )}
+
+      {isCameraOpen && (
+        <DocumentCameraModal
+          title={`Capture ${displayName}`}
+          onCapture={handleCameraCapture}
+          onClose={() => setIsCameraOpen(false)}
+        />
+      )}
+    </div>
   );
 }
 
