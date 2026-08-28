@@ -64,6 +64,9 @@ export const platformApi = {
     all: (params) => all('/loans', params),
     create: async (data) => {
       const payload = { ...data };
+      if (Object.prototype.hasOwnProperty.call(payload, 'collectionConcern')) {
+        payload.adminCollectionMonitoring = Boolean(payload.collectionConcern);
+      }
       if (payload.annualInterestRate != null && payload.annualInterestRate > 100) {
         payload.annualInterestRate = Math.min(Number(payload.interestRate || payload.annualInterestRate), 100);
       }

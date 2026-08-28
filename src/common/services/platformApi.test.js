@@ -220,6 +220,11 @@ describe('platformApi full test suite', () => {
         principal: 25000,
       });
 
+      expect(api.post).toHaveBeenCalledWith('/loans', expect.objectContaining({
+        collectionConcern: true,
+        adminCollectionMonitoring: true,
+      }));
+
       const [concern] = JSON.parse(localStorage.getItem('inrfs_collection_concerns'));
       expect(concern).toMatchObject({
         loanId: 'loan_customer_1',
