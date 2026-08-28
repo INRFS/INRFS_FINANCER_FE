@@ -7,8 +7,18 @@ import { useAuth } from '../../../auth/authState';
 import { isValidEmail, isValidIndianMobile, validateName } from '../../../common/utils/formValidation';
 import './Settings.css';
 
+const textValue = (value, fallback = '') =>
+  typeof value === 'string' || typeof value === 'number' ? String(value) : fallback;
+
 const userFullName = (user) =>
-  user?.fullName || [user?.firstName, user?.lastName].filter(Boolean).join(' ');
+  textValue(user?.fullName) || [textValue(user?.firstName), textValue(user?.lastName)].filter(Boolean).join(' ');
+
+const errorMessage = (error, fallback) =>
+  typeof error?.message === 'string'
+    ? error.message
+    : typeof error === 'string'
+      ? error
+      : fallback;
 
 export default function Settings() {
   const { updateUser } = useAuth();
@@ -50,11 +60,11 @@ export default function Settings() {
     if (!profileData) return;
     const fullName = userFullName(profileData.user);
     setProfile({
-      name: fullName, businessName: profileData.financer?.displayName || '',
-      mobile: profileData.user?.phone || '', email: profileData.user?.email || '',
-      city: profileData.financer?.city || '', state: profileData.financer?.state || '',
-      avatarLetter: (fullName || 'U').charAt(0), profileImage: profileData.profileImage || '',
-      plan: profileData.plan || 'No active plan',
+      name: fullName, businessName: textValue(profileData.financer?.displayName),
+      mobile: textValue(profileData.user?.phone), email: textValue(profileData.user?.email),
+      city: textValue(profileData.financer?.city), state: textValue(profileData.financer?.state),
+      avatarLetter: (fullName || 'U').charAt(0), profileImage: textValue(profileData.profileImage),
+      plan: textValue(profileData.plan, 'No active plan'),
     });
   }, [profileData]);
 
@@ -93,10 +103,10 @@ export default function Settings() {
       const saved = await platformApi.profile.update({ fullName: profile.name, businessName: profile.businessName, mobile: profile.mobile, email: profile.email, city: profile.city, state: profile.state, profileImageDataUrl: profile.profileImage || null });
       const fullName = userFullName(saved.user);
       setProfile({
-        name: fullName, businessName: saved.financer?.displayName || '',
-        mobile: saved.user?.phone || '', email: saved.user?.email || '', city: saved.financer?.city || '',
-        state: saved.financer?.state || '', avatarLetter: (fullName || 'U').charAt(0),
-        profileImage: saved.profileImage || '', plan: saved.plan || 'No active plan',
+        name: fullName, businessName: textValue(saved.financer?.displayName),
+        mobile: textValue(saved.user?.phone), email: textValue(saved.user?.email), city: textValue(saved.financer?.city),
+        state: textValue(saved.financer?.state), avatarLetter: (fullName || 'U').charAt(0),
+        profileImage: textValue(saved.profileImage), plan: textValue(saved.plan, 'No active plan'),
       });
       // A profile response is not an authentication response. Update only the
       // fields shown in the shell so an absent/empty roles collection can never
@@ -111,7 +121,7 @@ export default function Settings() {
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (reason) {
-      setSaveError(reason.message || 'Unable to save profile changes.');
+      setSaveError(errorMessage(reason, 'Unable to save profile changes.'));
     } finally {
       setSaving(false);
     }
@@ -182,7 +192,7 @@ export default function Settings() {
       {activeTab === 'Profile' && (
         <div className="fin-settings-profile-card animate-fade-in">
           {loading && <p>Loading profile...</p>}
-          {error && <div><p>{error.message}</p><Button onClick={refetch}>Try again</Button></div>}
+          {error && <div><p>{errorMessage(error, 'Unable to load profile.')}</p><Button onClick={refetch}>Try again</Button></div>}
 
           {/* Profile header */}
           <div className="fin-settings-profile-top">
