@@ -1,6 +1,41 @@
 export const roundMoney = (value) =>
   Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
 
+const indiaDateKey = (value) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date);
+  const part = (type) => parts.find((item) => item.type === type)?.value || '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+};
+
+export const withLiveInterestCollected = (billing, payments) => {
+  if (!billing?.periodStart || !billing?.periodEnd || !Array.isArray(payments)) return billing;
+  const interestCollected = roundMoney(payments
+    .filter((payment) => {
+      const status = typeof payment.status === 'string' ? payment.status.toLowerCase() : payment.status;
+      if (![1, 'completed', 'paid', 'success'].includes(status)) return false;
+      const received = indiaDateKey(payment.receivedAt);
+      return received >= billing.periodStart && received <= billing.periodEnd;
+    })
+    .reduce((sum, payment) => sum + Number(payment.interestAmount || 0), 0));
+  const amountPayable = billing.chargeRate === 'Mixed'
+    ? billing.amountPayable
+    : roundMoney(interestCollected * Number(billing.chargeRate || 0) / 100);
+  const amountPaid = roundMoney(billing.amountPaid);
+  const outstanding = roundMoney(Math.max(0, amountPayable - amountPaid));
+  const status = amountPayable <= 0
+    ? 'No Charge'
+    : outstanding <= 0
+      ? 'Paid'
+      : amountPaid > 0
+        ? 'Partially Paid'
+        : 'Accruing';
+  return { ...billing, interestCollected, amountPayable, outstanding, status };
+};
+
 export const formatMonthLabel = (periodEnd, periodStart) => {
   if (periodEnd) {
     const d = new Date(
@@ -99,7 +134,9 @@ export const groupServiceCharges = (
           : 'Mixed';
 
       let status = 'Pending';
-      if (outstanding <= 0 && (amountPaid > 0 || group.items.length > 0)) {
+      if (amountPayable <= 0) {
+        status = 'No Charge';
+      } else if (outstanding <= 0 && amountPaid > 0) {
         status = 'Paid';
       } else if (amountPaid > 0 && outstanding > 0) {
         status = 'Partially Paid';

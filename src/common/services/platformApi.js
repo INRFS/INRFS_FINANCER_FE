@@ -74,6 +74,9 @@ export const platformApi = {
             ...data,
             loanId: result?.id || data.loanId,
             loanNumber: result?.loanNumber || data.loanNumber,
+            customerId: result?.customerId || data.customerId,
+            financerId: result?.financerId || data.financerId,
+            financerName: result?.financerName || data.financerName,
           });
         } catch {
           // safe

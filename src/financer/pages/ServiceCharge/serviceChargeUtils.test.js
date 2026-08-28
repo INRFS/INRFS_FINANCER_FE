@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   formatMonthLabel,
   groupServiceCharges,
+  withLiveInterestCollected,
 } from './serviceChargeUtils';
 
 describe('serviceChargeUtils', () => {
@@ -113,5 +114,43 @@ describe('serviceChargeUtils', () => {
     expect(result[0].month).toBe('August 2026');
     expect(result[1].month).toBe('July 2026');
     expect(result[2].month).toBe('June 2026');
+  });
+
+  it('does not mark a zero-value invoice as paid', () => {
+    const [result] = groupServiceCharges([{
+      id: 'zero-rec',
+      periodStart: '2026-07-26',
+      periodEnd: '2026-08-25',
+      interestActivity: 0,
+      chargeAmount: 0,
+      collectedAmount: 0,
+      chargePercentage: 2,
+      status: 'Paid',
+    }]);
+
+    expect(result.status).toBe('No Charge');
+    expect(result.amountPayable).toBe(0);
+  });
+
+  it('calculates the current service charge from completed interest collected', () => {
+    const billing = {
+      periodStart: '2026-08-26',
+      periodEnd: '2026-09-25',
+      chargeRate: 2,
+      amountPayable: 0,
+      amountPaid: 0,
+    };
+    const payments = [
+      { status: 'Completed', receivedAt: '2026-08-28T06:30:00Z', interestAmount: 1000 },
+      { status: 'Pending', receivedAt: '2026-08-28T06:30:00Z', interestAmount: 900 },
+      { status: 'Completed', receivedAt: '2026-08-25T06:30:00Z', interestAmount: 500 },
+    ];
+
+    expect(withLiveInterestCollected(billing, payments)).toMatchObject({
+      interestCollected: 1000,
+      amountPayable: 20,
+      outstanding: 20,
+      status: 'Accruing',
+    });
   });
 });

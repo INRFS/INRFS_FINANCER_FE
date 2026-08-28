@@ -43,6 +43,24 @@ describe('apiClient full suite', () => {
       });
     });
 
+    it('restores the access token after a browser-page reload', async () => {
+      const firstModule = await import('./apiClient');
+      firstModule.sessionStore.save({
+        accessToken: 'reload_token',
+        expiresAt: '2030-01-01T00:00:00Z',
+        user: { id: 'u1' },
+      });
+
+      vi.resetModules();
+      const reloadedModule = await import('./apiClient');
+
+      expect(reloadedModule.sessionStore.getAccessToken()).toBe('reload_token');
+      expect(reloadedModule.sessionStore.getSession()).toEqual({
+        user: { id: 'u1' },
+        expiresAt: '2030-01-01T00:00:00Z',
+      });
+    });
+
     it('clears all session and local storage tokens', async () => {
       const { sessionStore } = await import('./apiClient');
       sessionStore.save({ accessToken: 'tok_123', user: { id: 'u1' } });

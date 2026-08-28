@@ -26,6 +26,12 @@ describe('loan interest preview', () => {
     expect(calculateTotalInterest(10000, 18, 'Days', 15)).toBe(900);
   });
 
+  it('keeps a calendar-month loan on the monthly-rate basis', () => {
+    const total = calculateTotalInterest(10000, 10, 'Months', 1);
+    expect(total).toBe(1000);
+    expect(calculatePeriodInterest(10000, 10, 'Monthly', total)).toBe(1000);
+  });
+
   it('calculates collection period interest based on frequency', () => {
     const total = calculateTotalInterest(10000, 18, 'Months', 1);
     expect(calculatePeriodInterest(10000, 18, 'Monthly', total)).toBe(1800);

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ShieldCheck, UserPlus } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ShieldCheck, UserPlus, X } from 'lucide-react';
 
 import { pageItems, platformApi } from '../../../common/services/platformApi';
 
@@ -16,6 +16,8 @@ export default function AdministratorSettings() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [sessions, setSessions] = useState(null);
+  const [confirmAdmin, setConfirmAdmin] = useState(null);
+  const [deactivating, setDeactivating] = useState(false);
 
   const adminRole = useMemo(() => roles.find((role) => role.name === 'Admin'), [roles]);
 
@@ -59,7 +61,19 @@ const update = (event) => {
   }));
 };
   const changeRole = async (admin, roleId) => { setError(''); try { await platformApi.admin.setUserRoles(admin.id, [roleId]); await load(); } catch (requestError) { setError(requestError.message); } };
-  const deactivate = async (admin) => { if (!window.confirm(`Deactivate ${admin.firstName} ${admin.lastName} and revoke all sessions?`)) return; setError(''); try { await platformApi.admin.deactivateUser(admin.id); await load(); } catch (requestError) { setError(requestError.message); } };
+  const deactivate = async () => {
+    if (!confirmAdmin || deactivating) return;
+    setDeactivating(true); setError('');
+    try {
+      await platformApi.admin.deactivateUser(confirmAdmin.id);
+      setConfirmAdmin(null);
+      await load();
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setDeactivating(false);
+    }
+  };
   const showSessions = async (admin) => { setError(''); try { setSessions({ admin, items: await platformApi.admin.userSessions(admin.id) }); } catch (requestError) { setError(requestError.message); } };
   const revokeSession = async (sessionId) => { await platformApi.admin.revokeSession(sessions.admin.id, sessionId); await showSessions(sessions.admin); };
 
@@ -210,8 +224,9 @@ const submit = async (event) => {
 
     <section className="admin-settings-card admin-list-card">
       <div className="admin-settings-section-title"><span><ShieldCheck size={20} /></span><div><h3>Platform Administrators</h3><p>Accounts currently assigned Admin or SuperAdmin access.</p></div></div>
-      {loading ? <p className="admin-settings-muted" role="status">Loading administrators...</p> : admins.length ? <div className="admin-settings-admin-list">{admins.map((admin) => <article key={admin.id}><span>{`${admin.firstName?.[0] || ''}${admin.lastName?.[0] || ''}` || 'A'}</span><div><strong>{admin.firstName} {admin.lastName}</strong><small>{admin.email}</small><label>Role<select aria-label={`Role for ${admin.firstName} ${admin.lastName}`} value={roles.find((role) => admin.roles?.includes(role.name))?.id || ''} onChange={(event) => changeRole(admin, event.target.value)}>{roles.filter((role) => ['SuperAdmin','Admin','FinanceOfficer','Auditor','ComplianceOfficer','SupportAgent'].includes(role.name)).map((role) => <option key={role.id} value={role.id}>{role.name}</option>)}</select></label></div><em className={String(admin.status).toLowerCase()}>{admin.status}</em><button type="button" onClick={() => showSessions(admin)}>Sessions</button><button type="button" onClick={() => deactivate(admin)}>Deactivate & revoke sessions</button></article>)}</div> : <p className="admin-settings-muted">No administrator accounts were returned.</p>}
+      {loading ? <p className="admin-settings-muted" role="status">Loading administrators...</p> : admins.length ? <div className="admin-settings-admin-list">{admins.map((admin) => <article key={admin.id}><span>{`${admin.firstName?.[0] || ''}${admin.lastName?.[0] || ''}` || 'A'}</span><div><strong>{admin.firstName} {admin.lastName}</strong><small>{admin.email}</small><label>Role<select aria-label={`Role for ${admin.firstName} ${admin.lastName}`} value={roles.find((role) => admin.roles?.includes(role.name))?.id || ''} onChange={(event) => changeRole(admin, event.target.value)}>{roles.filter((role) => ['SuperAdmin','Admin'].includes(role.name)).map((role) => <option key={role.id} value={role.id}>{role.name}</option>)}</select></label></div><em className={String(admin.status).toLowerCase()}>{admin.status}</em><div className="admin-settings-admin-actions"><button className="admin-settings-action-btn" type="button" onClick={() => showSessions(admin)}>View sessions</button><button className="admin-settings-action-btn danger" type="button" onClick={() => setConfirmAdmin(admin)}>Deactivate</button></div></article>)}</div> : <p className="admin-settings-muted">No administrator accounts were returned.</p>}
       {sessions && <div><h4>Sessions for {sessions.admin.firstName} {sessions.admin.lastName}</h4>{sessions.items.length ? sessions.items.map((session) => <p key={session.id}>{new Date(session.createdAt).toLocaleString('en-IN')} — {session.isActive ? 'Active' : 'Expired/revoked'} {session.isActive && <button type="button" onClick={() => revokeSession(session.id)}>Revoke</button>}</p>) : <p>No sessions.</p>}<button type="button" onClick={() => setSessions(null)}>Close</button></div>}
     </section>
+    {confirmAdmin && <div className="admin-settings-confirm-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !deactivating && setConfirmAdmin(null)}><section className="admin-settings-confirm" role="alertdialog" aria-modal="true" aria-labelledby="deactivate-admin-title"><button className="admin-settings-confirm-close" type="button" aria-label="Close" disabled={deactivating} onClick={() => setConfirmAdmin(null)}><X size={20}/></button><span className="admin-settings-confirm-icon"><AlertTriangle size={25}/></span><h3 id="deactivate-admin-title">Deactivate administrator?</h3><p><strong>{confirmAdmin.firstName} {confirmAdmin.lastName}</strong> will lose platform access and all active sessions will be revoked.</p><div><button className="admin-settings-action-btn" type="button" disabled={deactivating} onClick={() => setConfirmAdmin(null)}>Cancel</button><button className="admin-settings-action-btn danger solid" type="button" disabled={deactivating} onClick={deactivate}>{deactivating ? 'Deactivating...' : 'Deactivate & revoke sessions'}</button></div></section></div>}
   </div>;
 }

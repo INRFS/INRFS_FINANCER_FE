@@ -515,6 +515,20 @@
 .admin-settings-admin-list small { margin-top: 2px; overflow: hidden; color: #7b8da2; font-size: 9px; text-overflow: ellipsis; }
 .admin-settings-admin-list em { padding: 4px 7px; border-radius: 999px; background: #eef2f6; color: #62758b; font-size: 8px; font-style: normal; font-weight: 800; text-transform: uppercase; }
 .admin-settings-admin-list em.active { background: #e8f7eb; color: #21824a; }
+.admin-settings-admin-actions { grid-column: 2 / -1; display: flex !important; flex-direction: row !important; flex-wrap: wrap; gap: 8px; }
+.admin-settings-action-btn { min-height: 34px; padding: 7px 12px; border: 1px solid #cfd9e6; border-radius: 8px; background: #fff; color: #294664; font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
+.admin-settings-action-btn:hover { border-color: #7d1fe8; color: #6d16d1; background: #faf7ff; }
+.admin-settings-action-btn.danger { border-color: #efb4ba; color: #b42332; }
+.admin-settings-action-btn.danger:hover { border-color: #d73545; background: #fff2f3; }
+.admin-settings-action-btn.danger.solid { border-color: #c92b3b; background: #c92b3b; color: #fff; }
+.admin-settings-action-btn:disabled { cursor: not-allowed; opacity: .6; }
+.admin-settings-confirm-overlay { position: fixed; z-index: 2000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(15, 29, 45, .56); backdrop-filter: blur(2px); }
+.admin-settings-confirm { position: relative; width: min(440px, 100%); padding: 28px; border-radius: 16px; background: #fff; box-shadow: 0 24px 70px rgba(15, 29, 45, .3); text-align: center; }
+.admin-settings-confirm-close { position: absolute; top: 12px; right: 12px; display: grid; width: 36px; height: 36px; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #71849a; cursor: pointer; }
+.admin-settings-confirm-icon { display: grid; width: 52px; height: 52px; margin: 0 auto 14px; place-items: center; border-radius: 50%; background: #fff0f1; color: #c92b3b; }
+.admin-settings-confirm h3 { margin: 0 0 9px; color: #142c49; font-size: 20px; }
+.admin-settings-confirm p { margin: 0; color: #60748d; font-size: 13px; line-height: 1.55; }
+.admin-settings-confirm > div { display: flex; justify-content: center; gap: 10px; margin-top: 22px; }
 .admin-settings-muted { color: #74869c; font-size: 12px; }
 
 

@@ -30,6 +30,7 @@ import {
   validateCustomerField,
 } from '../../../common/utils/formValidation';
 import { autoFetchPincode, lookupByPin } from '../../../common/utils/addressLookup';
+import { calculatePeriodInterest, calculateTotalInterest } from '../Loans/loanInterest';
 
 import './Customers.css';
 import { useLocation } from 'react-router-dom';
@@ -59,7 +60,6 @@ const addLoanDuration = (startDate, value, unit) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
-const dateDays = (from, to) => from && to ? Math.round((new Date(`${to}T00:00:00`) - new Date(`${from}T00:00:00`)) / 86400000) : 0;
 const firstInterestDue = (form, maturity) => {
   if (!form.startDate || !maturity || !form.collectionFrequency) return '';
   const candidate = form.collectionFrequency === 'Daily' ? addLoanDuration(form.startDate, 1, 'Days')
@@ -79,19 +79,29 @@ const estimatedCollectionInterest = (form) => {
   if (!maturity) return null;
   const dueDate = firstInterestDue(form, maturity);
   if (!dueDate) return null;
-  const interestDays = dateDays(form.startDate, dueDate);
-  return toNumber(form.principal) * toNumber(form.rate) / 100 * 12 * interestDays / 365;
+  const totalInterest = calculateTotalInterest(
+    form.principal,
+    form.rate,
+    form.durationUnit,
+    form.durationValue
+  );
+  return calculatePeriodInterest(
+    form.principal,
+    form.rate,
+    form.collectionFrequency,
+    totalInterest
+  );
 };
 
 const estimatedTotalInterest = (form) => {
   if (!form.principal || !form.rate || !form.startDate || !form.durationValue || !form.durationUnit) return null;
   const maturity = addLoanDuration(form.startDate, form.durationValue, form.durationUnit);
   if (!maturity) return null;
-  return (
-    toNumber(form.principal)
-    * toNumber(form.rate) / 100
-    * 12
-    * dateDays(form.startDate, maturity) / 365
+  return calculateTotalInterest(
+    form.principal,
+    form.rate,
+    form.durationUnit,
+    form.durationValue
   );
 };
 
@@ -593,6 +603,10 @@ export default function Customers() {
       }
       await platformApi.loans.create({
         customerId: selectedCustomer.id,
+        customerName: selectedCustomer.fullName || selectedCustomer.name || '',
+        customerNumber: selectedCustomer.customerNumber || '',
+        customerPhone: selectedCustomer.phone || selectedCustomer.mobile || '',
+        customerEmail: selectedCustomer.email || '',
         loanProductId: product.id,
         principal,
         annualInterestRate: monthlyInterestRate,
@@ -603,6 +617,7 @@ export default function Customers() {
         interestRate: monthlyInterestRate,
         interestRateBasis: 'PerMonth',
         interestCollectionFrequency: loanForm.collectionFrequency,
+        interestFrequency: loanForm.collectionFrequency,
         collectionConcern: Boolean(loanForm.collectionConcern),
       });
       setIsAddLoanOpen(false);

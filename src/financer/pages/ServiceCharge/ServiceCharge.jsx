@@ -10,7 +10,7 @@ import {
 
 import './ServiceCharge.css';
 import { platformApi, pageItems } from '../../../common/services/platformApi';
-import { groupServiceCharges } from './serviceChargeUtils';
+import { groupServiceCharges, withLiveInterestCollected } from './serviceChargeUtils';
 
 const formatCurrency = (value) =>
   `₹${Number(value || 0).toLocaleString('en-IN')}`;
@@ -18,27 +18,38 @@ const formatCurrency = (value) =>
 export default function ServiceCharge() {
   const [selectedStatement, setSelectedStatement] = useState(null);
   const [billing, setBilling] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [pageError, setPageError] = useState('');
 
   useEffect(() => {
-    platformApi.admin
-      .invoices({ pageSize: 200 })
-      .then((payload) =>
-        setBilling(groupServiceCharges(pageItems(payload)))
-      )
+    Promise.all([
+      platformApi.admin.allInvoices(),
+      platformApi.payments.all(),
+    ])
+      .then(([invoicePayload, paymentPayload]) => {
+        setBilling(groupServiceCharges(pageItems(invoicePayload)));
+        setPayments(pageItems(paymentPayload));
+      })
       .catch((error) => setPageError(error.message));
   }, []);
 
-  const currentBilling = billing[0] || {
-    month: 'No billing period',
-    interestCollected: 0,
-    chargeRate: 0,
-    amountPayable: 0,
-    amountPaid: 0,
-    outstanding: 0,
-    status: 'Pending',
-    recordCount: 0,
-  };
+  const currentBilling = useMemo(
+    () => withLiveInterestCollected(billing[0] || {
+      month: 'No billing period',
+      interestCollected: 0,
+      chargeRate: 0,
+      amountPayable: 0,
+      amountPaid: 0,
+      outstanding: 0,
+      status: 'Pending',
+      recordCount: 0,
+    }, payments),
+    [billing, payments]
+  );
+  const displayedBilling = useMemo(
+    () => billing.map((row, index) => index === 0 ? currentBilling : row),
+    [billing, currentBilling]
+  );
 
   const _totals = useMemo(() => {
     const totalPayable = billing.reduce(
@@ -201,7 +212,7 @@ export default function ServiceCharge() {
 
                 <tbody>
 
-                  {billing.map((row) => (
+                  {displayedBilling.map((row) => (
                     <tr key={row.id || row.month}>
 
                       <td>

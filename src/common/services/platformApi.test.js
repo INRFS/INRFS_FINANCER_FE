@@ -198,6 +198,40 @@ describe('platformApi full test suite', () => {
       await platformApi.loans.transition('app_1', 'approve', { notes: 'Approved' });
       expect(api.post).toHaveBeenCalledWith('/loan-applications/app_1/approve', { notes: 'Approved' });
     });
+
+    it('creates a collection concern with customer and backend loan metadata', async () => {
+      localStorage.removeItem('inrfs_collection_concerns');
+      vi.spyOn(api, 'post').mockImplementation((path) => {
+        if (path === '/loans') return Promise.resolve({
+          id: 'loan_customer_1',
+          loanNumber: 'LN-CUSTOMER-1',
+          customerId: 'customer_1',
+          financerId: 'financer_1',
+          financerName: 'Apex Finance',
+        });
+        return Promise.resolve({});
+      });
+
+      await platformApi.loans.create({
+        customerId: 'customer_1',
+        customerName: 'Teja Bala',
+        customerNumber: 'CUS-1',
+        collectionConcern: true,
+        principal: 25000,
+      });
+
+      const [concern] = JSON.parse(localStorage.getItem('inrfs_collection_concerns'));
+      expect(concern).toMatchObject({
+        loanId: 'loan_customer_1',
+        loanNumber: 'LN-CUSTOMER-1',
+        customerId: 'customer_1',
+        customerName: 'Teja Bala',
+        financerId: 'financer_1',
+        financerName: 'Apex Finance',
+        principal: 25000,
+        status: 'PENDING',
+      });
+    });
   });
 
   describe('payments APIs', () => {

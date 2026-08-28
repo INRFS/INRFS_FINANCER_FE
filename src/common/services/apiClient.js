@@ -13,11 +13,19 @@ function readJson(key) {
 }
 
 export const sessionStore = {
-  getAccessToken: () => accessToken,
-  getSession: () => readJson(SESSION_KEY),
+  getAccessToken() {
+    if (!accessToken) accessToken = readJson(SESSION_KEY)?.accessToken || null;
+    return accessToken;
+  },
+  getSession() {
+    const stored = readJson(SESSION_KEY);
+    if (!stored) return null;
+    const { user, expiresAt } = stored;
+    return { user, expiresAt };
+  },
   save(tokens) {
     accessToken = tokens.accessToken;
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ user: tokens.user, expiresAt: tokens.expiresAt }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ accessToken: tokens.accessToken, user: tokens.user, expiresAt: tokens.expiresAt }));
   },
   clear() {
     accessToken = null;

@@ -38,6 +38,9 @@ describe('collection due amounts', () => {
 describe('CollectionOperations Component', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.admin, 'allFinancers').mockResolvedValue({ items: [] });
   });
 
   it('renders collections table with flagged loan tickets and displays customer and loan details', async () => {
@@ -118,6 +121,23 @@ describe('CollectionOperations Component', () => {
     expect(await screen.findByText('Pooja Verma')).toBeInTheDocument();
     expect(screen.getByText('LN-2002')).toBeInTheDocument();
     expect(screen.getByText('Flagged concern')).toBeInTheDocument();
+  });
+
+  it('resolves missing concern labels from loan, customer, and financer records', async () => {
+    platformApi.loans.all.mockResolvedValue({ items: [{ id: 'loan_303', customerId: 'cust_3', financerId: 'fin_3' }] });
+    platformApi.customers.all.mockResolvedValue({ items: [{ id: 'cust_3', fullName: 'Lakshmi Rao' }] });
+    platformApi.admin.allFinancers.mockResolvedValue({ items: [{ id: 'fin_3', displayName: 'Sree Lakshmi Finance' }] });
+    vi.spyOn(platformApi.collections, 'list').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.admin, 'users').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.settings, 'list').mockResolvedValue({ items: [] });
+    vi.spyOn(platformApi.collectionConcerns, 'list').mockResolvedValue({
+      items: [{ id: 'concern_303', loanId: 'loan_303', loanNumber: 'LN-303', status: 'PENDING', principal: 10000 }],
+    });
+
+    render(<CollectionOperations />);
+
+    expect(await screen.findByText('Lakshmi Rao')).toBeInTheDocument();
+    expect(screen.getByText('Sree Lakshmi Finance')).toBeInTheDocument();
   });
 });
 

@@ -23,19 +23,30 @@ export default function CollectionOperations() {
   const load = useCallback(async () => {
     setLoading(true); setError('');
     try {
-      const [collections, users, settings, concernsPayload] = await Promise.all([
+      const [collections, users, settings, concernsPayload, loansPayload, customersPayload, financersPayload] = await Promise.all([
         platformApi.collections.list({ pageSize: 100 }),
         platformApi.admin.users({ pageSize: 100 }).catch(() => ({ items: [] })),
         platformApi.settings.list('Platform').catch(() => ({ items: [] })),
         platformApi.collectionConcerns?.list ? platformApi.collectionConcerns.list().catch(() => ({ items: [] })) : { items: [] },
+        platformApi.loans.all().catch(() => ({ items: [] })),
+        platformApi.customers.all().catch(() => ({ items: [] })),
+        platformApi.admin.allFinancers().catch(() => ({ items: [] })),
       ]);
       const collectionRows = pageItems(collections);
       const concernItems = pageItems(concernsPayload);
+      const loansById = new Map(pageItems(loansPayload).map((loan) => [loan.id, loan]));
+      const customersById = new Map(pageItems(customersPayload).map((customer) => [customer.id, customer]));
+      const financersById = new Map(pageItems(financersPayload).map((financer) => [financer.id, financer]));
 
       // Merge collection records with collection concerns (loan tickets) without duplicate entries
       const mergedRows = [...collectionRows];
 
       concernItems.forEach((concern) => {
+        const loan = loansById.get(concern.loanId);
+        const customer = customersById.get(concern.customerId || loan?.customerId);
+        const financer = financersById.get(concern.financerId || loan?.financerId);
+        const customerName = customer?.fullName || customer?.name || concern.customerName || 'Customer details unavailable';
+        const financerName = financer?.displayName || financer?.legalName || financer?.businessName || concern.financerName || 'Financer details unavailable';
         const matchingRow = mergedRows.find(
           (r) =>
             (concern.loanId && (r.id === concern.loanId || r.loanId === concern.loanId)) ||
@@ -43,6 +54,8 @@ export default function CollectionOperations() {
         );
 
         if (matchingRow) {
+          if (!matchingRow.customer || matchingRow.customer === 'Customer') matchingRow.customer = customerName;
+          if (!matchingRow.financer || matchingRow.financer === 'Financer') matchingRow.financer = financerName;
           matchingRow.concernId = concern.id;
           matchingRow.concernStatus = concern.status;
           matchingRow.reason = concern.reason || matchingRow.reason;
@@ -72,12 +85,12 @@ export default function CollectionOperations() {
           // If the loan ticket does not yet have a standard collection row, add it as a new collection case
           mergedRows.unshift({
             id: concern.loanId || concern.id,
-            customer: concern.customerName || 'Customer',
-            customerId: concern.customerId,
+            customer: customerName,
+            customerId: concern.customerId || loan?.customerId,
             customerPhone: concern.customerPhone,
             customerEmail: concern.customerEmail,
-            financer: concern.financerName || 'Financer',
-            financerId: concern.financerId,
+            financer: financerName,
+            financerId: concern.financerId || loan?.financerId,
             loanNumber: concern.loanNumber || `LN-${concern.loanId}`,
             dueDate: concern.startDate || concern.createdAt?.split('T')[0],
             due: Number(concern.principal || 0),
