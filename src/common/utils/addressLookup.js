@@ -144,6 +144,19 @@ export function lookupLocalPincode(text) {
   return null;
 }
 
+export function suggestAddresses(text, field = 'city') {
+  if (!text || typeof text !== 'string' || !['city', 'state'].includes(field)) return [];
+  const query = text.toLowerCase().trim();
+  if (query.length < 3) return [];
+  const seen = new Set();
+  return PIN_DIRECTORY.filter((entry) => {
+    const value = entry[field].toLowerCase();
+    if (!value.startsWith(query) || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  }).slice(0, 8);
+}
+
 /**
  * Reverse lookup city and state by PIN code.
  * @param {string} pin
@@ -158,6 +171,27 @@ export function lookupByPin(pin) {
     return { city: found.city, state: found.state };
   }
   return null;
+}
+
+/** Resolves any valid Indian PIN online, with the local directory as a fast fallback. */
+export async function resolveAddressByPin(pin) {
+  const cleanPin = String(pin || '').trim();
+  if (!/^[1-9]\d{5}$/.test(cleanPin)) return null;
+  const local = lookupByPin(cleanPin);
+  if (local) return local;
+  try {
+    const response = await fetch(`https://api.postalpincode.in/pincode/${cleanPin}`);
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const postOffice = payload?.[0]?.PostOffice?.[0];
+    if (!postOffice || payload?.[0]?.Status !== 'Success') return null;
+    return {
+      city: postOffice.Block || postOffice.District || postOffice.Name,
+      state: postOffice.State,
+    };
+  } catch {
+    return null;
+  }
 }
 
 /**

@@ -214,16 +214,15 @@ export const validateName = (value, label = 'Full name') => {
 
 /* ----------------------------------------------------------
    STREET NAME VALIDATION
-   Rule: Must start with an alphabet. Must not start with a number.
+   Numeric prefixes are valid in names such as "12th Street".
    ---------------------------------------------------------- */
 
 export const validateStreetName = (value, options = {}) => {
   const { required = false, label = 'Street name' } = options;
   const v = trimmed(value);
   if (!v) return required ? `${label} is required.` : '';
-  if (/^\d/.test(v) || !/^[A-Za-z\u0900-\u097F\u0980-\u09FF\u0C00-\u0C7F\u0C80-\u0CFF]/.test(v)) {
-    return 'Street name must start with an alphabet.';
-  }
+  if (!/[A-Za-z\u0900-\u097F\u0980-\u09FF\u0C00-\u0C7F\u0C80-\u0CFF]/.test(v))
+    return `${label} must contain at least one letter.`;
   return '';
 };
 
@@ -552,7 +551,16 @@ export const validateCustomerStep = (step, form = {}, existingCustomers = [], cu
   }
 
   if (step === 4) {
-    // Document uploads are strictly optional. Validate only if files are attached.
+    const requiredFiles = [
+      ['aadhaarDocument', 'Aadhaar document'],
+      ['panDocument', 'PAN document'],
+      ['addressProof', 'Address proof'],
+      ['photograph', 'Photograph'],
+    ];
+    for (const [field, label] of requiredFiles) {
+      if (!form[field]) errors[field] = `${label} is required.`;
+    }
+    // Other documents remain optional; validate every attached file.
     const fileFields = ['aadhaarDocument', 'panDocument', 'addressProof', 'photograph', 'otherDocuments'];
     for (const ff of fileFields) {
       if (form[ff]) {

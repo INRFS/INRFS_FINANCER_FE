@@ -29,7 +29,7 @@ import {
   validateCustomerStep,
   validateCustomerField,
 } from '../../../common/utils/formValidation';
-import { autoFetchPincode, lookupByPin } from '../../../common/utils/addressLookup';
+import { resolveAddressByPin, suggestAddresses } from '../../../common/utils/addressLookup';
 import { calculatePeriodInterest, calculateTotalInterest } from '../Loans/loanInterest';
 
 import './Customers.css';
@@ -293,6 +293,7 @@ export default function Customers() {
   const [isSmsOpen, setIsSmsOpen] = useState(false);
 
   const [customerForm, setCustomerForm] = useState(emptyCustomerForm);
+  const [pinResolvedAddress, setPinResolvedAddress] = useState(null);
   const [loanForm, setLoanForm] = useState(emptyLoanForm);
   const [paymentForm, setPaymentForm] = useState(emptyPaymentForm);
   const [smsMessage, setSmsMessage] = useState('');
@@ -361,6 +362,7 @@ export default function Customers() {
     setFormErrors({});
     setTouchedFields({});
     setCustomerForm({ ...emptyCustomerForm });
+    setPinResolvedAddress(null);
     setCurrentStep(1);
     setIsAddCustomerOpen(true);
   };
@@ -379,6 +381,11 @@ export default function Customers() {
       ...customerForm,
       [field]: value,
     };
+    if (field === 'pinCode' && String(value).length < 6 && pinResolvedAddress) {
+      if (nextForm.city === pinResolvedAddress.city) nextForm.city = '';
+      if (nextForm.state === pinResolvedAddress.state) nextForm.state = '';
+      setPinResolvedAddress(null);
+    }
     setCustomerForm(nextForm);
     setTouchedFields((prev) => ({ ...prev, [field]: true }));
 
@@ -392,23 +399,15 @@ export default function Customers() {
     );
     setFormErrors((prev) => ({ ...prev, [field]: err }));
 
-    // Address to Pincode auto-fetch
-    if (field === 'city' || field === 'area' || field === 'street' || field === 'state') {
-      const autoPin = await autoFetchPincode(nextForm);
-      if (autoPin && autoPin !== nextForm.pinCode) {
-        setCustomerForm((current) => ({ ...current, pinCode: autoPin }));
-        setFormErrors((prev) => ({ ...prev, pinCode: '' }));
-      }
-    }
-
     // Reverse lookup by PIN
     if (field === 'pinCode' && String(value).length === 6) {
-      const rev = lookupByPin(value);
+      const rev = await resolveAddressByPin(value);
       if (rev) {
+        setPinResolvedAddress(rev);
         setCustomerForm((current) => ({
           ...current,
-          city: current.city || rev.city,
-          state: current.state || rev.state,
+          city: rev.city,
+          state: rev.state,
         }));
         setFormErrors((prev) => ({
           ...prev,
@@ -418,6 +417,13 @@ export default function Customers() {
         }));
       }
     }
+  };
+
+  const selectCustomerCity = (match) => {
+    setPageError('');
+    setCustomerForm((current) => ({ ...current, city: match.city, state: match.state }));
+    setTouchedFields((prev) => ({ ...prev, city: true, state: true }));
+    setFormErrors((prev) => ({ ...prev, city: '', state: '' }));
   };
 
   const handleCustomerFile = (field, fileOrEvent) => {
@@ -919,6 +925,7 @@ export default function Customers() {
         <CustomerWizard
           form={customerForm}
           updateForm={updateCustomerForm}
+          selectCity={selectCustomerCity}
           currentStep={currentStep}
           onNext={handleCustomerWizardNext}
           onBack={handleWizardBack}
@@ -1728,6 +1735,7 @@ function SmsHistoryTab({ history }) {
 function CustomerWizard({
   form,
   updateForm,
+  selectCity,
   currentStep,
   onNext,
   onBack,
@@ -1738,6 +1746,7 @@ function CustomerWizard({
   saving,
 }) {
   const labels = ['Personal Info', 'Address', 'KYC', 'Documents'];
+  const [activeAddressField, setActiveAddressField] = useState(null);
 
   return (
     <div className="fin-customer-overlay" onMouseDown={onClose}>
@@ -1833,6 +1842,8 @@ function CustomerWizard({
 
                 <FormField label="City" required error={errors?.city}>
                   <input
+                    onFocus={() => setActiveAddressField('city')}
+                    onBlur={() => setActiveAddressField(null)}
                     value={form.city}
                     onChange={(event) =>
                       updateForm(
@@ -1846,10 +1857,21 @@ function CustomerWizard({
                     title="City can contain only letters, spaces, apostrophe, dot and hyphen"
                     required
                   />
+                  {activeAddressField === 'city' && suggestAddresses(form.city, 'city').length > 0 && (
+                    <div className="fin-address-suggestions" role="listbox" aria-label="City suggestions">
+                      {suggestAddresses(form.city, 'city').map((item) => (
+                        <button key={`${item.pin}-${item.city}`} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { selectCity(item); setActiveAddressField(null); }}>
+                          <strong>{item.city}</strong><span>{item.state}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </FormField>
 
                 <FormField label="State" required error={errors?.state}>
                   <input
+                    onFocus={() => setActiveAddressField('state')}
+                    onBlur={() => setActiveAddressField(null)}
                     value={form.state}
                     onChange={(event) =>
                       updateForm(
@@ -1863,6 +1885,15 @@ function CustomerWizard({
                     title="State can contain only letters, spaces, apostrophe, dot and hyphen"
                     required
                   />
+                  {activeAddressField === 'state' && suggestAddresses(form.state, 'state').length > 0 && (
+                    <div className="fin-address-suggestions" role="listbox" aria-label="State suggestions">
+                      {suggestAddresses(form.state, 'state').map((item) => (
+                        <button key={`${item.pin}-${item.state}`} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { updateForm('state', item.state); setActiveAddressField(null); }}>
+                          <strong>{item.state}</strong><span>{item.city}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </FormField>
 
                 <FormField label="PIN Code" required error={errors?.pinCode}>
@@ -1949,7 +1980,7 @@ function CustomerWizard({
             <form onSubmit={onNext}>
               <div className="fin-customer-document-grid">
                 <DocumentUpload
-                  label="Upload Aadhaar Card (Optional)"
+                  label="Upload Aadhaar Card *"
                   documentName="Aadhaar Card"
                   fileNamePrefix="aadhaar"
                   file={form.aadhaarDocument}
@@ -1959,7 +1990,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload PAN Card (Optional)"
+                  label="Upload PAN Card *"
                   documentName="PAN Card"
                   fileNamePrefix="pan"
                   file={form.panDocument}
@@ -1969,7 +2000,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload Address Proof (Optional)"
+                  label="Upload Address Proof *"
                   documentName="Address Proof"
                   fileNamePrefix="address-proof"
                   file={form.addressProof}
@@ -1979,7 +2010,7 @@ function CustomerWizard({
                 />
 
                 <DocumentUpload
-                  label="Upload Photograph (Optional)"
+                  label="Upload Photograph *"
                   documentName="Photograph"
                   fileNamePrefix="photograph"
                   file={form.photograph}

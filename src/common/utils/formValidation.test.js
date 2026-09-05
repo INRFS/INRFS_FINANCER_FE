@@ -160,11 +160,12 @@ describe('form validation', () => {
   /* ----------------------------------------------------------
      STREET NAME VALIDATION
      ---------------------------------------------------------- */
-  it('validates street name: must start with an alphabet', () => {
+  it('accepts valid street names with alphabetic or numeric prefixes', () => {
     expect(validateStreetName('MG Road')).toBe('');
     expect(validateStreetName('Main Street')).toBe('');
-    expect(validateStreetName('12 Main Street')).toBe('Street name must start with an alphabet.');
-    expect(validateStreetName('1st Cross')).toBe('Street name must start with an alphabet.');
+    expect(validateStreetName('12 Main Street')).toBe('');
+    expect(validateStreetName('1st Cross')).toBe('');
+    expect(validateStreetName('123')).toMatch(/at least one letter/i);
     expect(validateStreetName('', { required: false })).toBe('');
     expect(validateStreetName('', { required: true })).toBe('Street name is required.');
   });
@@ -279,6 +280,7 @@ describe('form validation', () => {
      CUSTOMER FORM — INTEGRATION & STEPS
      ---------------------------------------------------------- */
   it('revalidates the complete customer payload before saving', () => {
+    const validFile = { name: 'kyc.pdf', size: 100, type: 'application/pdf' };
     const valid = {
       name: 'Asha Rao',
       mobile: '9876543210',
@@ -291,6 +293,10 @@ describe('form validation', () => {
       pinCode: '411001',
       aadhaar: '',
       pan: '',
+      aadhaarDocument: validFile,
+      panDocument: validFile,
+      addressProof: validFile,
+      photograph: { name: 'photo.jpg', size: 100, type: 'image/jpeg' },
     };
     expect(validateCustomerForm(valid)).toBe('');
     expect(validateCustomerForm(valid, { step: 1 })).toBe('');
@@ -306,7 +312,7 @@ describe('form validation', () => {
     expect(validateCustomerForm({ ...valid, gender: '' }, { step: 1 })).toMatch(/Please select gender/i);
 
     // Step 2 failures
-    expect(validateCustomerForm({ ...valid, street: '12 MG Road' }, { step: 2 })).toMatch(/Street name must start with an alphabet/i);
+    expect(validateCustomerForm({ ...valid, street: '12 MG Road' }, { step: 2 })).toBe('');
     expect(validateCustomerForm({ ...valid, city: '' }, { step: 2 })).toMatch(/City/i);
     expect(validateCustomerForm({ ...valid, state: '' }, { step: 2 })).toMatch(/State/i);
     expect(validateCustomerForm({ ...valid, pinCode: '123' }, { step: 2 })).toMatch(/PIN/i);
@@ -315,15 +321,16 @@ describe('form validation', () => {
     expect(validateCustomerForm({ ...valid, aadhaar: '123456789012' }, { step: 3 })).toMatch(/Aadhaar/i);
     expect(validateCustomerForm({ ...valid, pan: 'bad' }, { step: 3 })).toMatch(/PAN/i);
 
-    // Step 4 document optionality
+    // Step 4 required KYC documents
     const step4Check = validateCustomerStep(4, { aadhaarDocument: null, panDocument: null });
-    expect(step4Check.isValid).toBe(true);
+    expect(step4Check.isValid).toBe(false);
+    expect(step4Check.errors.aadhaarDocument).toMatch(/required/i);
 
     // validateCustomerField unit tests
     expect(validateCustomerField('name', '')).toMatch(/Full name is required/i);
     expect(validateCustomerField('mobile', '12345')).toMatch(/valid 10-digit Indian mobile/i);
     expect(validateCustomerField('gender', '')).toBe('Please select gender.');
-    expect(validateCustomerField('street', '12 MG Road')).toBe('Street name must start with an alphabet.');
+    expect(validateCustomerField('street', '12 MG Road')).toBe('');
     expect(validateCustomerField('city', '')).toBe('City is required.');
     expect(validateCustomerField('state', '')).toBe('State is required.');
     expect(validateCustomerField('pinCode', '123')).toMatch(/PIN code must be exactly 6 digits/i);

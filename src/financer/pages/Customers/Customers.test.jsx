@@ -169,7 +169,7 @@ describe('Customers Page Component', () => {
     });
   });
 
-  it('allows completing customer creation with 0 uploaded documents (optional documents)', async () => {
+  it('requires the four KYC documents before customer creation', async () => {
     vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
     vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
     vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
@@ -231,19 +231,12 @@ describe('Customers Page Component', () => {
     fireEvent.click(screen.getByRole('button', { name: /save customer/i }));
 
     await waitFor(() => {
-      expect(createSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          fullName: 'Vikram Singh',
-          phone: '9988776655',
-          city: 'Pune',
-          state: 'Maharashtra',
-          postalCode: '411001',
-        })
-      );
+      expect(screen.getAllByText(/Aadhaar document is required/i).length).toBeGreaterThan(0);
+      expect(createSpy).not.toHaveBeenCalled();
     });
   });
 
-  it('rejects street name starting with numbers', async () => {
+  it('accepts a valid street name starting with numbers', async () => {
     vi.spyOn(platformApi.customers, 'all').mockResolvedValue({ items: [] });
     vi.spyOn(platformApi.loans, 'all').mockResolvedValue({ items: [] });
     vi.spyOn(platformApi.payments, 'all').mockResolvedValue({ items: [] });
@@ -279,8 +272,8 @@ describe('Customers Page Component', () => {
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
-      expect(screen.getAllByText('Street name must start with an alphabet.').length).toBeGreaterThan(0);
-      expect(screen.getByText(/Step 2 of 4/i)).toBeInTheDocument();
+      expect(screen.getByText(/Step 3 of 4/i)).toBeInTheDocument();
+      expect(screen.queryByText('Street name must start with an alphabet.')).not.toBeInTheDocument();
     });
   });
 
@@ -628,9 +621,12 @@ describe('Customers Page Component', () => {
       const testFile = new File(['sample content'], 'aadhaar_front.jpg', { type: 'image/jpeg' });
       const aadhaarInput = document.getElementById('upload-aadhaar');
       fireEvent.change(aadhaarInput, { target: { files: [testFile] } });
+      fireEvent.change(document.getElementById('upload-pan'), { target: { files: [testFile] } });
+      fireEvent.change(document.getElementById('upload-address-proof'), { target: { files: [testFile] } });
+      fireEvent.change(document.getElementById('upload-photograph'), { target: { files: [testFile] } });
 
       // Verify file is shown
-      expect(await screen.findByText('aadhaar_front.jpg')).toBeInTheDocument();
+      expect((await screen.findAllByText('aadhaar_front.jpg')).length).toBe(4);
 
       // Save customer
       fireEvent.click(screen.getByRole('button', { name: /save customer/i }));

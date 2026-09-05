@@ -966,7 +966,44 @@
 
 .fin-customer-form-field {
   min-width: 0;
+  position: relative;
 }
+
+.fin-address-suggestions {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 210px;
+  overflow-y: auto;
+  margin-top: 4px;
+  border: 1px solid #dce4ed;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(31, 48, 70, 0.14);
+}
+
+.fin-address-suggestions button {
+  width: 100%;
+  padding: 10px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid #edf1f5;
+  background: #fff;
+  color: #26364d;
+  cursor: pointer;
+  text-align: left;
+}
+
+.fin-address-suggestions button:last-child { border-bottom: 0; }
+.fin-address-suggestions button:hover,
+.fin-address-suggestions button:focus { background: #eef9fd; outline: none; }
+.fin-address-suggestions strong { font-size: 13px; }
+.fin-address-suggestions span { color: #7086a2; font-size: 12px; }
 
 .fin-customer-form-field.full {
   grid-column: 1 / -1;
